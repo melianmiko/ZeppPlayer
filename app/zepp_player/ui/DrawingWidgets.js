@@ -250,7 +250,7 @@ export class ArcProgressWidget extends BaseWidget {
         if(!config.color) return;
         
         let level = config.level / 100;
-        if(config.type) level = player.getDeviceState(config.type, true);
+        if(config.type) level = player.getDeviceState(config.type, "progress");
 
         ArcProgressWidget.draw(canvas, level, config);
     }

@@ -91,10 +91,12 @@ export default class ZeppPlayer {
     getDeviceState(type, dataType=false) {
         const v = this._deviceState[type];
         switch(dataType) {
-            case true:
-                return v.getProgress();
+            case "progress":
+                return v.getProgress(v);
             case "string":
-                return v.getString ? v.getString() : v.value.toString();
+                return v.getString(v);
+            case "maxLength":
+                return v.maxLength;
             default:
                 return v.value;
         }
@@ -343,7 +345,7 @@ ${text} //# sourceURL=${location.href.substring(0, location.href.length-1)}${thi
     performShift() {
         for(var i in this._deviceState) {
             if(this._deviceState[i].shift) {
-                const v = this._deviceState[i].shift(this.render_counter);
+                const v = this._deviceState[i].shift(this.render_counter, this._deviceState[i]);
                 if(v !== null) this.setDeviceState(i, v);
             }
         }

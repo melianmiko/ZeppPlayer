@@ -15,7 +15,7 @@ export class DatePointer extends BaseWidget {
     async render(canvas, player) {
         const config = this.conf;
 
-        let angle = 360 * player.getDeviceState(config.type);
+        let angle = 360 * player.getDeviceState(config.type, "progress");
 
         const pointer = await player.getAssetImage(config.src);
         ImageWidget.draw(pointer, canvas, {
@@ -44,9 +44,9 @@ export class DatePointer extends BaseWidget {
         const config = this.config;
 
         const data = [
-            ["hour_", player.getDeviceState("HOUR", true)],
-            ["minute_", player.getDeviceState("MINUTE", true)],
-            ["second_", player.getDeviceState("SECOND", true)],
+            ["hour_", player.getDeviceState("HOUR", "progress")],
+            ["minute_", player.getDeviceState("MINUTE", "progress")],
+            ["second_", player.getDeviceState("SECOND", "progress")],
         ];
 
         for(var i in data) {
@@ -94,10 +94,10 @@ export class DatePointer extends BaseWidget {
 
         for(var i in timeParts) {
             let [prefix, value] = timeParts[i];
-            value = player.getDeviceState(value).toString();
+            value = player.getDeviceState(value, "string");
             if(config[prefix + "zero"] > 0) value = value.padStart(2, "0");
 
-            const img = await TextImageWidget.draw(player, value, {
+            const img = await TextImageWidget.draw(player, value, 2, {
                 font_array: config[prefix + "array"],
                 h_space: config[prefix + "space"],
                 unit_sc: config[prefix + "unit_sc"],
@@ -155,9 +155,9 @@ export class DateWidget extends BaseWidget {
         const lang = player.language;
         const config = this.config;
         const data = [
-            ["year_", player.getDeviceState("YEAR"), 4],
-            ["month_", player.getDeviceState("MONTH"), 2],
-            ["day_", player.getDeviceState("DAY"), 2]
+            ["year_", player.getDeviceState("YEAR", "string"), 4],
+            ["month_", player.getDeviceState("MONTH", "string"), 2],
+            ["day_", player.getDeviceState("DAY", "string"), 2]
         ];
 
         let lastCoordinates = [0, 0];
@@ -165,13 +165,17 @@ export class DateWidget extends BaseWidget {
             let [prefix, value, fullLength] = data[i];
 
             let img = null;
-            if(config[prefix + "_is_character"]) {
-                const imgs = config[prefix + "array"];
-                img = await player.getAssetImage(imgs[value]);
+            if(config[prefix + "is_character"]) {
+                const imgs = config[prefix + lang + "_array"];
+                try {
+                    img = await player.getAssetImage(imgs[value - 1]);
+                } catch (e) {
+                    continue;
+                }
             } else {
                 value = value.toString();
                 if(config[prefix + "zero"]) value = value.padStart(fullLength, "0");
-                img = await TextImageWidget.draw(player, value, {
+                img = await TextImageWidget.draw(player, value, fullLength, {
                     font_array: config[prefix + lang + "_array"],
                     h_space: config[prefix + "space"],
                     unit_sc: config[prefix + "unit_sc"],

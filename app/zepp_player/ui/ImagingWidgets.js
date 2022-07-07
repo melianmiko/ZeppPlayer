@@ -88,7 +88,7 @@ export class PointerWidget extends BaseWidget {
         const img = await player.getAssetImage(config.src);
 
         let angle = config.angle;
-        if(config.type) angle = player.getDeviceState(config.type, true) * 360;
+        if(config.type) angle = player.getDeviceState(config.type, "progress") * 360;
         if(config.start_angle !== undefined && config.end_angle !== undefined) {
             angle = (angle / 360) * (config.end_angle - config.start_angle) + config.start_angle;
         }
@@ -129,7 +129,7 @@ export class MissingWidget extends ImageWidget {
  * Fully implemented
  */
 export class TextImageWidget extends BaseWidget {
-    static async draw(player, text, config) {
+    static async draw(player, text, maxLength, config) {
         if(!config.font_array) return null;
         text = text.toString();
 
@@ -137,14 +137,19 @@ export class TextImageWidget extends BaseWidget {
         let imgs = [];
 
         // Icon
+        let iconImg = null,
+            unitImg = null,
+            unitPath = config["unit_" + player.language];
+        
+        let offset = config.h_space ? config.h_space : 0;
+        let iconOffset = config.icon_space ? config.icon_space : 0;
+
         if(config.icon) {
-            const icon = await player.getAssetImage(config.icon);
-            let offset = config.icon_space ? config.icon_space : 0;
-            imgs.push([icon, offset]);
+            iconImg = await player.getAssetImage(config.icon);
+            imgs.push([icon, iconOffset]);
         }
 
         // Pre-calculate width of text + load imgs
-        let offset = config.h_space ? config.h_space : 0;
         if((text == "" || text == null || text == undefined) && config.invalid_image) {
             const invalid = await player.getAssetImage(config.invalid_image);
             imgs.push([invalid, offset]);
@@ -161,11 +166,10 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Unit
-        let unitPath = config["unit_" + player.language];
         if(unitPath) {
             try {
-                const unit = await player.getAssetImage(unitPath);
-                imgs.push([unit, offset]);
+                unitImg = await player.getAssetImage(unitPath);
+                imgs.push([unitImg, offset]);
             } catch(e) {}
         }
 
@@ -184,8 +188,21 @@ export class TextImageWidget extends BaseWidget {
         const tmp = player.newCanvas();
         tmp.width = fullWidth;
         tmp.height = fullHeight;
-        if(config.w && config.w > tmp.width) tmp.width = config.w;
-        if(config.h && config.h > tmp.height) tmp.height = config.h;
+
+        const basementImg = await player.getAssetImage(config.font_array[0]);
+        let boxWidth = config.w, 
+            boxHeight = config.h;
+
+        if(!boxWidth) {
+            boxWidth = (basementImg.width + offset) * maxLength;
+            if(unitImg) boxWidth += unitImg.width + iconOffset;
+            if(iconImg) boxWidth += iconImg.width;
+        }
+
+        if(!boxHeight) boxHeight = basementImg.height;
+        
+        if(boxWidth > tmp.width) tmp.width = boxWidth;
+        if(boxHeight > tmp.height) tmp.height = boxHeight;
         if(tmp.width == 0 || tmp.height == 0) return null;
 
         // Align
@@ -213,8 +230,12 @@ export class TextImageWidget extends BaseWidget {
         const config = this.config;
 
         // Find text
-        let text = null;
-        if(config.type) text = player.getDeviceState(config.type, "string");
+        let text = null, maxLength = 1;
+        if(config.type) {
+            text = player.getDeviceState(config.type, "string");
+            maxLength = player.getDeviceState(config.type, "maxLength");
+        }
+
         if(config.text) text = config.text;
         if(customText !== null) text = customText;
 
@@ -227,7 +248,7 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Render text
-        const tmp = await TextImageWidget.draw(player, text, config);
+        const tmp = await TextImageWidget.draw(player, text, maxLength, config);
         if(tmp === null) return;
 
         // Draw result
@@ -310,7 +331,7 @@ export class ImageProgressWidget extends BaseWidget {
 
         let level = this.config.level;
         if(this.config.type) {
-            level = Math.floor(player.getDeviceState(this.config.type, true) * 
+            level = Math.floor(player.getDeviceState(this.config.type, "progress") * 
                 this.config.image_length);
         }
 
@@ -330,7 +351,7 @@ export class LevelWidget extends BaseWidget {
 
         let level = this.config.level;
         if(this.config.type) {
-            let val = player.getDeviceState(this.config.type, true);
+            let val = player.getDeviceState(this.config.type, "progress");
             if(!val) val = 0;
             level = Math.floor(val * (this.config.image_length-1));
             // console.log(val, level);

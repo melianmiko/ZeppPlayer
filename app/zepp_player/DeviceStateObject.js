@@ -42,7 +42,7 @@ export function createDeviceState() {
         STEP: {
             value: 4500,
             type: "number",
-            maxLength: 5,
+            maxLength: 4,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / state.STEP_TARGET.value,
             shift: (_, t) => (t.value + 500) % state.STEP_TARGET.value
@@ -56,11 +56,11 @@ export function createDeviceState() {
         DISTANCE: {
             value: 1.5,
             type: "number",
-            maxLength: 5, // with dot
+            maxLength: 4.5, // with dot
             getString: (t) => {
                 const km = Math.floor(t.value).toString(),
                     dm = Math.round((t.value % 1) * 100).toString();
-                return km.padStart(2, "0") + "." + dm.padStart(2, "0");
+                return km + "." + dm.padStart(2, "0");
             },
             shift: () => (state.DISTANCE.value + 0.5) % 20
         },
@@ -145,7 +145,7 @@ export function createDeviceState() {
         STAND: {
             value: 12,
             type: "number",
-            maxLength: 2,
+            maxLength: 5,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / state.STAND_TARGET.value,
             shift: (tick) => tick % 2 == 0 ? state.STAND.value % state.STAND_TARGET.value + 1 : null
@@ -160,7 +160,7 @@ export function createDeviceState() {
             value: 2022,
             type: "number",
             maxLength: 4,
-            getString: (t) => t.value.toString().padStart(4, "0")
+            getString: (t) => t.value.toString()
         },
         AM_PM: {
             value: "hide",
