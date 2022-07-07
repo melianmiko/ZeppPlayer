@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/app/index.css" />
+    <title>ZeppPlayer</title>
+</head>
+
+<body>
+    <div class="root">
+        <canvas id="display"></canvas>
+        <div id="view_console" class="base_panel" style="display: none"></div>
+        <div id="view_edit" class="base_panel" style="display: none"></div>
+        <div id="files_view" class="base_panel"></div>
+        <div id="toolbar_side">
+            <span title="Pause render (P)" class="material-symbols-outlined" id="toggle_pause">
+                pause
+            </span>
+            <span title="Next UI (S)" class="material-symbols-outlined" id="toggle_aod">
+                aod
+            </span>
+            <span title="Rotate screen" class="material-symbols-outlined" id="do_rotate">
+                screen_rotation
+            </span>
+            <span title="With frame" class="material-symbols-outlined" id="toggle_overlay">
+                layers
+            </span>
+            <span title="Auto-increment (S)" class="material-symbols-outlined" id="toggle_shift">
+                exposure_plus_1
+            </span>
+            <span title="Show event zones (Z)" class="material-symbols-outlined" id="toggle_events">
+                touch_app
+            </span>
+            <span title="Factory reset (W)" class="material-symbols-outlined" id="do_reload">
+                mop
+            </span>
+            <span title="Export widgets (console) (D)" class="material-symbols-outlined" id="do_export">
+                developer_mode
+            </span>
+            <span title="Create GIF" class="material-symbols-outlined" id="do_gif">
+                gif_box
+            </span>
+        </div>
+        <div id="toolbar_top">
+            <select id="project_select"></select>
+            <span title="WF console (c)" class="material-symbols-outlined" id="toggle_console">
+                terminal
+            </span>
+            <span title="State editor (e)" class="material-symbols-outlined" id="toggle_edit">
+                edit
+            </span>
+        </div>
+    </div>
+    <div id="version_box">
+        <div>
+            <span>Loading...</span>
+        </div>
+        <a href="https://melianmiko.ru">by MelianMiko</a>
+    </div>
+    <div id="loading" style="display: none;"></div>
+    <script src="/lib/gif.js"></script>
+    <script src="/lib/tgaimage.min.js"></script>
+    <script src="/app/index.chrome.js" type="module"></script>
+</body>
+
+</html>

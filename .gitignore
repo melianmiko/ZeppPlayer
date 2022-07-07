@@ -1,0 +1,7 @@
+/_*
+/projects/*
+/lib/nginx/logs/*
+/lib/nginx/temp/*
+
+!/projects/demo
+!.empty
