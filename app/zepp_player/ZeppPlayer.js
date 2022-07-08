@@ -37,6 +37,7 @@ export default class ZeppPlayer {
         this.current_level = 1;
         this.current_page = 0;
         this.biggestImage = [0, 0];
+        this.withScriptConsole = true;
 
         // Render settings
         this.language = "en";           // en, tc, sc

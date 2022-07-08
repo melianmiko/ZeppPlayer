@@ -4,6 +4,9 @@
   "description": "Mi Band 7 preview tool",
   "main": "app/zepp_player/cli.js",
   "type": "module",
+  "bin": {
+    "zepp-preview": "app/zepp_player/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://notabug.org/melianmiko/ZeppPlayer"
@@ -13,7 +16,8 @@
   "dependencies": {
     "canvas": "^2.9.3",
     "fs": "^0.0.1-security",
-    "fs-extra": "^10.1.0",
-    "tga": "^1.0.7"
+    "gif-encoder-2": "^1.0.5",
+    "tga": "^1.0.7",
+    "yargs": "^17.5.1"
   }
 }

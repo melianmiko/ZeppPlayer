@@ -13,21 +13,25 @@ export class ConsoleMock {
 
     log() {
         this._parse("log", arguments);
-        this.console.log(...arguments);
+        if(this.player.withScriptConsole)
+            this.console.log(...arguments);
     }
 
     info() {
         this._parse("info", arguments);
-        this.console.info(...arguments);
+        if(this.player.withScriptConsole)
+            this.console.info(...arguments);
     }
 
     warn() {
         this._parse("warn", arguments);
-        this.console.warn(...arguments);
+        if(this.player.withScriptConsole)
+            this.console.warn(...arguments);
     }
 
     error() {
         this._parse("error", arguments);
-        this.console.error(...arguments);
+        if(this.player.withScriptConsole)
+            this.console.error(...arguments);
     }
 }

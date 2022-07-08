@@ -2,6 +2,7 @@ import {createCanvas, loadImage, Image} from "canvas";
 import ZeppPlayer from "./ZeppPlayer.js";
 import TGA from "tga";
 import * as fs from 'fs';
+import { PersistentStorage } from "./PersistentStorage.js";
 
 export class NodeZeppPlayer extends ZeppPlayer {
     constructor() {
@@ -9,6 +10,7 @@ export class NodeZeppPlayer extends ZeppPlayer {
 
         // Create fake localStorage for persistent
         global.localStorage = {};
+        this.withScriptConsole = false;
     }
 
     getFileContent(path) {
