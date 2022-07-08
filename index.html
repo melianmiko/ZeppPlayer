@@ -10,11 +10,17 @@
 </head>
 
 <body>
-    <div class="root">
-        <canvas id="display"></canvas>
-        <div id="view_console" class="base_panel" style="display: none"></div>
-        <div id="view_edit" class="base_panel" style="display: none"></div>
-        <div id="files_view" class="base_panel"></div>
+    <div id="toolbar_top">
+        <select id="project_select"></select>
+        <span title="WF console (c)" class="material-symbols-outlined" id="toggle_console">
+            terminal
+        </span>
+        <span title="State editor (e)" class="material-symbols-outlined" id="toggle_edit">
+            edit
+        </span>
+    </div>
+
+    <div class="player_root">
         <div id="toolbar_side">
             <span title="Pause render (P)" class="material-symbols-outlined" id="toggle_pause">
                 pause
@@ -44,16 +50,16 @@
                 gif_box
             </span>
         </div>
-        <div id="toolbar_top">
-            <select id="project_select"></select>
-            <span title="WF console (c)" class="material-symbols-outlined" id="toggle_console">
-                terminal
-            </span>
-            <span title="State editor (e)" class="material-symbols-outlined" id="toggle_edit">
-                edit
-            </span>
+        <div class="root">
+            <canvas id="display"></canvas>
+            <div>
+                <div id="view_console" class="base_panel" style="display: none"></div>
+                <div id="view_edit" class="base_panel" style="display: none"></div>
+                <div id="files_view" class="base_panel"></div>
+            </div>
         </div>
     </div>
+
     <div id="version_box">
         <div>
             <span>Loading...</span>

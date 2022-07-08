@@ -20,13 +20,7 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: #111;
-    width: 100%;
-    height: 100%;
-    position: fixed;
     margin: 0;
 }
 
@@ -55,15 +49,37 @@ caption {
 .root {
     position: relative;
     display: flex;
+    flex-wrap: wrap;
+    max-width: 700px;
+    flex: 1;
+    margin-top: 8px;
+    margin-left: 8px;
+}
+
+.root > div,
+.root > canvas {
+    margin-bottom: 8px;
+    margin-right: 8px;
+}
+
+.root > canvas,
+.base_panel {
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.root > div {
+    flex: 1;
+}
+
+.player_root {
+    display: flex;
+    min-height: 400px;
 }
 
 #toolbar_top, #toolbar_side {
     background-color: #333;
     color: #fff;
     padding: 8px;
-    margin-bottom: 8px;
-    margin-right: 8px;
-    position: absolute;
     user-select: none;
 }
 
@@ -78,6 +94,7 @@ caption {
     top: 0;
     display: flex;
     flex-direction: column;
+    margin-bottom: 8px;
 }
 
 #toolbar_side > span,
@@ -110,16 +127,18 @@ select, input {
 }
 
 .base_panel {
-    margin: 0 8px;
     color: #fff;
     background-color: #222;
     overflow: auto;
     max-height: 360px;
+    min-width: 300px;
+    max-width: 490px;
+    margin-bottom: 8px;
 }
 
 #view_console {
-    width: 300px;
     font-family: monospace;
+    height: 200px;
 }
 
 #view_console > div > span {
@@ -131,8 +150,8 @@ select, input {
 }
 
 #view_edit {
-    width: 450px;
     font-size: .9em;
+    height: 250px;
 }
 
 #view_edit .material-symbols-outlined {
@@ -155,9 +174,9 @@ select, input {
 }
 
 #version_box {
-    position: absolute;
-    top: 8px;
-    left: 8px;
+    position: fixed;
+    bottom: 8px;
+    right: 8px;
     font-size: .8em;
     color: #fff;
 }

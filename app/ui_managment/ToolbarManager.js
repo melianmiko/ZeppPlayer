@@ -36,6 +36,9 @@ export class ToolbarManager {
         if(localStorage.zepp_player_overlay === "false") {
             ToolbarManager.withOverlay = false;
         }
+        if(localStorage.zepp_player_rotation !== undefined) {
+            ToolbarManager.player.rotation = parseInt(localStorage.zepp_player_rotation);
+        }
         ToolbarManager._refresh();
 
         // Bind onClick events
@@ -104,6 +107,7 @@ export class ToolbarManager {
 
     static doRotate() {
         ToolbarManager.player.rotation = (ToolbarManager.player.rotation + 90) % 360;
+        localStorage.zepp_player_rotation = ToolbarManager.player.rotation;
     }
 
     static doToggleMode() {
