@@ -52,28 +52,43 @@ async function createGif(player) {
  * Main CLI function
  */
 async function main() {
+    let success = 0, fail = 0;
+
     for(var a in argv._) {
         const project = argv._[a];
 
-        let player = new NodeZeppPlayer();
-        console.info("Processing " + project + "...");
-        await player.setProject(project);
-        await player.init();
+        try {
+            let player = new NodeZeppPlayer();
+            console.info("Processing " + project + "...");
+            await player.setProject(project);
+            await player.init();
+    
+            let output = argv.o.replace("{}", project);
+    
+            if(argv.png) {
+                const png = await player.render();
+                fs.writeFileSync(output + "/preview.png", png.toBuffer());
+                console.log("[ZeppPlayer] PNG saved to: " + output + "/preview.png");
+            }
+    
+            if(argv.gif) {
+                const gif = await createGif(player);
+                fs.writeFileSync(output + "/preview.gif", gif);
+                console.log("[ZeppPlayer] GIF saved to: " + output + "/preview.gif");
+            }
 
-        let output = argv.o.replace("{}", project);
+            player.finish();
 
-        if(argv.png) {
-            const png = await player.render();
-            fs.writeFileSync(output + "/preview.png", png.toBuffer());
-            console.log("[ZeppPlayer] PNG saved to: " + output + "/preview.png");
-        }
-
-        if(argv.gif) {
-            const gif = await createGif(player);
-            fs.writeFileSync(output + "/preview.gif", gif);
-            console.log("[ZeppPlayer] GIF saved to: " + output + "/preview.gif");
+            success++;
+        } catch(e) {
+            console.error(e);
+            fail++;
         }
     }
+
+    console.log("");
+    console.info("Processed: " + success);
+    if(fail > 0) console.warn("Failed: " + fail);
 }
 
 main();

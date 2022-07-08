@@ -179,6 +179,7 @@ select, input {
     right: 8px;
     font-size: .8em;
     color: #fff;
+    text-align: right;
 }
 
 #version_box > div {

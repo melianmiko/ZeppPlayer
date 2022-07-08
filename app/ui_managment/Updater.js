@@ -1,6 +1,9 @@
-import APP_VERSION from "../version.js";
 
 export async function initVersionUI() {
+    const pkg = await fetch("/package.json");
+    const pkgJson = await pkg.json();
+    const APP_VERSION = pkgJson.version;
+    
     const view = document.getElementById("version_box");
     const versionDiv = document.createElement("div");
     versionDiv.innerHTML = "<span>ZeppPlayer v" + APP_VERSION + 

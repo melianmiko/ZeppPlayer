@@ -166,6 +166,7 @@ export default class ZeppPlayer {
     async init() {
         await this.finish();
         
+        const extra = this.getEvalAdditionalData();
         const text = await this.getFileContent(this.path_script);
         this.script_data = text;
 
@@ -175,7 +176,7 @@ export default class ZeppPlayer {
         const env = setupEnvironment(this);
         for(let i in this.globalScopeFix) env[this.globalScopeFix[i]] = 0;
 
-        const fnc = eval(`(${Object.keys(env).toString() }) => {${text} ${this.getEvalAdditionalData()}}`)
+        const fnc = eval(`(${Object.keys(env).toString() }) => {${text}; \n${extra}\n}`)
 
         try {
             fnc(...Object.values(env));
