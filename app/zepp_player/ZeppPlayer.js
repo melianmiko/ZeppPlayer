@@ -158,6 +158,10 @@ export default class ZeppPlayer {
         this.onDestroy = [];
     }
 
+    getEvalAdditionalData() {
+        return '';
+    }
+
     async init() {
         await this.finish();
         
@@ -170,9 +174,7 @@ export default class ZeppPlayer {
         const env = setupEnvironment(this);
         for(let i in this.globalScopeFix) env[this.globalScopeFix[i]] = 0;
 
-        const fnc = eval(`(${Object.keys(env).toString() }) => {
-${text} //# sourceURL=${location.href.substring(0, location.href.length-1)}${this.path_script};
-}`)
+        const fnc = eval(`(${Object.keys(env).toString() }) => {${text} ${this.getEvalAdditionalData()}}`)
 
         try {
             fnc(...Object.values(env));

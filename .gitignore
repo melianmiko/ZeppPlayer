@@ -2,6 +2,7 @@
 /projects/*
 /lib/nginx/logs/*
 /lib/nginx/temp/*
+node_modules
 
 !/projects/demo
 !.empty

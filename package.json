@@ -1,0 +1,19 @@
+{
+  "name": "zeppplayer",
+  "version": "0.9.0",
+  "description": "Mi Band 7 preview tool",
+  "main": "app/zepp_player/cli.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://notabug.org/melianmiko/ZeppPlayer"
+  },
+  "author": "MelianMiko",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "canvas": "^2.9.3",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^10.1.0",
+    "tga": "^1.0.7"
+  }
+}

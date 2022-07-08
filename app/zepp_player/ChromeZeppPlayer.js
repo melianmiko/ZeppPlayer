@@ -1,9 +1,14 @@
+import { PersistentStorage } from "./PersistentStorage.js";
 import ZeppPlayer from "./ZeppPlayer.js";
 
 export class ChromeZeppPlayer extends ZeppPlayer {
     constructor() {
         super();
         this.rotation = 0;
+    }
+
+    getEvalAdditionalData() {
+        return `//# sourceURL=${location.href.substring(0, location.href.length-1)}${this.path_script};`
     }
 
     setupHTMLEvents(block) {
