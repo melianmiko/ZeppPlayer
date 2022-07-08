@@ -69,4 +69,92 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         if(y - sy > 30) return "bottom";
         return null;
     }
+
+    /**
+     * Load TGA image
+     * 
+     * @param {string} url URL or path
+     * @returns image
+     */
+     async _loadTGA(url) {
+        if(!this.__tga_first_use) {
+            this.onConsole("ZeppPlayer", [
+                "We're using TGA images loader. This will reduce performance."
+            ]);
+            this.__tga_first_use = true;
+        }
+        const tga = TGAImage.imageWithURL(url)
+        await tga.didLoad;
+        return tga.image;
+    }
+
+    /**
+     * Load app asset file to persistent storage,
+     * this will allow you to edit this file.
+     * 
+     * @param {string} path File path
+     */
+     getAssetText(path) {
+        if(PersistentStorage.get("appFs", path)) 
+            return PersistentStorage.get("appFs", path);
+
+        if(!this._auFlag) {
+            this.onConsole("ZeppPlayer", ["Notice that stat/open asset enulation works bad for now, "
+                + "becouse we need to fetch file from \"server\". Browser may hang."]);
+            this._auFlag = true;
+        }
+
+        const url = this.path_project + "/assets/" + path;
+        const rq = new XMLHttpRequest();
+        rq.open('GET', url, false);
+        rq.send();
+
+        this.onConsole("ZeppPlayer", ["Fetched asset", path]);
+        return rq.responseText;
+    }
+
+    async getFileContent(path) {
+        const resp = await fetch(path);
+        const text = await resp.text();
+        return text;
+    }
+
+    getAssetImage(path) {
+        return new Promise((resolve, reject) => {
+            if(this._img_cache[path] === false) {
+                reject();
+                return
+            }
+
+            if(this._img_cache[path]) {
+                resolve(this._img_cache[path]);
+                return;
+            }
+
+            const image = new Image();
+            image.onload = () => {
+                this._img_cache[path] = image;
+                this.biggestImage = [
+                    Math.max(this.biggestImage[0], image.width),
+                    Math.max(this.biggestImage[1], image.height)
+                ];
+                resolve(image);
+            };
+            image.onerror = () => {
+                this._loadTGA(this.path_project + "/assets/" + path).then((image) => {
+                    this._img_cache[path] = image;
+                    this.biggestImage = [
+                        Math.max(this.biggestImage[0], image.width),
+                        Math.max(this.biggestImage[1], image.height)
+                    ];
+                    resolve(image);
+                }).catch((e) => {
+                    console.warn("Failed to fetch image", path);
+                    this._img_cache[path] = false;
+                    reject();
+                })
+            };
+            image.src = this.path_project + "/assets/" + path;
+        })
+    }
 }

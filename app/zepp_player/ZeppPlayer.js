@@ -14,8 +14,8 @@ export default class ZeppPlayer {
     constructor() {
         // Device config
         this.screen = [192, 490];
-        this.url_script = "/watchface/watchface/index.js";
-        this.url_assets = "/watchface/assets";
+        this.path_script = "";
+        this.path_project = "";
 
         // Render stage data
         this.currentCanvas = null;
@@ -118,83 +118,34 @@ export default class ZeppPlayer {
     }
 
     getAssetImage(path) {
-        return new Promise((resolve, reject) => {
-            if(this._img_cache[path] === false) {
-                reject();
-                return
-            }
-
-            if(this._img_cache[path]) {
-                resolve(this._img_cache[path]);
-                return;
-            }
-
-            const image = new Image();
-            image.onload = () => {
-                this._img_cache[path] = image;
-                this.biggestImage = [
-                    Math.max(this.biggestImage[0], image.width),
-                    Math.max(this.biggestImage[1], image.height)
-                ];
-                resolve(image);
-            };
-            image.onerror = () => {
-                this._loadTGA(this.url_assets + "/" + path).then((image) => {
-                    this._img_cache[path] = image;
-                    this.biggestImage = [
-                        Math.max(this.biggestImage[0], image.width),
-                        Math.max(this.biggestImage[1], image.height)
-                    ];
-                    resolve(image);
-                }).catch((e) => {
-                    console.warn("Failed to fetch image", path);
-                    this._img_cache[path] = false;
-                    reject();
-                })
-            };
-            image.src = this.url_assets + "/" + path;
-        })
+        throw new Error("not overriden");
     }
 
-    /**
-     * Load app asset file to persistent storage,
-     * this will allow you to edit this file.
-     * 
-     * @param {string} path File path
-     */
     getAssetText(path) {
-        if(PersistentStorage.get("appFs", path)) 
-            return PersistentStorage.get("appFs", path);
-
-        if(!this._auFlag) {
-            this.onConsole("ZeppPlayer", ["Notice that stat/open asset enulation works bad for now, "
-                + "becouse we need to fetch file from \"server\". Browser may hang."]);
-            this._auFlag = true;
-        }
-
-        const url = this.url_assets + "/" + path;
-        const rq = new XMLHttpRequest();
-        rq.open('GET', url, false);
-        rq.send();
-
-        this.onConsole("ZeppPlayer", ["Fetched asset", path]);
-        return rq.responseText;
+        throw new Error("not overriden");
     }
 
-    async setProject(url) {
-        const resp = await fetch(url + '/app.json');
-        const appConfig = await resp.json();
+    async getFileContent(path) {
+        throw new Error("not overriden");
+    }
+
+    newCanvas() {
+        throw new Error("not overriden");
+    }
+
+    async setProject(path) {
+        const appConfig = JSON.parse(await this.getFileContent(path + '/app.json'));
         let modulePath = "/watchface/index.js";
         if(appConfig.module && appConfig.module.watchface)
             modulePath = appConfig.module.watchface.path + ".js";
-        this.url_script = url + "/" + modulePath;
-        this.url_assets = url + '/assets';
+        this.path_script = path + "/" + modulePath;
+        this.path_project = path;
 
-        log("use script", this.url_script);
+        log("use script", this.path_script);
     }
 
     async finish() {
-        if(!this.url_script) return;
+        if(!this.path_script) return;
 
         if(this.page && this.page.onDestroy) this.page.onDestroy();
         for(var a in this.onDestroy) this.onDestroy[a]();
@@ -209,9 +160,8 @@ export default class ZeppPlayer {
 
     async init() {
         await this.finish();
-
-        const resp = await fetch(this.url_script);
-        const text = await resp.text();
+        
+        const text = await this.getFileContent(this.path_script);
         this.script_data = text;
 
         // Eval this script
@@ -221,10 +171,8 @@ export default class ZeppPlayer {
         for(let i in this.globalScopeFix) env[this.globalScopeFix[i]] = 0;
 
         const fnc = eval(`(${Object.keys(env).toString() }) => {
-${text} //# sourceURL=${location.href.substring(0, location.href.length-1)}${this.url_script};
+${text} //# sourceURL=${location.href.substring(0, location.href.length-1)}${this.path_script};
 }`)
-
-        // const fnc = eval("(" + Object.keys(env).toString() + ") => {\"use strict\";" + text + "}");
 
         try {
             fnc(...Object.values(env));
@@ -269,10 +217,6 @@ ${text} //# sourceURL=${location.href.substring(0, location.href.length-1)}${thi
                 return;
             }
         }
-    }
-
-    newCanvas() {
-        throw new Error("not overriden");
     }
 
     /**
@@ -362,23 +306,5 @@ ${text} //# sourceURL=${location.href.substring(0, location.href.length-1)}${thi
             console.error("render failed with error", e, "widget", widget._export());
             throw new Error("Render failed");
         }
-    }
-
-    /**
-     * Load TGA image
-     * 
-     * @param {string} url URL or path
-     * @returns image
-     */
-    async _loadTGA(url) {
-        if(!this.__tga_first_use) {
-            this.onConsole("ZeppPlayer", [
-                "We're using TGA images loader. This will reduce performance."
-            ]);
-            this.__tga_first_use = true;
-        }
-        const tga = TGAImage.imageWithURL(url)
-        await tga.didLoad;
-        return tga.image;
     }
 }
