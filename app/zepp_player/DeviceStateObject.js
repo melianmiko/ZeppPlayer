@@ -105,7 +105,7 @@ export function createDeviceState() {
         HOUR: {
             value: 9,
             type: "number",
-            maxLength: 2,
+            maxLength: 0, // not required
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 12,
             shift: (tick) => tick % 2 == 0 ? (state.HOUR.value + 1) % 24 : null
@@ -113,7 +113,7 @@ export function createDeviceState() {
         MINUTE: {
             value: 30,
             type: "number",
-            maxLength: 2,
+            maxLength: 0, // not required
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 60,
             shift: () => (state.MINUTE.value + 5) % 60
@@ -121,7 +121,7 @@ export function createDeviceState() {
         SECOND: {
             value: 45,
             type: "number",
-            maxLength: 2,
+            maxLength: 0, // not required
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 60,
             shift: () => (state.SECOND.value + 1) % 60

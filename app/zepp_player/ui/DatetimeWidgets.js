@@ -85,19 +85,22 @@ export class DatePointer extends BaseWidget {
         const config = this.config;
 
         const ctx = canvas.getContext("2d");
-        let lastCoordinates = [0, 0];
         const timeParts = [
             ["hour_", "HOUR"],
             ["minute_", "MINUTE"],
             ["second_", "SECOND"]
         ];
 
+        let images = [];
         for(var i in timeParts) {
             let [prefix, value] = timeParts[i];
+            if(!config[prefix + "array"]) continue;
+
             value = player.getDeviceState(value, "string");
             if(config[prefix + "zero"] > 0) value = value.padStart(2, "0");
-
-            const img = await TextImageWidget.draw(player, value, 2, {
+            
+            const basementImg = await player.getAssetImage(config[prefix + "array"][0]);
+            const img = await TextImageWidget.draw(player, value, 1, {
                 font_array: config[prefix + "array"],
                 h_space: config[prefix + "space"],
                 unit_sc: config[prefix + "unit_sc"],
@@ -107,21 +110,57 @@ export class DatePointer extends BaseWidget {
             });
 
             if(img === null) continue;
+            if(config[prefix + "follow"] > 0) {
+                let [lastImg, lastPrefix, expectedWidth] = images.pop();
 
+                let offset = config[lastPrefix + "space"];
+                if(!offset) offset = 0;
+                const combinedImg = player.newCanvas();
+                combinedImg.width = lastImg.width + img.width + offset;
+                combinedImg.height = Math.max(lastImg.width, img.width);
+                const cctx = combinedImg.getContext("2d");
+                cctx.drawImage(lastImg, 0, 0);
+                cctx.drawImage(img, lastImg.width + offset, 0);
+                
+                expectedWidth += 2 * (basementImg.width + offset);
+                if(config[prefix + "unit_en"]) {
+                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                    expectedWidth += unit.width;
+                }
+                
+                images.push([combinedImg, lastPrefix, expectedWidth]);
+            } else {
+                const offset = config[prefix + "space"];
+                let expectedWidth = 2 * (basementImg.width + offset);
+                if(config[prefix + "unit_en"]) {
+                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                    expectedWidth += unit.width;
+                }
+
+                images.push([img, prefix, expectedWidth]);
+            }
+        }
+
+        for(var i in images) {
+            const [img, prefix, expWidth] = images[i];
             let x = config[prefix + "startX"];
             let y = config[prefix + "startY"];
-            if(config[prefix + "follow"] > 0) {
-                x = lastCoordinates[0];
-                y = lastCoordinates[1];
+            let px = 0;
+            switch(config[prefix + "align"]) {
+                case "center_h":
+                    px = Math.max(0, (expWidth - img.width) / 2);
+                    break;
+                case "right":
+                    px = expWidth - img.width;
             }
 
-            ctx.drawImage(img, x, y);
+            ctx.drawImage(img, x + px, y);
             this.dropEvents(player, [
                 x, y, x + img.width, y + img.height
             ])
-            lastCoordinates = [x + img.width, y];
         }
 
+        // AM\PM
         const ampmState = player.getDeviceState("AM_PM");
         const lang = player.language;
         const ampmData = ["am", "pm"];
@@ -152,6 +191,8 @@ export class DatePointer extends BaseWidget {
  */
 export class DateWidget extends BaseWidget {
     async render(canvas, player) {
+        const ctx = canvas.getContext("2d");
+
         const lang = player.language;
         const config = this.config;
         const data = [
@@ -160,13 +201,15 @@ export class DateWidget extends BaseWidget {
             ["day_", player.getDeviceState("DAY", "string"), 2]
         ];
 
-        let lastCoordinates = [0, 0];
+        let images = [];
         for(var i in data) {
             let [prefix, value, fullLength] = data[i];
+            if(!config[prefix + lang + "_array"]) continue;
+            const imgs = config[prefix + lang + "_array"];
 
+            const basementImg = await player.getAssetImage(imgs[0]);
             let img = null;
             if(config[prefix + "is_character"]) {
-                const imgs = config[prefix + lang + "_array"];
                 try {
                     img = await player.getAssetImage(imgs[value - 1]);
                 } catch (e) {
@@ -175,7 +218,7 @@ export class DateWidget extends BaseWidget {
             } else {
                 value = value.toString();
                 if(config[prefix + "zero"]) value = value.padStart(fullLength, "0");
-                img = await TextImageWidget.draw(player, value, fullLength, {
+                img = await TextImageWidget.draw(player, value, 1, {
                     font_array: config[prefix + lang + "_array"],
                     h_space: config[prefix + "space"],
                     unit_sc: config[prefix + "unit_sc"],
@@ -186,18 +229,54 @@ export class DateWidget extends BaseWidget {
             }
 
             if(!img) continue;
-
-            let x = config[prefix + "startX"],
-                y = config[prefix + "startY"];
-
             if(config[prefix + "follow"] > 0) {
-                x = lastCoordinates[0];
-                y = lastCoordinates[1];
+                let [lastImg, lastPrefix, expectedWidth] = images.pop();
+
+                let offset = config[lastPrefix + "space"];
+                if(!offset) offset = 0;
+                const combinedImg = player.newCanvas();
+                combinedImg.width = lastImg.width + img.width + offset;
+                combinedImg.height = Math.max(lastImg.width, img.width);
+                const cctx = combinedImg.getContext("2d");
+                cctx.drawImage(lastImg, 0, 0);
+                cctx.drawImage(img, lastImg.width + offset, 0);
+                
+                expectedWidth += fullLength * (basementImg.width + offset);
+                if(config[prefix + "unit_en"]) {
+                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                    expectedWidth += unit.width;
+                }
+                
+                images.push([combinedImg, lastPrefix, expectedWidth]);
+            } else {
+                const offset = config[prefix + "space"];
+                let expectedWidth = fullLength * (basementImg.width + offset);
+                if(config[prefix + "unit_en"]) {
+                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                    expectedWidth += unit.width;
+                }
+
+                images.push([img, prefix, expectedWidth]);
+            }
+        }
+
+        for(var i in images) {
+            const [img, prefix, expWidth] = images[i];
+            let x = config[prefix + "startX"];
+            let y = config[prefix + "startY"];
+            let px = 0;
+            switch(config[prefix + "align"]) {
+                case "center_h":
+                    px = Math.max(0, (expWidth - img.width) / 2);
+                    break;
+                case "right":
+                    px = expWidth - img.width;
             }
 
-            canvas.getContext("2d").drawImage(img, x, y);
-            this.dropEvents(player, [x, y, x + img.width, y + img.height]);
-            lastCoordinates = [x + img.width, y];
+            ctx.drawImage(img, x + px, y);
+            this.dropEvents(player, [
+                x, y, x + img.width, y + img.height
+            ])
         }
     }
 }
