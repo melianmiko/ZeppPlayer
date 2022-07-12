@@ -1,17 +1,22 @@
 import { setupEnvironment } from "./SyystemEnvironment.js";
 import { createDeviceState } from "./DeviceStateObject.js";
 import { PersistentStorage } from "./PersistentStorage.js";
+import ZeppPlayerConfig from "./ZeppPlayerConfig.js";
 
 function log() {
     console.log("[ZeppPlayer]", ...arguments);
 }
 
-export default class ZeppPlayer {
+export default class ZeppPlayer extends ZeppPlayerConfig {
     LEVEL_NORMAL = 1;
     LEVEL_AOD = 2;
     LEVEL_EDIT = 4;
 
+    _lastCanvas = null;
+
     constructor() {
+        super();
+
         // Device config
         this.screen = [192, 490];
         this.path_script = "";
@@ -34,16 +39,7 @@ export default class ZeppPlayer {
         // App state
         this.settings = {};
         this.onDestroy = [];
-        this.current_level = 1;
-        this.current_page = 0;
         this.biggestImage = [0, 0];
-        this.withScriptConsole = true;
-
-        // Render settings
-        this.language = "en";           // en, tc, sc
-        this.showEventZones = false;
-        this.withoutTransparency = true;
-        this.withShift = false;
 
         // Device state
         this._deviceState = createDeviceState();
@@ -54,9 +50,10 @@ export default class ZeppPlayer {
         this.onRestart = () => null;
     }
 
-    wipeSettings() {
+   wipeSettings() {
         this._deviceState = createDeviceState();
         this.settings = {};
+        PersistentStorage.wipe();
     }
 
     setPause(val) {
@@ -116,6 +113,8 @@ export default class ZeppPlayer {
                 this._deviceStateChangeEvents[type][i]()
             }
         }
+
+        this.refresh_required = true;
     }
 
     getAssetImage(path) {
@@ -223,13 +222,37 @@ export default class ZeppPlayer {
         }
     }
 
+    countWidgets() {
+        let count = 0;
+
+        for(let i in this.widgets) {
+            if(this.widgets[i].config.__content) {
+                count += this.widgets[i].config.__content.length;
+            }
+            count++;
+        }
+
+        return count;
+    }
+
     /**
      * Render current stage.
      * @returns a new canvas
      */
-    async render() {
+    async render(force=false) {
+        if(!this.refresh_required && this._lastCanvas && !force)
+            return this._lastCanvas;
+
         const canvas = this.newCanvas();
         const ctx = canvas.getContext("2d");
+
+        if(this.render_counter % 500 == 0) {
+            // Drop info
+            console.log("[ZeppPlayer] Render stats",
+                "last_refresh_request=", this.refresh_required,
+                "render_counter=", this.render_counter,
+                "widgets_count=", this.countWidgets());
+        }
 
         if(this.biggestImage[0] > this.screen[0] || this.biggestImage[1] > this.screen[1]) {
             console.info("Resize screen to", this.biggestImage);
@@ -246,6 +269,7 @@ export default class ZeppPlayer {
         }
 
         // Prepare props
+        this.refresh_required = false;
         this.currentCanvas = canvas;
         this.events = {};
 
@@ -281,11 +305,13 @@ export default class ZeppPlayer {
         }
 
         // Shifts
-        if(this.withShift && this.render_counter % 15 == 0) {
-            this.performShift();
+        if(this.withShift) {
+            if(this.render_counter % 15 == 0) this.performShift();
+            this.refresh_required = "shift";
         }
 
         this.render_counter = (this.render_counter + 1) % 3000;
+        this._lastCanvas = canvas;
 
         return canvas;
     }
@@ -311,4 +337,5 @@ export default class ZeppPlayer {
             throw new Error("Render failed");
         }
     }
+
 }

@@ -26,10 +26,12 @@ export class BaseWidget {
             for(var a in val) {
                 this.config[a] = val[a];
             }
+            this.player.refresh_required = "set_prop";
             return;
         }
 
         this.config[prop] = val;
+        this.player.refresh_required = "set_prop";
     }
 
     getProperty(key) {

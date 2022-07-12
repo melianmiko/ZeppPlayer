@@ -146,7 +146,7 @@ export class TextImageWidget extends BaseWidget {
 
         if(config.icon) {
             iconImg = await player.getAssetImage(config.icon);
-            imgs.push([icon, iconOffset]);
+            imgs.push([iconImg, iconOffset]);
         }
 
         // Pre-calculate width of text + load imgs
@@ -293,6 +293,7 @@ export class AnimationWidget extends BaseWidget {
         canvas.getContext("2d").drawImage(img, x, y);
 
         super.dropEvents(player, [x, y, x + img.widget, y + img.height]);
+        player.refresh_required = "img_anim";
     }
 }
 

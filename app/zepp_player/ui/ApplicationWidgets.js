@@ -48,10 +48,17 @@ export class GroupWidget extends BaseWidget {
             Widget = (new HuamiUIMock())._widget[type];
         }
 
+        if(typeof config !== "object") {
+            config = {};
+        }
+
+        config.__widget = type;
+        config.__id = this.widgets.length;
         config.__player = this.config.__player;
 
         const i = new Widget(config);
         this.widgets.push(i);
+        this.config.__player.refresh_required = "add_widget_group";
 
         return i;
     }

@@ -51,6 +51,7 @@ export default class HuamiUIMock {
             } else if(widgets[i].config.__content && widgets[i].config.__content.indexOf(widget) > -1) {
                 const j = widgets[i].config.__content.indexOf(widget);
                 widgets[i].config.__content.splice(j, 1);
+                this.player.refresh_required = "del_widget";
                 return;
             }
         }
@@ -75,6 +76,7 @@ export default class HuamiUIMock {
 
         const i = new Widget(config);
         this.player.widgets.push(i);
+        this.player.refresh_required = "add_widget";
 
         return i;
     }

@@ -8,9 +8,13 @@ export class ButtonWidget extends BaseWidget {
         super(config);
         this.pressed = false;
 
-        this.addEventListener("onmousedown", () => this.pressed = true);
+        this.addEventListener("onmousedown", () => {
+            this.pressed = true;
+            config.__player.refresh_required = "button"; // we changed color/bg
+        });
         this.addEventListener("onmouseup", () => {
             this.pressed = false;
+            config.__player.refresh_required = "button"; // we changed color/bg
             if(config.click_func) config.click_func();
         });
     }

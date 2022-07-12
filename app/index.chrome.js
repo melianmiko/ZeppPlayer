@@ -40,7 +40,7 @@ const start = async () => {
     const ctx = root.getContext("2d");
     const overlay = await player.getAssetImage("../../../app/overlay.png");
     const refresh = async () => {
-        if(!document.hidden && !player.uiPause) {
+        if(!document.hidden && !player.uiPause && player.refresh_required) {
             const canvas = await player.render();
             const rotation = player.rotation;
 

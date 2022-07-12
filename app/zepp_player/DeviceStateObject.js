@@ -59,9 +59,9 @@ export function createDeviceState() {
             maxLength: 4,
             getString: (t) => {
                 let km = Math.floor(t.value).toString(),
-                    dm = Math.round((t.value % 1) * 100).toString();
-
-                if(t.value < 10) dm = dm.padStart(2, "0");
+                    dm = Math.round((t.value % 1) * 100).toString().padStart(2, "0");
+                
+                if(t.value >= 10) dm = dm[0];
                 return km + "." + dm;
             },
             shift: () => (state.DISTANCE.value + 0.5) % 20
