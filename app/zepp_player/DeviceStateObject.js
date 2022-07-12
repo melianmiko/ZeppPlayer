@@ -42,7 +42,7 @@ export function createDeviceState() {
         STEP: {
             value: 4500,
             type: "number",
-            maxLength: 4,
+            maxLength: 5,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / state.STEP_TARGET.value,
             shift: (_, t) => (t.value + 500) % state.STEP_TARGET.value
@@ -56,11 +56,13 @@ export function createDeviceState() {
         DISTANCE: {
             value: 1.5,
             type: "number",
-            maxLength: 4.5, // with dot
+            maxLength: 4,
             getString: (t) => {
-                const km = Math.floor(t.value).toString(),
+                let km = Math.floor(t.value).toString(),
                     dm = Math.round((t.value % 1) * 100).toString();
-                return km + "." + dm.padStart(2, "0");
+
+                if(t.value < 10) dm = dm.padStart(2, "0");
+                return km + "." + dm;
             },
             shift: () => (state.DISTANCE.value + 0.5) % 20
         },
@@ -145,7 +147,7 @@ export function createDeviceState() {
         STAND: {
             value: 12,
             type: "number",
-            maxLength: 5,
+            maxLength: 2,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / state.STAND_TARGET.value,
             shift: (tick) => tick % 2 == 0 ? state.STAND.value % state.STAND_TARGET.value + 1 : null
@@ -197,7 +199,7 @@ export function createDeviceState() {
         WEATHER_CURRENT: {
             value: 12,
             type: "number",
-            maxLength: 3,
+            maxLength: 5,
             getString: (t) => t.value.toString(),
             getProgress: () => state.WEATHER_CURRENT_ICON.value / 29 //redir to icon
         },
@@ -212,7 +214,7 @@ export function createDeviceState() {
         UVI: {
             value: 10,
             type: "number",
-            maxLength: 3,
+            maxLength: 2,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 100,
             shift: () => state.UVI.value % 100 + 5
