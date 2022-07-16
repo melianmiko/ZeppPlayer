@@ -315,7 +315,7 @@ export class ImageStatusWidget extends BaseWidget {
         if(config.pos_y) y += config.pos_y;
 
         // Render image, if visible
-        if(player.getDeviceState(type) === true) {
+        if(player.getDeviceState(type, "boolean") === true) {
             canvas.getContext("2d").drawImage(img, x, y);
         }
 

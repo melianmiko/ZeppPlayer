@@ -96,6 +96,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 return v.getString(v);
             case "maxLength":
                 return v.maxLength;
+            case "boolean":
+                return v.getBoolean(v);
             default:
                 return v.value;
         }

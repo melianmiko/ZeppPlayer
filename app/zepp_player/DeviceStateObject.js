@@ -4,6 +4,7 @@ export function createDeviceState() {
             value: "09:30",
             type: "string",
             maxLength: 5,
+            getBoolean: (v) => v.value !== "",
             getString: (t) => t.value,
             getProgress: (t) => {
                 try {
@@ -13,28 +14,38 @@ export function createDeviceState() {
                 } catch(e) {
                     return 0;
                 }
+            },
+            shift: (tick, t) => {
+                if(tick % 2 != 0) return null;
+                const vals = ["", "06:00", "09:30", "11:00"];
+                let index = vals.indexOf(t.value);
+                if(index < 0) index = 0;
+                return vals[index + 1 % vals.length];
             }
         },
         DISCONNECT: {
             value: false,
             type: "boolean",
             maxLength: 5,
+            getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
-            shift: (tick, t) => tick % 3 == 0 ? !t.value : null
+            shift: (tick, t) => tick % 3 == 1 ? !t.value : null
         },
         DISTURB: {
             value: true,
             type: "boolean",
             maxLength: 5,
+            getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
-            shift: (tick, t) => tick % 3 == 0 ? !t.value : null
+            shift: (tick, t) => tick % 3 == 2 ? !t.value : null
         },
         LOCK: {
             value: true,
             type: "boolean",
             maxLength: 5,
+            getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
             shift: (tick, t) => tick % 3 == 0 ? !t.value : null
@@ -201,7 +212,8 @@ export function createDeviceState() {
             type: "number",
             maxLength: 3,
             getString: (t) => t.value.toString(),
-            getProgress: () => state.WEATHER_CURRENT_ICON.value / 29 //redir to icon
+            getProgress: () => state.WEATHER_CURRENT_ICON.value / 29, //redir to icon
+            shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
         },
         HUMIDITY: {
             value: 10,
