@@ -1,6 +1,6 @@
 import { GroupWidget, DelegateWidget } from "./ApplicationWidgets.js"
 import { DatePointer, DateWidget, TimePointer, TimeWidget, WeekdayWidget } from "./DatetimeWidgets.js";
-import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, TextWidget } from "./DrawingWidgets.js";
+import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget, TextWidget } from "./DrawingWidgets.js";
 import { EditableBackground, EditGroupWidget } from "./EditableWatchfaceWidgets.js";
 import { ButtonWidget } from "./FormWidgets.js";
 import { AnimationWidget, ClickableImageWidget, ImageProgressWidget, ImageStatusWidget, ImageWidget, LevelWidget, MissingWidget, PointerWidget, TextImageWidget } from "./ImagingWidgets.js";
@@ -16,6 +16,7 @@ export default class HuamiUIMock {
         IMG_ANIM: AnimationWidget,
         GROUP: GroupWidget,
         FILL_RECT: FillRectWidget,
+        STROKE_RECT: StrokeRectWidget,
         IMG_WEEK: WeekdayWidget,
         IMG_TIME: TimeWidget,
         IMG_DATE: DateWidget,
@@ -44,15 +45,21 @@ export default class HuamiUIMock {
 
     deleteWidget(widget) {
         const widgets = this.player.widgets;
+        const targetId = widget.config.__id;
         for(var i in widgets) {
-            if(widgets[i].config.__id == widget.__id) {
+            if(widgets[i].config.__id == targetId) {
                 widgets.splice(i, 1);
-                return;
-            } else if(widgets[i].config.__content && widgets[i].config.__content.indexOf(widget) > -1) {
-                const j = widgets[i].config.__content.indexOf(widget);
-                widgets[i].config.__content.splice(j, 1);
                 this.player.refresh_required = "del_widget";
                 return;
+            } else if(widgets[i].config.__content) {
+                const groupContent = widgets[i].config.__content;
+                for(var j in groupContent) {
+                    if(groupContent[j].config.__id == targetId) {
+                        widgets[i].config.__content.splice(j, 1);
+                        this.player.refresh_required = "del_widget";
+                        return;
+                    }
+                }
             }
         }
 

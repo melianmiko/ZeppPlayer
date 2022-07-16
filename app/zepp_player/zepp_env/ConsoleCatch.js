@@ -5,10 +5,12 @@ export class ConsoleMock {
     }
 
     _parse(level, args) {
-        this.player.onConsole(level, args);
-        if(args[0] instanceof Error) {
-            this.player.handleScriptError(args[0]);
-        }
+        try {
+            this.player.onConsole(level, args);
+            if(args[0] instanceof Error) {
+                this.player.handleScriptError(args[0]);
+            }
+        } catch(e) {}
     }
 
     log() {
