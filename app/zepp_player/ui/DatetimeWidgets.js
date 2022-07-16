@@ -117,7 +117,7 @@ export class DatePointer extends BaseWidget {
                 if(!offset) offset = 0;
                 const combinedImg = player.newCanvas();
                 combinedImg.width = lastImg.width + img.width + offset;
-                combinedImg.height = Math.max(lastImg.width, img.width);
+                combinedImg.height = Math.max(lastImg.height, img.height);
                 const cctx = combinedImg.getContext("2d");
                 cctx.drawImage(lastImg, 0, 0);
                 cctx.drawImage(img, lastImg.width + offset, 0);
@@ -236,7 +236,7 @@ export class DateWidget extends BaseWidget {
                 if(!offset) offset = 0;
                 const combinedImg = player.newCanvas();
                 combinedImg.width = lastImg.width + img.width + offset;
-                combinedImg.height = Math.max(lastImg.width, img.width);
+                combinedImg.height = Math.max(lastImg.height, img.height);
                 const cctx = combinedImg.getContext("2d");
                 cctx.drawImage(lastImg, 0, 0);
                 cctx.drawImage(img, lastImg.width + offset, 0);
