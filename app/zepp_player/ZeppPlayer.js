@@ -277,7 +277,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const postRender = [];
         for(let i in this.widgets) {
             const widget = this.widgets[i];
-            ctx.globalAlpha = widget.config.alpha ? widget.config.alpha / 255 : 1;
 
             if(widget._renderStage === "post") {
                 postRender.push(widget);
@@ -326,7 +325,11 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     async renderWidget(widget, canvas) {
+        const ctx = canvas.getContext("2d");
         const show_level = widget.config.show_level;
+
+        ctx.globalAlpha = widget.config.alpha !== undefined ? widget.config.alpha / 255 : 1;
+
         if((show_level & this.current_level) == 0 && show_level) return;
         if(!widget.config.visible) return;
 
