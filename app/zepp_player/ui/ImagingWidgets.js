@@ -155,7 +155,9 @@ export class TextImageWidget extends BaseWidget {
             imgs.push([invalid, offset]);
         } else for(let i in text) {
             let img = null;
-            if(isNaN(text[i] || isNaN(parseInt(text[i])))) {
+            if(text[i] == "-") {
+                img = await player.getAssetImage(config.negative_image);
+            } else if(isNaN(text[i] || isNaN(parseInt(text[i])))) {
                 img = await player.getAssetImage(config.dot_image);
             } else {
                 i = parseInt(text[i]);

@@ -199,7 +199,7 @@ export function createDeviceState() {
         WEATHER_CURRENT: {
             value: 12,
             type: "number",
-            maxLength: 5,
+            maxLength: 3,
             getString: (t) => t.value.toString(),
             getProgress: () => state.WEATHER_CURRENT_ICON.value / 29 //redir to icon
         },

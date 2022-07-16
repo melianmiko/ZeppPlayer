@@ -187,8 +187,8 @@ select {
 #view_edit > div {
     display: flex;
     align-items: center;
-    padding: 4px 0;
     margin-right: 8px;
+    line-height: 34px;
 }
 
 #version_box {
