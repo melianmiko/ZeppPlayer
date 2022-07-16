@@ -2,6 +2,7 @@ import { setupEnvironment } from "./SyystemEnvironment.js";
 import { createDeviceState } from "./DeviceStateObject.js";
 import { PersistentStorage } from "./PersistentStorage.js";
 import ZeppPlayerConfig from "./ZeppPlayerConfig.js";
+import Overlay from "./ui/Overlay.js";
 
 function log() {
     console.log("[ZeppPlayer]", ...arguments);
@@ -309,6 +310,11 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             this.refresh_required = "shift";
         }
 
+        // Overlay
+        if(this.render_overlay) {
+            await Overlay.draw(this, canvas);
+        }
+
         this.render_counter = (this.render_counter + 1) % 3000;
         this._lastCanvas = canvas;
 
@@ -339,6 +345,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             console.error("render failed with error", e, "widget", widget._export());
             throw new Error("Render failed");
         }
+
+        ctx.globalAlpha = 1;
     }
 
 }

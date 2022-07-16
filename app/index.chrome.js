@@ -39,7 +39,6 @@ const start = async () => {
 
     // Render in cycle
     const ctx = root.getContext("2d");
-    const overlay = await player.getAssetImage("../../../app/overlay.png");
     const refresh = async () => {
         if(!document.hidden && !player.uiPause && player.refresh_required) {
             const canvas = await player.render();
@@ -50,12 +49,11 @@ const start = async () => {
             if(root.width != w) root.width = w;
             if(root.height != h) root.height = h;
 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.translate(w / 2, h / 2);
             ctx.rotate(rotation * Math.PI / 180);
             ctx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
-            if(ToolbarManager.withOverlay) 
-                ctx.drawImage(overlay, -canvas.width / 2, -canvas.height / 2);
             ctx.restore();
         } 
         window.requestAnimationFrame(refresh);

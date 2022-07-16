@@ -5,6 +5,7 @@ export default class ZeppPlayerConfig {
     _renderEventZones = false;
     _renderWithoutTransparency = true;
     _renderAutoShift = false;
+    _renderOverlay = true;
     _renderLanguage = "en";
 
     withScriptConsole = true;
@@ -15,6 +16,15 @@ export default class ZeppPlayerConfig {
 
     set current_level(val) {
         this._currentRenderLevel = val;
+        this.refresh_required = true; 
+    }
+
+    get render_overlay() {
+        return this._renderOverlay;
+    }
+
+    set render_overlay(val) {
+        this._renderOverlay = val;
         this.refresh_required = true; 
     }
 

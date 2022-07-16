@@ -3,7 +3,6 @@ import GifRecorder from "./GifRecorder.js";
 
 export class ToolbarManager {
     static player = null;
-    static withOverlay = true;
 
     // UI Elements
     static toggleMode1 = document.getElementById("mode_1");
@@ -33,9 +32,6 @@ export class ToolbarManager {
         }
         if(localStorage.zepp_player_console === "true") {
             ToolbarManager.viewConsole.style.display = "";
-        }
-        if(localStorage.zepp_player_overlay === "false") {
-            ToolbarManager.withOverlay = false;
         }
         if(localStorage.zepp_player_rotation !== undefined) {
             ToolbarManager.player.rotation = parseInt(localStorage.zepp_player_rotation);
@@ -105,7 +101,7 @@ export class ToolbarManager {
             [ToolbarManager.toggleEventZones, ToolbarManager.player.showEventZones],
             [ToolbarManager.togglePause, ToolbarManager.player.uiPause],
             [ToolbarManager.toggleShift, ToolbarManager.player.withShift],
-            [ToolbarManager.toggleFrames, ToolbarManager.withOverlay],
+            [ToolbarManager.toggleFrames, ToolbarManager.player.render_overlay],
             [ToolbarManager.toggleMode1, ToolbarManager.player.current_level == 1],
             [ToolbarManager.toggleMode2, ToolbarManager.player.current_level == 2],
             [ToolbarManager.toggleMode4, ToolbarManager.player.current_level == 4]
@@ -130,8 +126,7 @@ export class ToolbarManager {
     }
 
     static doToggleFrames() {
-        ToolbarManager.withOverlay = !ToolbarManager.withOverlay;
-        localStorage.zepp_player_overlay = ToolbarManager.withOverlay;
+        ToolbarManager.player.render_overlay = !ToolbarManager.player.render_overlay;
         ToolbarManager._refresh();
         ToolbarManager.player.refresh_required = "ui";
     }
