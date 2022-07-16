@@ -44,6 +44,7 @@ caption {
 
 #display {
     background-color: #000;
+    height: fit-content;
 }
 
 .root {
@@ -60,11 +61,6 @@ caption {
 .root > canvas {
     margin-bottom: 8px;
     margin-right: 8px;
-}
-
-.root > canvas,
-.base_panel {
-    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.1);
 }
 
 .root > div {
@@ -155,6 +151,7 @@ select {
     max-width: 490px;
     margin-bottom: 8px;
     border-radius: 5px;
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.1);
 }
 
 #view_console {

@@ -120,6 +120,7 @@ export class ToolbarManager {
     static doRotate() {
         ToolbarManager.player.rotation = (ToolbarManager.player.rotation + 90) % 360;
         localStorage.zepp_player_rotation = ToolbarManager.player.rotation;
+        ToolbarManager.player.refresh_required = "ui";
     }
 
     static doToggleMode(val) {
@@ -132,6 +133,7 @@ export class ToolbarManager {
         ToolbarManager.withOverlay = !ToolbarManager.withOverlay;
         localStorage.zepp_player_overlay = ToolbarManager.withOverlay;
         ToolbarManager._refresh();
+        ToolbarManager.player.refresh_required = "ui";
     }
 
     static doTogglePause() {
