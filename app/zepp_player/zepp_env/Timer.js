@@ -18,7 +18,8 @@ export default class TimerMock {
         this.timers[id] = -1;
 
         ctx.timers[id] = setTimeout(() => {
-            ctx.timers[id] = setInterval(() => {
+            if(delay > 0) callable.apply(this, option);
+            if(period > 0) ctx.timers[id] = setInterval(() => {
                 if(player.uiPause) return;
                 callable.apply(this, option);
             }, period);
@@ -28,7 +29,6 @@ export default class TimerMock {
     }
     
     stopTimer(timerID) {
-        console.log("stop timer", this.timers[timerID]);
         clearInterval(this.timers[timerID]);
     }
 }

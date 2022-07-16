@@ -53,7 +53,7 @@ export class GroupWidget extends BaseWidget {
         }
 
         config.__widget = type;
-        config.__id = this.widgets.length;
+        config.__id = (this.config.__id+1 << 8) + this.widgets.length;
         config.__player = this.config.__player;
 
         const i = new Widget(config);
