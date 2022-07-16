@@ -21,6 +21,7 @@ const start = async () => {
 
     // Make storage available from browser console
     window.PersistentStorage = PersistentStorage;
+    window.player = player;
 
     // Project picker
     const picker = new ProjectPicker(player);

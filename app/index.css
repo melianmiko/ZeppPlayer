@@ -79,7 +79,6 @@ caption {
 #toolbar_top, #toolbar_side {
     background-color: #333;
     color: #fff;
-    padding: 8px;
     user-select: none;
 }
 
@@ -87,26 +86,39 @@ caption {
     left: 0;
     bottom: 100%;
     display: flex;
+    padding: 6px;
+}
+
+hr {
+    margin: 4px;
+    border: none;
+    border-bottom: thin #555 solid;
+    border-left: thin #555 solid;
 }
 
 #toolbar_side {
     right: 100%;
     top: 0;
     display: flex;
+    padding: 0 6px 6px 2px;
     flex-direction: column;
     margin-bottom: 8px;
+    border-radius: 0 0 16px 0; 
+    height: fit-content;
 }
 
 #toolbar_side > span,
 #toolbar_top > span {
     max-width: 24px;
     max-height: 24px;
-    padding: 4px;
+    padding: 6px;
+    margin: 2px;
     cursor: pointer;
     overflow: hidden;
     transition: color .5s, background-color .5s;
     background-color: transparent;
     font-size: 24px;
+    border-radius: 8px;
 }
 
 #toolbar_top > span:hover,
@@ -116,7 +128,8 @@ caption {
 
 #toolbar_top > span.active,
 #toolbar_side > span.active {
-    color: #09f;
+    color: rgb(135, 207, 255);
+    background-color: #282828;
 }
 
 select, input {
@@ -124,6 +137,13 @@ select, input {
     border: none;
     color: #fff;
     padding: 6px;
+    box-sizing: border-box;
+    margin: 4px;
+    border-radius: 8px;
+}
+
+select {
+    height: 34px;
 }
 
 .base_panel {
@@ -134,11 +154,13 @@ select, input {
     min-width: 300px;
     max-width: 490px;
     margin-bottom: 8px;
+    border-radius: 5px;
 }
 
 #view_console {
     font-family: monospace;
     height: 200px;
+    padding: 5px 10px;
 }
 
 #view_console > div > span {
@@ -151,7 +173,7 @@ select, input {
 
 #view_edit {
     font-size: .9em;
-    height: 250px;
+    height: 300px;
 }
 
 #view_edit .material-symbols-outlined {
@@ -169,7 +191,7 @@ select, input {
 #view_edit > div {
     display: flex;
     align-items: center;
-    padding: 8px 0;
+    padding: 4px 0;
     margin-right: 8px;
 }
 
