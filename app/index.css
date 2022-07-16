@@ -164,7 +164,15 @@ select {
 }
 
 #view_console .type {
-    opacity: .5;
+    color: #999;
+}
+
+#view_console .SystemWarning {
+    color: #f90;
+}
+
+#view_console .ZeppPlayer {
+    color: #09f;
 }
 
 #view_edit {
@@ -217,4 +225,25 @@ a:link, a:visited {
 #version_box .update:link, .update:visited {
     color: #f90;
     border-bottom: thin #f90 dotted;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+    background: #222; 
+    /* border-radius: 0 5px 5px 0; */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #333; 
+    border-radius: 5px;
+}
+
+@media all and (max-width: 550px) {
+    .bigscreen {
+        display: none;
+    }
 }

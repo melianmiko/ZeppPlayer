@@ -91,7 +91,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         const tga = TGAImage.imageWithURL(url);
         await tga.didLoad;
         if(tga._imageType !== 1 || tga._colorMapDepth !== 32) {
-            this.onConsole("ZeppPlayer", [`WARNING: file ${url.substring(url.lastIndexOf("/") + 1)}, ` +
+            this.onConsole("SystemWarning", [`TGA file ${url.substring(url.lastIndexOf("/") + 1)} has ` +
                 `invalid colormap depth, ${tga._colorMapDepth} != 32. This `+
                 `file won't be accepted by ZeppOS.`]);
         }

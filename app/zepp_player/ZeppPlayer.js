@@ -181,6 +181,10 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         try {
             fnc(...Object.values(env));
 
+            if(!env.__$$hmAppManager$$__.currentApp.current.module) {
+                this.onConsole("SystemWarning", ["Page/Watchface don't exported. This app won't work on real device."])
+            }
+
             if(this.page.init_view) this.page.init_view();
             else if(this.page.build) this.page.build();
             else if(this.page.onInit) this.page.onInit();

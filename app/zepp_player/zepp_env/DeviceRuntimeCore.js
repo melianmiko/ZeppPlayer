@@ -21,9 +21,11 @@ export default class DeviceRuntimeCoreMock {
 
     WatchFace(config) {
         this.player.page = config;
+        return config;
     }
 
     Page(config) {
         this.player.page = config;
+        return config;
     }
 }

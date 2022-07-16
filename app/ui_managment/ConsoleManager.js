@@ -19,9 +19,8 @@ export class ConsoleManager {
     write(level, data) {
         const div = document.createElement("div");
         const lv = document.createElement("span");
-        lv.className = "type";
+        lv.className = "type " + level;
         lv.innerText = level;
-        if(level == "ZeppPlayer") lv.style.color = "#0099ff";
         div.appendChild(lv);
 
         for(var i in data) {
