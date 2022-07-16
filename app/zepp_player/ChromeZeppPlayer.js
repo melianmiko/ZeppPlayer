@@ -62,7 +62,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
                 y = e.clientY - rect.top;
         }
         
-        return [x, y];
+        return [Math.floor(x), Math.floor(y)];
     }
 
     _getSwipeState(x, y) {
@@ -88,8 +88,13 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             ]);
             this.__tga_first_use = true;
         }
-        const tga = TGAImage.imageWithURL(url)
+        const tga = TGAImage.imageWithURL(url);
         await tga.didLoad;
+        if(tga._imageType !== 1 || tga._colorMapDepth !== 32) {
+            this.onConsole("ZeppPlayer", [`WARNING: file ${url.substring(url.lastIndexOf("/") + 1)}, ` +
+                `invalid colormap depth, ${tga._colorMapDepth} != 32. This `+
+                `file won't be accepted by ZeppOS.`]);
+        }
         return tga.image;
     }
 
