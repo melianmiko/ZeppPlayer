@@ -6,12 +6,19 @@ import { initVersionUI } from "./ui_managment/Updater.js";
 import { ChromeZeppPlayer } from "./zepp_player/ChromeZeppPlayer.js";
 import { PersistentStorage } from "./zepp_player/PersistentStorage.js";
 
+const DISPLAY_FPS = 25;
+
+const DISPLAY_DELTA = 1000 / DISPLAY_FPS;
+
 /**
  * Start all
  */
 const start = async () => {
     const root = document.getElementById("display");
+    const ctx = root.getContext("2d");
+
     const player = new ChromeZeppPlayer();
+    player.system_fps = DISPLAY_FPS;
 
     initVersionUI();
 
@@ -38,27 +45,43 @@ const start = async () => {
     player.setupHTMLEvents(root);
 
     // Render in cycle
-    const ctx = root.getContext("2d");
+    let lastRefresh = 0;
+
     const refresh = async () => {
-        if(!document.hidden && !player.uiPause && player.refresh_required) {
-            const canvas = await player.render();
-            const rotation = player.rotation;
+        if(Date.now() - lastRefresh >= DISPLAY_DELTA) {
+            const start = Date.now();
+            await performRefresh();
+            const end = Date.now();
 
-            let [w, h] = [canvas.width, canvas.height];
-            if(rotation % 180 == 90) [h, w] = [w, h];
-            if(root.width != w) root.width = w;
-            if(root.height != h) root.height = h;
+            if(end-start > DISPLAY_DELTA && player.render_counter > 100) {
+                console.warn("Too long render time, ", end-start);
+            }
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            ctx.translate(w / 2, h / 2);
-            ctx.rotate(rotation * Math.PI / 180);
-            ctx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
-            ctx.restore();
-        } 
-        window.requestAnimationFrame(refresh);
+            lastRefresh = end;
+        }
+        requestAnimationFrame(refresh);
     };
-    refresh();
+    
+    const performRefresh = async () => {
+        if(document.hidden || player.uiPause || !player.refresh_required) return;
+
+        const canvas = await player.render();
+        const rotation = player.rotation;
+
+        let [w, h] = [canvas.width, canvas.height];
+        if(rotation % 180 == 90) [h, w] = [w, h];
+        if(root.width != w) root.width = w;
+        if(root.height != h) root.height = h;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate(rotation * Math.PI / 180);
+        ctx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
+        ctx.restore();
+    }
+
+        refresh();
 };
 
 start();

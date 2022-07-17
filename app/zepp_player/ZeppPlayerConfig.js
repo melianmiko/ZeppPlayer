@@ -1,5 +1,6 @@
 export default class ZeppPlayerConfig {
     refresh_required = true;            // Must screen be refreshed
+    system_fps = 60;
 
     _currentRenderLevel = 1;
     _renderEventZones = false;

@@ -36,6 +36,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.globalScopeFix = [];
         this.mustRestart = false;
         this.uiPause = false;
+        this.initTime = 0;
 
         // App state
         this.settings = {};
@@ -193,6 +194,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             else console.error("no supported entry function");
        
             this.setPause(false);
+            this.initTime = Date.now();
 
         } catch(e) {
             this.handleScriptError(e);
@@ -258,7 +260,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             console.log("[ZeppPlayer] Render stats",
                 "last_refresh_request=", this.refresh_required,
                 "render_counter=", this.render_counter,
-                "widgets_count=", this.countWidgets());
+                "widgets_count=", this.countWidgets(),
+                "from_init=", Date.now()-this.initTime);
         }
 
         if(this.biggestImage[0] > this.screen[0] || this.biggestImage[1] > this.screen[1]) {
