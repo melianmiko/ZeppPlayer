@@ -2,6 +2,8 @@ import { PersistentStorage } from "./PersistentStorage.js";
 import ZeppPlayer from "./ZeppPlayer.js";
 
 export class ChromeZeppPlayer extends ZeppPlayer {
+    pathOverlay = "../../../app/overlay.png";
+
     constructor() {
         super();
         this.rotation = 0;
@@ -104,7 +106,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
      * 
      * @param {string} path File path
      */
-     getAssetText(path) {
+     getAssetText(path, noprefix=false) {
         if(PersistentStorage.get("appFs", path)) 
             return PersistentStorage.get("appFs", path);
 
@@ -114,7 +116,8 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             this._auFlag = true;
         }
 
-        const url = this.path_project + "/assets/" + path;
+        let url = this.path_project + "/assets/" + path;
+        if(noprefix) url = path;
         const rq = new XMLHttpRequest();
         rq.open('GET', url, false);
         rq.send();

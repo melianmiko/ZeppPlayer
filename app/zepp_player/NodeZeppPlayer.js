@@ -3,8 +3,14 @@ import ZeppPlayer from "./ZeppPlayer.js";
 import TGA from "tga";
 import * as fs from 'fs';
 import { PersistentStorage } from "./PersistentStorage.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export class NodeZeppPlayer extends ZeppPlayer {
+    pathOverlay = __dirname + "/../overlay.png";
+
     constructor() {
         super();
 
@@ -34,13 +40,13 @@ export class NodeZeppPlayer extends ZeppPlayer {
         return fs.readFileSync(fullPath, "utf8");
     }
 
-    async getAssetImage(path) {
+    async getAssetImage(path, noprefix=false) {
         const fullPath = this.path_project + "/assets/" + path;
         try {
-            const image = await loadImage(fullPath);
+            const image = await loadImage(noprefix ? path : fullPath);
             return image;
         } catch(e) {
-            return await this._loadTga(fullPath);
+            return await this._loadTga(noprefix ? path : fullPath);
         }
     }
 

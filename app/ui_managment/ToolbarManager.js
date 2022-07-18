@@ -13,6 +13,7 @@ export class ToolbarManager {
     static toggleShift = document.getElementById("toggle_shift");
     static toggleConsole = document.getElementById("toggle_console");
     static toggleEditor = document.getElementById("toggle_edit");
+    static toggleExplorer = document.getElementById("toggle_explorer");
     static toggleFrames = document.getElementById("toggle_overlay");
     
     static doReloadBtn = document.getElementById("do_reload");
@@ -22,6 +23,7 @@ export class ToolbarManager {
 
     static viewConsole = document.getElementById("view_console");
     static viewEditor = document.getElementById("view_edit");
+    static viewExplorer = document.getElementById("view_explorer");
 
     static init(player) {
         ToolbarManager.player = player;
@@ -32,6 +34,9 @@ export class ToolbarManager {
         }
         if(localStorage.zepp_player_console === "true") {
             ToolbarManager.viewConsole.style.display = "";
+        }
+        if(localStorage.zepp_player_explorer === "true") {
+            ToolbarManager.viewExplorer.style.display = "";
         }
         if(localStorage.zepp_player_rotation !== undefined) {
             ToolbarManager.player.rotation = parseInt(localStorage.zepp_player_rotation);
@@ -49,6 +54,7 @@ export class ToolbarManager {
         ToolbarManager.doReloadBtn.onclick = ToolbarManager.doReload;
         ToolbarManager.toggleConsole.onclick = ToolbarManager.doToggleConsole;
         ToolbarManager.toggleEditor.onclick = ToolbarManager.doToggleEdit;
+        ToolbarManager.toggleExplorer.onclick = ToolbarManager.DoToggleExplorer;
         ToolbarManager.doGifBtn.onclick = ToolbarManager.doGif;
         ToolbarManager.doRotateBtn.onclick = ToolbarManager.doRotate;
         ToolbarManager.toggleFrames.onclick = ToolbarManager.doToggleFrames;
@@ -98,6 +104,7 @@ export class ToolbarManager {
         const data = [
             [ToolbarManager.toggleEditor, localStorage.zepp_player_editor === "true"],
             [ToolbarManager.toggleConsole, localStorage.zepp_player_console === "true"],
+            [ToolbarManager.toggleExplorer, localStorage.zepp_player_explorer === "true"],
             [ToolbarManager.toggleEventZones, ToolbarManager.player.showEventZones],
             [ToolbarManager.togglePause, ToolbarManager.player.uiPause],
             [ToolbarManager.toggleShift, ToolbarManager.player.withShift],
@@ -173,6 +180,13 @@ export class ToolbarManager {
         const newState = localStorage.zepp_player_editor !== "true";
         ToolbarManager.viewEditor.style.display = newState ? "" : "none";
         localStorage.zepp_player_editor = newState;
+        ToolbarManager._refresh();
+    }
+
+    static DoToggleExplorer() {
+        const newState = localStorage.zepp_player_explorer !== "true";
+        ToolbarManager.viewExplorer.style.display = newState ? "" : "none";
+        localStorage.zepp_player_explorer = newState;
         ToolbarManager._refresh();
     }
 

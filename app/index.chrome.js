@@ -1,5 +1,6 @@
 import { ConsoleManager } from "./ui_managment/ConsoleManager.js";
 import { EditorManager } from "./ui_managment/EditorManager.js";
+import ExplorerManager from "./ui_managment/ExplorerManager.js";
 import { ProjectPicker } from "./ui_managment/ProjectPicker.js";
 import { ToolbarManager } from "./ui_managment/ToolbarManager.js";
 import { initVersionUI } from "./ui_managment/Updater.js";
@@ -25,6 +26,7 @@ const start = async () => {
     ToolbarManager.init(player);
     EditorManager.init(player);
     ConsoleManager.init(player);
+    ExplorerManager.init(player);
 
     // Make storage available from browser console
     window.PersistentStorage = PersistentStorage;

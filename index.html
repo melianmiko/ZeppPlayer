@@ -18,6 +18,9 @@
         <span title="State editor (e)" class="material-symbols-outlined bigscreen" id="toggle_edit">
             edit
         </span>
+        <span title="Object explorer" class="material-symbols-outlined bigscreen" id="toggle_explorer">
+            explorer
+        </span>
         <hr class="bigscreen" />
         <span title="Create GIF" class="material-symbols-outlined" id="do_gif">
             gif_box
@@ -64,6 +67,12 @@
             <div class="bigscreen">
                 <div id="view_console" class="base_panel" style="display: none"></div>
                 <div id="view_edit" class="base_panel" style="display: none"></div>
+                <div id="view_explorer" class="base_panel" style="display: none">
+                    <div>
+                        <button id="explorer_reload">Refresh</button>
+                    </div>
+                    <div id="explorer_data"></div>
+                </div>
                 <div id="files_view" class="base_panel"></div>
             </div>
         </div>

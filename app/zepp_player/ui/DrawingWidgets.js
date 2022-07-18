@@ -247,7 +247,7 @@ export class ArcProgressWidget extends BaseWidget {
 
     async render(canvas, player) {
         const config = this.config;
-        if(!config.color) return;
+        if(config.color === undefined) return;
         
         let level = config.level / 100;
         if(config.type) level = player.getDeviceState(config.type, "progress");

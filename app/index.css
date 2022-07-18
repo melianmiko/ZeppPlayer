@@ -127,11 +127,11 @@ hr {
     background-color: #282828;
 }
 
-select, input {
+select, input, button {
     background-color: #444;
     border: none;
     color: #fff;
-    padding: 6px;
+    padding: 6px 12px;
     box-sizing: border-box;
     margin: 4px;
     border-radius: 8px;
@@ -240,6 +240,48 @@ a:link, a:visited {
 ::-webkit-scrollbar-thumb {
     background-color: #333; 
     border-radius: 5px;
+}
+
+#view_explorer details {
+    margin-left: 8px;
+}
+
+#view_explorer br {
+    height: 0.25em;
+}
+
+#view_explorer summary {
+    padding: 4px 8px;
+    border-bottom: thin #1f1f1f solid;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+#view_explorer summary aside {
+    color: #999;
+    display: inline;
+}
+
+#view_explorer summary aside.userDefined {
+    color:rgb(135, 207, 255);
+}
+
+#view_explorer .prop_row {
+    display: flex;
+    font-size: .8em;
+}
+
+#view_explorer .prop_row strong {
+    min-width: 150px;
+}
+
+#view_explorer .prop_row span {
+    color:rgb(135, 207, 255);
+}
+
+#view_explorer .prop_row > * {
+    padding: 2px 4px;
+    font-size: .95em;
 }
 
 @media all and (max-width: 550px) {

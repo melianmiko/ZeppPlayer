@@ -1,5 +1,8 @@
 export class HmAppMock {
-    startApp() {}
+    startApp(options) {
+        console.log("startApp", options);
+    }
+
     gotoPage() {}
     reloadPage() {}
     setLayerX() {}
