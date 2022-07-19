@@ -196,7 +196,7 @@ export class DateWidget extends BaseWidget {
         const lang = player.language;
         const config = this.config;
         const data = [
-            ["year_", player.getDeviceState("YEAR", "string"), 4],
+            ["year_", player.getDeviceState("YEAR", "string"), 2],
             ["month_", player.getDeviceState("MONTH", "string"), 2],
             ["day_", player.getDeviceState("DAY", "string"), 2]
         ];
@@ -217,7 +217,11 @@ export class DateWidget extends BaseWidget {
                 }
             } else {
                 value = value.toString();
-                if(config[prefix + "zero"]) value = value.padStart(fullLength, "0");
+                if(config[prefix + "zero"]) 
+                    value = value
+                        .padStart(fullLength, "0")
+                        .substring(value.length - fullLength, value.length);
+
                 img = await TextImageWidget.draw(player, value, 1, {
                     font_array: config[prefix + lang + "_array"],
                     h_space: config[prefix + "space"],
