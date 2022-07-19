@@ -39,7 +39,7 @@ export default class TimerMock {
     }
     
     stopTimer(timerID) {
-        if(this.timers[timerID] === null) return;
+        if(!this.timers[timerID]) return;
         if(this.timers[timerID].timeout > -1) 
             clearTimeout(this.timers[timerID].timeout);
         if(this.timers[timerID].interval > -1)
