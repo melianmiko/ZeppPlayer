@@ -52,7 +52,9 @@ export class NodeZeppPlayer extends ZeppPlayer {
 
     _loadTga(fullPath) {
         return new Promise((resolve, reject) => {
-            const tga = new TGA(fs.readFileSync(fullPath));
+            const tga = new TGA(fs.readFileSync(fullPath), {
+                dontFixAlpha: true
+            });
 
             const canvas = createCanvas(tga.width, tga.height);
             const ctx = canvas.getContext("2d");

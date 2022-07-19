@@ -17,6 +17,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     pathOverlay = null;
     zeppEnv = null;
 
+    withStagingDump = false;
+    stages = [];
+
     constructor() {
         super();
 
@@ -286,6 +289,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.refresh_required = false;
         this.currentCanvas = canvas;
         this.events = {};
+        this.stages = [];
 
         // Render all widgets
         const postRender = [];
@@ -360,5 +364,20 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         ctx.globalAlpha = 1;
+
+        if(this.withStagingDump) {
+            // Stage data
+            const st = this.newCanvas();
+            st.width = canvas.width;
+            st.height = canvas.height;
+            st.getContext("2d").drawImage(canvas, 0, 0);
+
+            console.log("[ZeppPlaye] Do stage dump", 
+                        this.stages.length, 
+                        widget.constructor.name, 
+                        widget._getPlainConfig());
+
+            this.stages.push(st);
+        }
     }
 }

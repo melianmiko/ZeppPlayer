@@ -17,6 +17,16 @@ export class BaseWidget {
         return obj;
     }
 
+    _getPlainConfig() {
+        const out = {};
+
+        for(var i in this.config) {
+            if(i[0] !== "_") out[i] = this.config[i];
+        }
+
+        return out;
+    }
+
     setProperty(prop, val) {
         if(prop == undefined) {
             console.warn("This prop was missing in simulator. Please, debug me...");

@@ -12,6 +12,10 @@ const argv = yargs(hideBin(process.argv))
         describe: "With GIF preview",
         boolean: true
     })
+    .option('stage', {
+        describe: "With render stages export (debug feature)",
+        boolean: true
+    })
     .option('png', {
         describe: "With PNG preview",
         default: true,
@@ -62,6 +66,8 @@ async function main() {
             console.info("Processing " + project + "...");
             await player.setProject(project);
             await player.init();
+
+            player.withStagingDump = argv.stage;
     
             let output = argv.o.replace("{}", project);
     
@@ -70,7 +76,13 @@ async function main() {
                 fs.writeFileSync(output + "/preview.png", png.toBuffer());
                 console.log("[ZeppPlayer] PNG saved to: " + output + "/preview.png");
             }
-    
+
+            if(argv.stage) {
+                for(var i in player.stages) {
+                    fs.writeFileSync(output + "/stage_" + i + ".png", player.stages[i].toBuffer());
+                }
+            }
+            
             if(argv.gif) {
                 const gif = await createGif(player);
                 fs.writeFileSync(output + "/preview.gif", gif);
