@@ -238,7 +238,7 @@ export class TextImageWidget extends BaseWidget {
             maxLength = player.getDeviceState(config.type, "maxLength");
         }
 
-        if(config.text) text = config.text;
+        if(config.text !== undefined) text = config.text;
         if(customText !== null) text = customText;
 
         if(text === null || text === undefined) {
