@@ -5,14 +5,12 @@ export default class TimerMock {
 
         player.onDestroy.push(() => {
             for(var a in this.timers) try {
-                clearInterval(this.timers[a])
+                this.stopTimer(a);
             } catch(e) {};
         })
     }
 
     createTimer(delay, period, callable, option) {
-        if(delay <= 0) return;
-
         const player = this.player;
         const id = this.timers.length;
         const ctx = this;
@@ -33,7 +31,7 @@ export default class TimerMock {
                     callable.apply(this, option);
                 }, period);
             }
-        }, delay);
+        }, Math.max(25, delay));
 
         return id;
     }

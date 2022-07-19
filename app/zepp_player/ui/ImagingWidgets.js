@@ -129,6 +129,8 @@ export class MissingWidget extends ImageWidget {
  * Fully implemented
  */
 export class TextImageWidget extends BaseWidget {
+    setPropertyBanlist = ["text"];
+    
     static async draw(player, text, maxLength, config) {
         if(!config.font_array) return null;
         text = text.toString();

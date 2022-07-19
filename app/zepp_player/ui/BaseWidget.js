@@ -1,4 +1,6 @@
 export class BaseWidget {
+    setPropertyBanlist = [];
+
     constructor(config) {
         this.config = config;
         this.events = [];
@@ -34,6 +36,12 @@ export class BaseWidget {
 
         if(prop == "more") {
             for(var a in val) {
+                if(this.setPropertyBanlist.indexOf(a) > -1) {
+                    const info = `You can't set ${a} after ${this.constructor.name} init. Player crashed.`;
+                    this.player.onConsole("SystemWarning", [info]);
+                    this.player.finish();
+                    throw new Error(info);
+                }
                 this.config[a] = val[a];
             }
             this.player.refresh_required = "set_prop";
