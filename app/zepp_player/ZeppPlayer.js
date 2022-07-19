@@ -361,5 +361,4 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         ctx.globalAlpha = 1;
     }
-
 }

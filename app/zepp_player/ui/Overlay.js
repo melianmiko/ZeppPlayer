@@ -1,8 +1,12 @@
 export default class Overlay {
     static maskData = null;
+    static mask = null;
 
     static async draw(player, canvas) {
         if(Overlay.maskData == null) await Overlay.loadMask(player);
+
+        if(canvas.width !== Overlay.mask.width || canvas.height !== Overlay.mask.height) 
+            return;
 
         const ctx = canvas.getContext("2d");
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -21,6 +25,8 @@ export default class Overlay {
         maskCanvas.height = mask.height;
         const ctx = maskCanvas.getContext("2d");
         ctx.drawImage(mask, 0, 0);
+
+        Overlay.mask = maskCanvas;
         Overlay.maskData = ctx.getImageData(0, 0, maskCanvas.width, maskCanvas.height).data;
     }
 }
