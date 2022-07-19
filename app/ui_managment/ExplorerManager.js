@@ -1,19 +1,51 @@
 export default class ExplorerManager {
-    static button = document.getElementById("explorer_reload");
+    static reloadWidgets = document.getElementById("explorer_reload_widgets");
+    static reloadTimers = document.getElementById("explorer_reload_timers");
     static view = document.getElementById("explorer_data");
     static player = null;
 
     static init(player) {
         ExplorerManager.player = player;
-        ExplorerManager.button.onclick = ExplorerManager.refresh;
+        ExplorerManager.reloadWidgets.onclick = ExplorerManager.doReloadWidgets;
+        ExplorerManager.reloadTimers.onclick = ExplorerManager.doReloadTimers;
     }
 
-    static refresh() {
+    static doReloadWidgets() {
         ExplorerManager.view.innerHTML = "";
-        ExplorerManager.addArray(ExplorerManager.player.widgets, ExplorerManager.view);
+        ExplorerManager.addWidgetsArray(ExplorerManager.player.widgets, ExplorerManager.view);
     }
 
-    static addArray(widgets, root) {
+    static doReloadTimers() {
+        const timers = ExplorerManager.player.zeppEnv.timer.timers;
+        ExplorerManager.view.innerHTML = "";
+
+        for(let i in timers) {
+            if(timers[i] === null) continue;
+            const data = timers[i];
+            const widgetView = document.createElement("details");
+
+            const header = document.createElement("summary");
+            let preview = data.func.name;
+            if(!preview) preview = data.func.toString().substring(0, 48) + "...";
+            header.innerHTML = "Timer ID" + i.toString();
+            header.innerHTML += " <aside>" + preview + "</aside>";
+            widgetView.appendChild(header);
+
+            const row1 = document.createElement("div");
+            row1.className = "prop_row";
+            row1.innerHTML = `<strong>Delay</strong><span>${data.delay}</span>`;
+            widgetView.append(row1);
+
+            const row2 = document.createElement("div");
+            row2.className = "prop_row";
+            row2.innerHTML = `<strong>Period</strong><span>${data.period}</span>`;
+            widgetView.append(row2);
+
+            ExplorerManager.view.appendChild(widgetView);
+        }
+    }
+
+    static addWidgetsArray(widgets, root) {
         for(let i in widgets) {
             ExplorerManager.addWidget(widgets[i], root);
         }
@@ -55,7 +87,7 @@ export default class ExplorerManager {
         }
 
         if(widget.config.__content) 
-            ExplorerManager.addArray(widget.config.__content, widgetView);
+            ExplorerManager.addWidgetsArray(widget.config.__content, widgetView);
 
         widgetView.appendChild(document.createElement("br"));
 

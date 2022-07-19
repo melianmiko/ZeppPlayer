@@ -15,6 +15,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
     _lastCanvas = null;
     pathOverlay = null;
+    zeppEnv = null;
 
     constructor() {
         super();
@@ -179,6 +180,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         log("starting wf script...");
         const env = setupEnvironment(this);
         for(let i in this.globalScopeFix) env[this.globalScopeFix[i]] = 0;
+
+        this.zeppEnv = env;
 
         const fnc = eval(`(${Object.keys(env).toString() }) => {${text}; \n${extra}\n}`)
 
