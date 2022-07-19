@@ -76,10 +76,9 @@ export class EditGroupWidget extends BaseWidget {
 
     async render(canvas, player) {
         const config = this.config;
+        const ctx = canvas.getContext("2d");
 
         const isActive = PersistentStorage.get("wfEdit", "focus") == config.edit_id
-        const overlay = await player.getAssetImage(
-            isActive ? config.select_image : config.un_select_image);
         const currentType = config.current_type;
 
         let preview = null;
@@ -87,17 +86,26 @@ export class EditGroupWidget extends BaseWidget {
         for(var i in config.optional_types) {
             const option = config.optional_types[i];
             if(option.type == currentType)
-                preview = await player.getAssetImage(option.preview);
+                preview = option.preview;
         }
 
-        if(!preview) return;
+        try {
+            preview = await player.getAssetImage(preview);
+            ctx.drawImage(preview, config.x, config.y);
+        } catch(e) {
+            // No preview, ignore
+            preview = {width: config.w, height: config.h};
+        }
 
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(preview, config.x, config.y);
-
-        const dx = (overlay.width - preview.width) / 2;
-        const dy = (overlay.height - preview.height) / 2;
-        ctx.drawImage(overlay, config.x - dx, config.y - dy);
+        try {
+            const overlay = await player.getAssetImage(
+                isActive ? config.select_image : config.un_select_image);
+            const dx = (overlay.width - preview.width) / 2;
+            const dy = (overlay.height - preview.height) / 2;
+            ctx.drawImage(overlay, config.x - dx, config.y - dy);
+        } catch(e) {
+            // No overlay, ignore
+        }
 
         this.dropEvents(player, [
             config.x,
