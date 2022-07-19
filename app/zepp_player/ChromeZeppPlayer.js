@@ -132,7 +132,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         return text;
     }
 
-    getAssetImage(path) {
+    getAssetImage(path, noprefix=false) {
         return new Promise((resolve, reject) => {
             if(this._img_cache[path] === false) {
                 reject();
@@ -167,7 +167,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
                     reject();
                 })
             };
-            image.src = this.path_project + "/assets/" + path;
+            image.src = noprefix ? path : this.path_project + "/assets/" + path;
         })
     }
 }

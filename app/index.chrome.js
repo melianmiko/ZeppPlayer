@@ -67,7 +67,14 @@ const start = async () => {
     const performRefresh = async () => {
         if(document.hidden || player.uiPause || !player.refresh_required) return;
 
-        const canvas = await player.render();
+        let canvas;
+        try {
+            canvas = await player.render();
+        } catch(e) {
+            console.error("Render err", e);
+            canvas = await player.getAssetImage("app/render_fail.png", true);
+            player.refresh_required = false;
+        }
         const rotation = player.rotation;
 
         let [w, h] = [canvas.width, canvas.height];

@@ -24,7 +24,7 @@ body {
     margin: 0;
 }
 
-caption {
+aside.caption {
     display: block;
     margin: 8px;
     opacity: .5;
@@ -177,15 +177,61 @@ select {
 
 #view_edit {
     font-size: .9em;
-    height: 300px;
+    height: 450px;
 }
 
-#view_edit .material-symbols-outlined {
+#view_edit > div {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+#view_edit .group_icon {
+    margin: 8px 16px 8px 8px;
+    color: #999;
+}
+
+#view_edit > div > .contents {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#view_edit .editor_item {
+    margin-right: 12px;
+}
+
+#view_edit .editor_item > h3 {
+    font-weight: normal;
+    color: #aaa;
+    padding: 0;
+    margin: 8px 0;
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+#view_edit .editor_item select,
+#view_edit .editor_item input {
+    margin: 0;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 32px;
+    height: 24px;
+}
+
+#view_edit .editor_item input[type=checkbox] {
+    margin: 4px;
+    height: 16px;
+    width: 16px;
+    min-width: 16px; /* override chrome default style */
+}
+
+/* #view_edit .material-symbols-outlined {
     margin: 0 8px;
     opacity: .5;
-}
+} */
 
-#view_edit h3 {
+/* #view_edit h3 {
     margin: 0;
     font-size: 1em;
     flex: 1;
@@ -197,7 +243,9 @@ select {
     align-items: center;
     margin-right: 8px;
     line-height: 34px;
-}
+} */
+
+/* Version info box */
 
 #version_box {
     position: fixed;
@@ -227,20 +275,7 @@ a:link, a:visited {
     border-bottom: thin #f90 dotted;
 }
 
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track,
-::-webkit-scrollbar-corner {
-    background: #222; 
-    /* border-radius: 0 5px 5px 0; */
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #333; 
-    border-radius: 5px;
-}
+/* Explorer */
 
 #view_explorer details {
     margin-left: 8px;
@@ -284,8 +319,38 @@ a:link, a:visited {
     font-size: .95em;
 }
 
+/* Mobile */
+
 @media all and (max-width: 550px) {
     .bigscreen {
         display: none;
     }
+}
+
+/* Trash */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+    background: #222; 
+    /* border-radius: 0 5px 5px 0; */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #333; 
+    border-radius: 5px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
 }

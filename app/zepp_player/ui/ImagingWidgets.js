@@ -175,6 +175,8 @@ export class TextImageWidget extends BaseWidget {
             } catch(e) {}
         }
 
+        if(imgs.length < 1) return player.newCanvas();
+
         // Remove offset after last img
         imgs[imgs.length - 1][1] = 0;
 

@@ -217,10 +217,10 @@ export class DateWidget extends BaseWidget {
                 }
             } else {
                 value = value.toString();
-                if(config[prefix + "zero"]) 
-                    value = value
-                        .padStart(fullLength, "0")
-                        .substring(value.length - fullLength, value.length);
+                if(config[prefix + "zero"]) {
+                    value = value.padStart(fullLength, "0");
+                    value = value.substring(value.length - fullLength, value.length);
+                }
 
                 img = await TextImageWidget.draw(player, value, 1, {
                     font_array: config[prefix + lang + "_array"],
@@ -295,6 +295,8 @@ export class DateWidget extends BaseWidget {
         const config = this.config;
 
         let val = player.getDeviceState("WEEKDAY");
+        if(!val || val < 0) val = 0;
+        
         let font = config["week_" + player.language];
         if(!font || val >= font.length) return;
 

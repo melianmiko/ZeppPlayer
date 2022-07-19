@@ -1,8 +1,84 @@
 export function createDeviceState() {
     const state = {
+        HOUR: {
+            value: 9,
+            type: "number",
+            groupIcon: "calendar_month",
+            maxLength: 0, // not required
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 12,
+            shift: (tick) => tick % 2 == 0 ? (state.HOUR.value + 1) % 24 : null
+        },
+        MINUTE: {
+            value: 30,
+            type: "number",
+            maxLength: 0, // not required
+            groupIcon: "calendar_month",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 60,
+            shift: () => (state.MINUTE.value + 5) % 60
+        },
+        SECOND: {
+            value: 45,
+            type: "number",
+            maxLength: 0, // not required
+            groupIcon: "calendar_month",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 60,
+            shift: () => (state.SECOND.value + 1) % 60
+        },
+        DAY: {
+            value: 15,
+            type: "number",
+            maxLength: 2,
+            groupIcon: "calendar_month",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 31,
+            shift: () => (state.DAY.value + 1) % 31
+        },
+        MONTH: {
+            value: 9,
+            type: "number",
+            maxLength: 2,
+            groupIcon: "calendar_month",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 12,
+            shift: (tick) => tick % 2 == 0 ? state.MONTH.value % 12 + 1 : null
+        },
+        YEAR: {
+            value: 2022,
+            type: "number",
+            groupIcon: "calendar_month",
+            maxLength: 4,
+            getString: (t) => t.value.toString()
+        },
+        WEEKDAY: {
+            value: 0,
+            type: "number",
+            groupIcon: "calendar_month",
+            maxLength: 1,
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 6,
+            shift: (tick) => tick % 2 == 0 ? (state.WEEKDAY.value + 1) % 7 : null
+        },
+        AM_PM: {
+            value: "hide",
+            type: "select",
+            options: ["hide", "am", "pm"],
+            groupIcon: "calendar_month",
+            info: "AM/PM state: hide - 24h mode, am/pm - 12h mode",
+            maxLength: 4,
+            getString: (t) => t.value,
+            shift: () => {
+                if(state.AM_PM == "hidden") return "am";
+                if(state.AM_PM == "am") return "pm";
+                return "hidden";
+            }
+        },
         ALARM_CLOCK: {
             value: "09:30",
             type: "string",
+            groupIcon: "settings",
             maxLength: 5,
             getBoolean: (v) => v.value !== "",
             getString: (t) => t.value,
@@ -23,10 +99,26 @@ export function createDeviceState() {
                 return vals[index + 1 % vals.length];
             }
         },
+        BATTERY: {
+            value: 60,
+            type: "number",
+            groupIcon: "settings",
+            maxLength: 3,
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 100,
+            shift: (_, t) => (t.value) % 100 + 10
+        },
+        WEAR_STATE: {
+            value: 0,
+            groupIcon: "settings",
+            displayName: "Wear",
+            info: "Wear state: 0 - Not worn, 1 - Wearing, 2 - In motion, 3 - not sure"
+        },
         DISCONNECT: {
             value: false,
             type: "boolean",
-            maxLength: 5,
+            groupIcon: "settings",
+            maxLength: 1,
             getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
@@ -35,7 +127,8 @@ export function createDeviceState() {
         DISTURB: {
             value: true,
             type: "boolean",
-            maxLength: 5,
+            groupIcon: "settings",
+            maxLength: 1,
             getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
@@ -44,7 +137,8 @@ export function createDeviceState() {
         LOCK: {
             value: true,
             type: "boolean",
-            maxLength: 5,
+            groupIcon: "settings",
+            maxLength: 1,
             getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
@@ -53,6 +147,7 @@ export function createDeviceState() {
         STEP: {
             value: 4500,
             type: "number",
+            groupIcon: "fitness_center",
             maxLength: 5,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / state.STEP_TARGET.value,
@@ -61,12 +156,14 @@ export function createDeviceState() {
         STEP_TARGET: {
             value: 9000,
             type: "number",
+            groupIcon: "fitness_center",
             maxLength: 5,
             getString: (t) => t.value.toString()
         },
         DISTANCE: {
             value: 1.5,
             type: "number",
+            groupIcon: "fitness_center",
             maxLength: 4,
             getString: (t) => {
                 let km = Math.floor(t.value).toString(),
@@ -77,17 +174,10 @@ export function createDeviceState() {
             },
             shift: () => (state.DISTANCE.value + 0.5) % 20
         },
-        HEART: {
-            value: 99,
-            type: "number",
-            maxLength: 3,
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 180,
-            shift: () => (state.HEART.value + 15) % 180
-        },
         CAL: {
             value: 320,
             type: "number",
+            groupIcon: "fitness_center",
             maxLength: 4,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / state.CAL_TARGET.value,
@@ -96,69 +186,15 @@ export function createDeviceState() {
         CAL_TARGET: {
             value: 500,
             type: "number",
+            groupIcon: "fitness_center",
             maxLength: 4,
             getString: (t) => t.value.toString()
-        },
-        BATTERY: {
-            value: 60,
-            type: "number",
-            maxLength: 3,
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 100,
-            shift: (_, t) => (t.value) % 100 + 10
-        },
-        WEEKDAY: {
-            value: 0,
-            type: "number",
-            maxLength: 1,
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 6,
-            shift: (tick) => tick % 2 == 0 ? (state.WEEKDAY.value + 1) % 7 : null
-        },
-        HOUR: {
-            value: 9,
-            type: "number",
-            maxLength: 0, // not required
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 12,
-            shift: (tick) => tick % 2 == 0 ? (state.HOUR.value + 1) % 24 : null
-        },
-        MINUTE: {
-            value: 30,
-            type: "number",
-            maxLength: 0, // not required
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 60,
-            shift: () => (state.MINUTE.value + 5) % 60
-        },
-        SECOND: {
-            value: 45,
-            type: "number",
-            maxLength: 0, // not required
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 60,
-            shift: () => (state.SECOND.value + 1) % 60
-        },
-        DAY: {
-            value: 15,
-            type: "number",
-            maxLength: 2,
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 31,
-            shift: () => (state.DAY.value + 1) % 31
-        },
-        MONTH: {
-            value: 9,
-            type: "number",
-            maxLength: 2,
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 12,
-            shift: (tick) => tick % 2 == 0 ? state.MONTH.value % 12 + 1 : null
         },
         STAND: {
             value: 12,
             type: "number",
             maxLength: 2,
+            groupIcon: "fitness_center",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / state.STAND_TARGET.value,
             shift: (tick) => tick % 2 == 0 ? state.STAND.value % state.STAND_TARGET.value + 1 : null
@@ -166,31 +202,32 @@ export function createDeviceState() {
         STAND_TARGET: {
             value: 13,
             type: "number",
+            groupIcon: "fitness_center",
             maxLength: 2,
             getString: (t) => t.value.toString()
         },
-        YEAR: {
-            value: 2022,
+        HEART: {
+            value: 99,
             type: "number",
-            maxLength: 4,
-            getString: (t) => t.value.toString()
+            groupIcon: "monitor_heart",
+            maxLength: 3,
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 180,
+            shift: () => (state.HEART.value + 15) % 180
         },
-        AM_PM: {
-            value: "hide",
-            type: "string",
-            info: "AM/PM state: hide - 24h mode, am/pm - 12h mode",
-            maxLength: 4,
-            getString: (t) => t.value,
-            shift: () => {
-                if(state.AM_PM == "hidden") return "am";
-                if(state.AM_PM == "am") return "pm";
-                return "hidden";
-            }
+        SPO2: {
+            value: 30,
+            type: "number",
+            maxLength: 3,
+            groupIcon: "monitor_heart",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 100
         },
         PAI_WEEKLY: {
             value: 55,
             type: "number",
             maxLength: 3,
+            groupIcon: "monitor_heart",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 100,
             shift: (tick) => tick % 3 == 0 ? state.PAI_WEEKLY.value % 100 + 4 : null
@@ -199,26 +236,42 @@ export function createDeviceState() {
             value: 80,
             type: "number",
             maxLength: 3,
+            groupIcon: "monitor_heart",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 100,
             shift: () => state.PAI_DAILY.value % 100 + 4
         },
-        WEATHER_CURRENT_ICON: {
-            value: 0,
-            shift: () => (state.WEATHER_CURRENT_ICON.value + 1) % 29
+        STRESS: {
+            value: 50,
+            type: "number",
+            maxLength: 3,
+            groupIcon: "monitor_heart",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 100,
+            shift: () => state.STRESS.value % 100 + 5
         },
         WEATHER_CURRENT: {
             value: 12,
             type: "number",
+            groupIcon: "sunny",
+            displayName: "Current",
             maxLength: 3,
             getString: (t) => t.value.toString(),
             getProgress: () => state.WEATHER_CURRENT_ICON.value / 29, //redir to icon
             shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
         },
+        WEATHER_CURRENT_ICON: {
+            value: 0,
+            maxLength: 2,
+            groupIcon: "sunny",
+            displayName: "Icon",
+            shift: () => (state.WEATHER_CURRENT_ICON.value + 1) % 29
+        },
         HUMIDITY: {
             value: 10,
             type: "number",
             maxLength: 3,
+            groupIcon: "sunny",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 100,
             shift: () => state.HUMIDITY.value % 92 + 8
@@ -227,17 +280,31 @@ export function createDeviceState() {
             value: 10,
             type: "number",
             maxLength: 2,
+            groupIcon: "sunny",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 100,
             shift: () => state.UVI.value % 100 + 5
         },
-        STRESS: {
-            value: 50,
-            type: "number",
-            maxLength: 3,
+        MUSIC_IS_PLAYING: {
+            value: true,
+            type: "boolean",
+            groupIcon: "music_note",
+            maxLength: 1,
             getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 100,
-            shift: () => state.STRESS.value % 100 + 5
+            getProgress: (t) => t.value ? 1 : 0,
+            shift: (tick, t) => tick % 3 == 0 ? !t.value : null
+        },
+        MUSIC_ARTIST: {
+            value: "Crusher-P",
+            groupIcon: "music_note",
+            type: "string",
+            maxLength: 8 // UI align
+        },
+        MUSIC_TITLE: {
+            value: "ECHO",
+            groupIcon: "music_note",
+            type: "string",
+            maxLength: 12 // UI align
         },
         FAT_BURNING: {
             value: 0,
@@ -263,39 +330,12 @@ export function createDeviceState() {
             },
             getProgress: (t) => t.value / 45
         },
-        SPO2: {
-            value: 30,
-            type: "number",
-            maxLength: 3,
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 100
-        },
         SUN_CURRENT: { // ???
             value: 0,
             type: "number",
             maxLength: 3,
             getString: (t) => t.value.toString(),
             getProgress: () => state.HOUR.value / 24
-        },
-        WEAR_STATE: {
-            value: 0,
-            info: "Wear state: 0 - Not worn, 1 - Wearing, 2 - In motion, 3 - not sure"
-        },
-        MUSIC_TITLE: {
-            value: "ECHO",
-            type: "string"
-        },
-        MUSIC_ARTIST: {
-            value: "Crusher-P",
-            type: "string"
-        },
-        MUSIC_IS_PLAYING: {
-            value: true,
-            type: "boolean",
-            maxLength: 5,
-            getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value ? 1 : 0,
-            shift: (tick, t) => tick % 3 == 0 ? !t.value : null
         },
         MOON: { // ???
             getProgress: () => 0.3

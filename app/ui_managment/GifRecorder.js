@@ -66,7 +66,8 @@ export default class GifRecorder {
         img.src = url;
 
         const view = document.getElementById("files_view");
-        const caption = document.createElement("caption");
+        const caption = document.createElement("aside");
+        caption.className = "caption";
         caption.innerText = 'Right-click on GIF and select "Save image as..."';
 
         view.innerHTML = "";
