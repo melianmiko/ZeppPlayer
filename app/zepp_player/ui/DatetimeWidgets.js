@@ -130,7 +130,8 @@ export class DatePointer extends BaseWidget {
                 
                 images.push([combinedImg, lastPrefix, expectedWidth]);
             } else {
-                const offset = config[prefix + "space"];
+                let offset = config[prefix + "space"];
+                if(!offset) offset = 0;
                 let expectedWidth = 2 * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
                     let unit = await player.getAssetImage(config[prefix + "unit_en"]);
@@ -253,7 +254,8 @@ export class DateWidget extends BaseWidget {
                 
                 images.push([combinedImg, lastPrefix, expectedWidth]);
             } else {
-                const offset = config[prefix + "space"];
+                let offset = config[prefix + "space"];
+                if(!offset) offset = 0;
                 let expectedWidth = fullLength * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
                     let unit = await player.getAssetImage(config[prefix + "unit_en"]);
