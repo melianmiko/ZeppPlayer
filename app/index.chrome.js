@@ -47,9 +47,12 @@ const start = async () => {
     player.setupHTMLEvents(root);
 
     // Render in cycle
+    let lastRefresh = 0;
+
     const refresh = async () => {
         if(Date.now() - lastRefresh >= DISPLAY_DELTA) {
             await performRefresh();
+            lastRefresh = end;
         }
         requestAnimationFrame(refresh);
     };
