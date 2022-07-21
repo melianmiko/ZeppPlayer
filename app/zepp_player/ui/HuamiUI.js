@@ -113,6 +113,10 @@ export default class HuamiUIMock {
         });
     }
 
+    setLayerScrolling(val) {
+        // todo
+    }
+
     prop = {
         VISIBLE: "visible",
         ANIM_STATUS: "anim_status",
