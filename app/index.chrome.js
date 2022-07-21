@@ -52,7 +52,7 @@ const start = async () => {
     const refresh = async () => {
         if(Date.now() - lastRefresh >= DISPLAY_DELTA) {
             await performRefresh();
-            lastRefresh = end;
+            lastRefresh = Date.now();
         }
         requestAnimationFrame(refresh);
     };
