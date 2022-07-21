@@ -314,15 +314,19 @@ export class ImageStatusWidget extends BaseWidget {
     async render(canvas, player) {
         const config = this.config;
         const type = this.config.type;
-        const img = await player.getAssetImage(config.src);
+        try {
+            const img = await player.getAssetImage(config.src);
 
-        let x = config.x, y = config.y;
-        if(config.pos_x) x += config.pos_x;
-        if(config.pos_y) y += config.pos_y;
-
-        // Render image, if visible
-        if(player.getDeviceState(type, "boolean") === true) {
-            canvas.getContext("2d").drawImage(img, x, y);
+            let x = config.x, y = config.y;
+            if(config.pos_x) x += config.pos_x;
+            if(config.pos_y) y += config.pos_y;
+    
+            // Render image, if visible
+            if(player.getDeviceState(type, "boolean") === true) {
+                canvas.getContext("2d").drawImage(img, x, y);
+            }
+        } catch(e) {
+            return;
         }
 
         super.dropEvents(player, [x, y, x + img.width, y + img.height]);
