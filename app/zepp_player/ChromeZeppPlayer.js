@@ -90,13 +90,16 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             ]);
             this.__tga_first_use = true;
         }
+
         const tga = TGAImage.imageWithURL(url);
         await tga.didLoad;
-        if(tga._imageType !== 1 || tga._colorMapDepth !== 32) {
+
+        if(tga._colorMapType !== 1 || tga._colorMapDepth !== 32) {
             this.onConsole("SystemWarning", [`TGA file ${url.substring(url.lastIndexOf("/") + 1)} has ` +
                 `invalid colormap depth, ${tga._colorMapDepth} != 32. This `+
                 `file won't be accepted by ZeppOS.`]);
         }
+
         return tga.image;
     }
 
