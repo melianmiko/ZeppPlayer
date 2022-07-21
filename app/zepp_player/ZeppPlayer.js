@@ -144,20 +144,25 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
     async setProject(path) {
         const appConfig = JSON.parse(await this.getFileContent(path + '/app.json'));
+        this.path_project = path;
+
+        // Find init page
         let modulePath = null;
         if(appConfig.app.appType == "watchface") {
             // Run as watchface
-            modulePath = "/watchface/index.js";
+            modulePath = "/watchface/index";
             if(appConfig.module && appConfig.module.watchface)
-                modulePath = appConfig.module.watchface.path + ".js";
+                modulePath = appConfig.module.watchface.path;
         } else if(appConfig.app.appType == "app") {
             // Run as app (experimental)
         }
-        modulePath = appConfig.module.page.pages[0] + ".js";
+        modulePath = appConfig.module.page.pages[0];
 
-        this.path_script = path + "/" + modulePath;
-        this.path_project = path;
+        this.setPage(modulePath);
+    }
 
+    setPage(modulePath) {
+        this.path_script = this.path_project + "/" + modulePath + ".js";
         log("use script", this.path_script);
     }
 

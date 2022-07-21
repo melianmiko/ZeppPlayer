@@ -59,11 +59,11 @@ export default class HuamiSettingMock {
     getDiskInfo() {
         return {
             total: 128 * 1024 * 1024,
-            free: 96.9 * 1024 * 1024,
+            free: 47 * 1024 * 1024,
             app: 1.1 * 1024 * 1024,
-            watchface: 2.1 * 1024 * 1024,
+            watchface: 12.5 * 1024 * 1024,
             music: 0,
-            system: 92 * 1024 * 1024
+            system: 48 * 1024 * 1024
         }
     }
 

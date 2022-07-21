@@ -18,7 +18,7 @@ export function setupEnvironment(player) {
     object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player);
     object.hmUI = new HuamiUIMock(player);
     object.hmFS = new HuamiFsMock(player);
-    object.hmApp = new HmAppMock();
+    object.hmApp = new HmAppMock(player);
     object.hmBle = new HuamiBLEMock();
     object.hmSensor = new HuamiSensorMock(player);
     object.hmSetting = new HuamiSettingMock(player);
