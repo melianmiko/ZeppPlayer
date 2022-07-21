@@ -202,6 +202,12 @@ export class DateWidget extends BaseWidget {
             ["day_", player.getDeviceState("DAY", "string"), 2]
         ];
 
+        if(config.year_zero) {
+            // Switch to full year
+            data[0][1] = "20" + data[0][1];
+            data[0][2] = 4;
+        }
+
         let images = [];
         for(var i in data) {
             let [prefix, value, fullLength] = data[i];
@@ -220,7 +226,6 @@ export class DateWidget extends BaseWidget {
                 value = value.toString();
                 if(config[prefix + "zero"]) {
                     value = value.padStart(fullLength, "0");
-                    value = value.substring(value.length - fullLength, value.length);
                 }
 
                 img = await TextImageWidget.draw(player, value, 1, {

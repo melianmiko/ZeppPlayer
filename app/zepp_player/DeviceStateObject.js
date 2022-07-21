@@ -46,10 +46,10 @@ export function createDeviceState() {
             shift: (tick) => tick % 2 == 0 ? state.MONTH.value % 12 + 1 : null
         },
         YEAR: {
-            value: 2022,
+            value: 22,
             type: "number",
             groupIcon: "calendar_month",
-            maxLength: 4,
+            maxLength: 2,
             getString: (t) => t.value.toString()
         },
         WEEKDAY: {
