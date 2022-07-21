@@ -47,19 +47,9 @@ const start = async () => {
     player.setupHTMLEvents(root);
 
     // Render in cycle
-    let lastRefresh = 0;
-
     const refresh = async () => {
         if(Date.now() - lastRefresh >= DISPLAY_DELTA) {
-            const start = Date.now();
             await performRefresh();
-            const end = Date.now();
-
-            if(end-start > DISPLAY_DELTA && player.render_counter > 100) {
-                console.warn("Too long render time, ", end-start);
-            }
-
-            lastRefresh = end;
         }
         requestAnimationFrame(refresh);
     };
