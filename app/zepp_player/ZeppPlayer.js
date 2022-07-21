@@ -155,8 +155,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 modulePath = appConfig.module.watchface.path;
         } else if(appConfig.app.appType == "app") {
             // Run as app (experimental)
+            modulePath = appConfig.module.page.pages[0];
         }
-        modulePath = appConfig.module.page.pages[0];
 
         this.setPage(modulePath);
     }
