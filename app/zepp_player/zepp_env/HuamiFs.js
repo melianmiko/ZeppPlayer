@@ -46,8 +46,8 @@ export default class HuamiFsMock {
 
         if(!f) return [{}, 1];
         return [{
-            size: f.data.length,
-            mtime: f.mtime
+            size: f.length,
+            mtime: Date.now()
         }, 0];
     }
 

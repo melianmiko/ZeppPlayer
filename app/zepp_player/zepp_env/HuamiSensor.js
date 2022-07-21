@@ -163,7 +163,13 @@ class HeartSensor {
         this.player = player;
         this.current = player.getDeviceState("HEART");
         this.last = player.getDeviceState("HEART") * 1.1;
-        this.today = player.getDeviceState("HEART") * 0.8;
+        this.today = [];
+
+        for(let i = 0; i < 3600; i++) {
+            this.today[i] = Math.round(90 + 90 * (i % 120)/120);
+        }
+
+        console.log(this.today);
     }
 
     addEventListener(name, callback) {

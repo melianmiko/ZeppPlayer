@@ -26,6 +26,8 @@ export default class TimerMock {
         ctx.timers[id].timeout = setTimeout(() => {
             callable.apply(this, option);
             if(period > 0) {
+                if(!ctx.timers[id]) return;
+
                 ctx.timers[id].interval = setInterval(() => {
                     if(player.uiPause) return;
                     callable.apply(this, option);

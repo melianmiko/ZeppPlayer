@@ -3,6 +3,7 @@ import { DatePointer, DateWidget, TimePointer, TimeWidget, WeekdayWidget } from 
 import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget, TextWidget } from "./DrawingWidgets.js";
 import { EditableBackground, EditGroupWidget } from "./EditableWatchfaceWidgets.js";
 import { ButtonWidget } from "./FormWidgets.js";
+import { HistogramWidget } from "./HistogramWidget.js";
 import { AnimationWidget, ClickableImageWidget, ImageProgressWidget, ImageStatusWidget, ImageWidget, LevelWidget, MissingWidget, PointerWidget, TextImageWidget } from "./ImagingWidgets.js";
 
 export default class HuamiUIMock {
@@ -32,7 +33,8 @@ export default class HuamiUIMock {
         WIDGET_DELEGATE: DelegateWidget,
         TEXT: TextWidget,
         CIRCLE: CircleWidget,
-        BUTTON: ButtonWidget
+        BUTTON: ButtonWidget,
+        HISTOGRAM: HistogramWidget
     }
 
     constructor(player) {
@@ -117,7 +119,8 @@ export default class HuamiUIMock {
         ANGLE: "angle",
         SRC: "src",
         CURRENT_TYPE: "current_type",
-        MORE: "more"
+        MORE: "more",
+        UPDATE_DATA: "more" // fuck you, again
     }
 
     show_level = {
