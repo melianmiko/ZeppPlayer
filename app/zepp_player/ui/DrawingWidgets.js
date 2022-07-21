@@ -99,8 +99,8 @@ export class TextWidget extends BaseWidget {
         canvas.width = maxWidth;
         canvas.height = maxHeight;
 
-        let py = 0;
-        if(config.align_v == "center_v") py = (canvas.height - totalHeight) / 2;
+        let py = (canvas.height - totalHeight) / 2
+        if(config.align_v == "top") py = 0;
         if(config.align_v == "bottom") py = canvas.height - totalHeight;
 
         for(var i in lines) {

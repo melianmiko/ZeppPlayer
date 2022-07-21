@@ -182,7 +182,14 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.onRestart();
         log("starting wf script...");
         const env = setupEnvironment(this);
-        for(let i in this.globalScopeFix) env[this.globalScopeFix[i]] = 0;
+
+        if(this.globalScopeFix.length > 0) {
+            for(let i in this.globalScopeFix) env[this.globalScopeFix[i]] = 0;
+
+            this.onConsole("SystemWarning", [
+                "Fix global var defination, please do not declare variables "+
+                " without var/let/const, this is legacy way. List:", this.globalScopeFix]);
+        }
 
         this.zeppEnv = env;
 
