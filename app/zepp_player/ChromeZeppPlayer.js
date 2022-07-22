@@ -17,12 +17,14 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         this._swipeStartCoords = [0, 0];
 
         block.onmousedown = (e) => {
+            e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
             this._swipeStartCoords = [x, y];
             this.handleEvent("onmousedown", x, y, {x, y});
         };
 
         block.onmouseup = (e) => {
+            e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
             this.handleEvent("onmouseup", x, y, {x, y});
 
