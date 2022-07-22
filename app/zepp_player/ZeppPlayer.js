@@ -46,7 +46,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         // App state
         this.settings = {};
         this.onDestroy = [];
-        this.biggestImage = [0, 0];
 
         // Device state
         this._deviceState = createDeviceState();
@@ -289,11 +288,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 "render_counter=", this.render_counter,
                 "widgets_count=", this.countWidgets(),
                 "from_init=", Date.now()-this.initTime);
-        }
-
-        if(this.biggestImage[0] > this.screen[0] || this.biggestImage[1] > this.screen[1]) {
-            console.info("Resize screen to", this.biggestImage);
-            this.screen = this.biggestImage;
         }
 
         canvas.width = this.screen[0];

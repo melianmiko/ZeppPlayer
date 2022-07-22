@@ -150,19 +150,11 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             const image = new Image();
             image.onload = () => {
                 this._img_cache[path] = image;
-                this.biggestImage = [
-                    Math.max(this.biggestImage[0], image.width),
-                    Math.max(this.biggestImage[1], image.height)
-                ];
                 resolve(image);
             };
             image.onerror = () => {
                 this._loadTGA(this.path_project + "/assets/" + path).then((image) => {
                     this._img_cache[path] = image;
-                    this.biggestImage = [
-                        Math.max(this.biggestImage[0], image.width),
-                        Math.max(this.biggestImage[1], image.height)
-                    ];
                     resolve(image);
                 }).catch((e) => {
                     console.warn("Failed to fetch image", path);

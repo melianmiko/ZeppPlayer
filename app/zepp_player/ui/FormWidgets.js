@@ -12,10 +12,10 @@ export class ButtonWidget extends BaseWidget {
             this.pressed = true;
             config.__player.refresh_required = "button"; // we changed color/bg
         });
-        this.addEventListener("onmouseup", () => {
+        this.addEventListener("onmouseup", (info) => {
             this.pressed = false;
             config.__player.refresh_required = "button"; // we changed color/bg
-            if(config.click_func) config.click_func();
+            if(config.click_func) config.click_func(info);
         });
     }
 

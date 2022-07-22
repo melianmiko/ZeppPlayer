@@ -1,5 +1,6 @@
 export class BaseWidget {
     setPropertyBanlist = [];
+    getPropertyBanlist = [];
 
     constructor(config) {
         this.config = config;
@@ -52,7 +53,15 @@ export class BaseWidget {
         this.player.refresh_required = "set_prop";
     }
 
-    getProperty(key) {
+    getProperty(key, second) {
+        if(key == "more") {
+            if(typeof second !== "object") 
+                this.player.onConsole("SystemWarning", [
+                    "When using getProperty with MORE, you must give empty "+
+                    "object as second param."
+                ]);
+            return this.config;
+        }
         return this.config[key];
     }
 
