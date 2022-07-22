@@ -1,8 +1,9 @@
 /_*
 /projects/*
-/lib/nginx/logs/*
-/lib/nginx/temp/*
+/win32_server/build
+/win32_server/dist
 node_modules
+__pycache__
 
 !/projects/demo
 !.empty

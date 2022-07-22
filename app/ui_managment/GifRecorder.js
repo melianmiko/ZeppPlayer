@@ -25,7 +25,7 @@ export default class GifRecorder {
         const gif = new GIF({
             width: this.player.screen[0],
             height: this.player.screen[1],
-            workerScript: "/lib/gif.worker.js"
+            workerScript: "/app/lib/gif.worker.js"
         });
 
         // Render
