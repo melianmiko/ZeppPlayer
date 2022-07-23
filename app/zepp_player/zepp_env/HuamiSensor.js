@@ -96,7 +96,7 @@
     }
     
     get year() {
-        return this.player.getDeviceState("YEAR");
+        return this.player.getDeviceState("YEAR") + 2000;
     }
 
     get format_hour() {

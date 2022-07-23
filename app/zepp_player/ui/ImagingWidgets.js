@@ -151,7 +151,7 @@ export class TextImageWidget extends BaseWidget {
     
     static async draw(player, text, maxLength, config) {
         if(!config.font_array) return null;
-        text = text.toString();
+        // text = text.toString();
 
         // Prepare
         let imgs = [];
@@ -177,8 +177,10 @@ export class TextImageWidget extends BaseWidget {
             let img = null;
             if(text[i] == "-") {
                 img = await player.getAssetImage(config.negative_image);
-            } else if(isNaN(text[i] || isNaN(parseInt(text[i])))) {
+            } else if(text[i] == ".") {
                 img = await player.getAssetImage(config.dot_image);
+            } else if(text[i] == "u") {
+                img = await player.getAssetImage(config["unit_" + player.language]);
             } else {
                 i = parseInt(text[i]);
                 img = await player.getAssetImage(config.font_array[i]);

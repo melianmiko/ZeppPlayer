@@ -56,7 +56,7 @@ export class BaseWidget {
         if(prop == "more") {
             for(var a in val) {
                 if(this.setPropertyBanlist.indexOf(a) > -1) {
-                    const info = `You can't set ${a} after ${this.constructor.name} init. Player crashed.`;
+                    const info = `You can't set ${a} in ${this.constructor.name} via hmUI.prop.MORE. Player crashed.`;
                     this.player.onConsole("SystemWarning", [info]);
                     this.player.finish();
                     throw new Error(info);

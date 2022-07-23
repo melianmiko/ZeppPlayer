@@ -142,7 +142,24 @@ export default class HuamiUIMock {
         SRC: "src",
         CURRENT_TYPE: "current_type",
         MORE: "more",
-        UPDATE_DATA: "more" // fuck you, again
+        UPDATE_DATA: "more",
+        X: "x",
+        Y: "y",
+        W: "w",
+        H: "h",
+        POS_X: "pos_x",
+        POS_Y: "pos_y",
+        ANGLE: "angle",
+        CENTER_X: "center_x",
+        CENTER_Y: "center_y",
+        TEXT: "text",
+        TEXT_SIZE: "text_size",
+        COLOR: "color",
+        START_ANGLE: "start_angle",
+        END_ANGLE: "end_angle",
+        LINE_WIDTH: "line_width",
+        WORD_WRAP: "word_wrap",
+        DATASET: "dataset"
     }
 
     show_level = {
