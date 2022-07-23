@@ -17,12 +17,11 @@
 import http.server
 import socketserver
 import os
-import pystray_mod as pystray
 import threading
 import webbrowser
 import sys
 
-PORT = 3000
+PORT = 3023
 HTTPD = None
 
 if getattr(sys, 'frozen', False):
@@ -35,6 +34,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        return super().end_headers()
 
 
 def do_open_chrome():
@@ -55,6 +57,8 @@ def run_server():
 
 
 def main():
+    import pystray_mod as pystray
+
     icon = DIRECTORY + "/app/icon.ico"
     assert os.path.isfile(icon)
 
@@ -75,4 +79,8 @@ def main():
 
 
 if __name__ == "__main__":
+    if sys.platform == 'linux':
+        print("Run only server, without tray. Reson: linux")
+        run_server()
+        raise SystemExit
     main()

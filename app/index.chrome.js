@@ -90,6 +90,8 @@ const start = async () => {
 
         let [w, h] = [canvas.width, canvas.height];
         if(rotation % 180 == 90) [h, w] = [w, h];
+        if(root.width != w) root.width = w;
+        if(root.height != h) root.height = h;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
