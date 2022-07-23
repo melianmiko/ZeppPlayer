@@ -40,7 +40,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 
 def do_open_chrome():
-    webbrowser.open("http://127.0.0.1:3000")
+    webbrowser.open(f"http://127.0.0.1:{PORT}")
 
 
 def do_exit():
