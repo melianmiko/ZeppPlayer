@@ -14,15 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import http.server
-import socketserver
 import os
 import threading
+from typing import Dict
 import webbrowser
 import sys
 
+from twisted.web.server import Site
+from twisted.web.static import File
+from twisted.internet import reactor
+
 PORT = 3023
-HTTPD = None
 
 if getattr(sys, 'frozen', False):
     DIRECTORY = os.path.dirname(sys.executable)
@@ -30,13 +32,10 @@ elif __file__:
     DIRECTORY = os.path.dirname(__file__) + "/.."
 
 
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=DIRECTORY, **kwargs)
-
-    def end_headers(self) -> None:
-        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
-        return super().end_headers()
+class DirectoryResource(File):
+    def render_GET(self, request):
+        request.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")
+        return super().render_GET(request)
 
 
 def do_open_chrome():
@@ -48,12 +47,9 @@ def do_exit():
 
 
 def run_server():
-    global HTTPD
-
-    HTTPD = socketserver.TCPServer(("", PORT), Handler)
-
-    print("serving at port", PORT)
-    HTTPD.serve_forever()
+    factory = Site(DirectoryResource(DIRECTORY))
+    reactor.listenTCP(PORT, factory)
+    reactor.run()
 
 
 def main():
