@@ -193,6 +193,8 @@ export class FillRectWidget extends BaseWidget {
         const round = config.radius ? config.radius : 0;
 
         ctx.fillStyle = zeppColorToHex(config.color);
+        ctx.strokeStyle = zeppColorToHex(config.color);
+        ctx.lineWidth = config.line_width ? config.line_width : 1;
 
         ctx.beginPath();
 
