@@ -2,7 +2,7 @@ import sys
 import json
 import shutil
 import os
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 from pathlib import Path
 
 
@@ -18,7 +18,7 @@ def main():
 		shutil.rmtree("dist")
 
 	os.mkdir("dist")
-	with ZipFile(f"dist/ZeppPlayer_v{get_version()}.zip", "w") as zip:
+	with ZipFile(f"dist/ZeppPlayer_v{get_version()}.zip", "w", ZIP_DEFLATED) as zip:
 		zip.write("package.json")
 		zip.write("package-lock.json")
 		zip.write("index.html")

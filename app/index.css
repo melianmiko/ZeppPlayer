@@ -321,7 +321,7 @@ a:link, a:visited {
 
 /* Mobile */
 
-@media all and (max-width: 550px) {
+@media all and (max-width: 360px) {
     .bigscreen {
         display: none;
     }
