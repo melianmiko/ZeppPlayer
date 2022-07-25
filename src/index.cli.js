@@ -22,6 +22,7 @@
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 import { NodeZeppPlayer } from "./zepp_player/NodeZeppPlayer";
+import { registerFont } from "canvas";
 import GIFEncoder from "gif-encoder-2";
 import * as fs from 'fs';
 
@@ -58,7 +59,7 @@ async function createGif(player) {
     gif.start();
 
     for(let i = 0; i < FPS*SECONDS*2; i++) {
-        if(i == FPS*SECONDS) player.current_level = 2;
+        if(i === FPS*SECONDS) player.current_level = 2;
 
         const canvas = await player.render();
         gif.addFrame(canvas.getContext("2d"));
@@ -77,7 +78,11 @@ async function createGif(player) {
 async function main() {
     let success = 0, fail = 0;
 
-    for(var a in argv._) {
+    // Load font
+    console.log(__dirname + "/allfont-Regular.ttf")
+    registerFont(__dirname + "/allfont-Regular.ttf", { family: 'allfont'});
+
+    for(let a in argv._) {
         const project = argv._[a];
 
         try {

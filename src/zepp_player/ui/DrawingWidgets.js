@@ -25,7 +25,7 @@ import { ImageWidget } from "./ImagingWidgets.js";
  */
 export class TextWidget extends BaseWidget {
     static async drawText(config, player) {
-        const fontConf = (config.text_size ? config.text_size : 22) + "px allfont";
+        const fontConf = (config.text_size ? config.text_size : 22) + "px sans";
         const colorConf = config.color ? zeppColorToHex(config.color) : "#000000";
         const offsetX = config.char_space ? config.char_space : 0;
 
@@ -92,14 +92,14 @@ export class TextWidget extends BaseWidget {
 
             let sizes = lineContext.measureText(data);
             lineCanvas.width = sizes.width + offsetX * data.length + 2;
-            lineCanvas.height = sizes.fontBoundingBoxAscent*2 + sizes.fontBoundingBoxDescent;
+            lineCanvas.height = sizes.fontBoundingBoxAscent*2 + sizes.actualBoundingBoxDescent;
 
             lineContext.fillStyle = colorConf;
             lineContext.font = fontConf;
             
             px = 0;
             for(let j in data) {
-                lineContext.fillText(data[j], px, sizes.fontBoundingBoxDescent);
+                lineContext.fillText(data[j], px, sizes.actualBoundingBoxDescent);
                 px += lineContext.measureText(data[j]).width + offsetX;
             }
 
