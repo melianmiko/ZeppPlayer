@@ -25,7 +25,8 @@ import { ImageWidget } from "./ImagingWidgets.js";
  */
 export class TextWidget extends BaseWidget {
     static async drawText(config, player) {
-        const fontConf = (config.text_size ? config.text_size : 22) + "px sans";
+        const textSize = config.text_size ? config.text_size : 22;
+        const fontConf = textSize + "px sans";
         const colorConf = config.color ? zeppColorToHex(config.color) : "#000000";
         const offsetX = config.char_space ? config.char_space : 0;
 
@@ -48,6 +49,7 @@ export class TextWidget extends BaseWidget {
             let data = preLines[i];
             currentLine++;
 
+            if(!lines[currentLine]) lines[currentLine] = "";
             while(data !== "") {
                 if(!lines[currentLine]) lines[currentLine] = "";
                 if(config.text_style >= 1) {
@@ -92,14 +94,15 @@ export class TextWidget extends BaseWidget {
 
             let sizes = lineContext.measureText(data);
             lineCanvas.width = sizes.width + offsetX * data.length + 2;
-            lineCanvas.height = sizes.fontBoundingBoxAscent*2 + sizes.actualBoundingBoxDescent;
+            lineCanvas.height = textSize * 1.5;
 
+            lineContext.textBaseline = "top";
             lineContext.fillStyle = colorConf;
             lineContext.font = fontConf;
             
             px = 0;
             for(let j in data) {
-                lineContext.fillText(data[j], px, sizes.actualBoundingBoxDescent);
+                lineContext.fillText(data[j], px, 0);
                 px += lineContext.measureText(data[j]).width + offsetX;
             }
 
@@ -109,12 +112,14 @@ export class TextWidget extends BaseWidget {
             totalHeight += lineCanvas.height + (config.line_space ? config.line_space : 0);
         }
 
+        totalHeight -= textSize*0.5; // remove last offset after line
+
         // Build full image
         canvas.width = maxWidth;
         canvas.height = maxHeight;
 
-        let py = (canvas.height - totalHeight) / 2
-        if(config.align_v === "top") py = 0;
+        let py = 0;
+        if(config.align_v === "center_v") py = (canvas.height - totalHeight) / 2;
         if(config.align_v === "bottom") py = canvas.height - totalHeight;
 
         for(let i in lines) {

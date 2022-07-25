@@ -79,8 +79,7 @@ async function main() {
     let success = 0, fail = 0;
 
     // Load font
-    console.log(__dirname + "/allfont-Regular.ttf")
-    registerFont(__dirname + "/allfont-Regular.ttf", { family: 'allfont'});
+    registerFont(__dirname + "/allfont-Medium.ttf", { family: 'allfont'});
 
     for(let a in argv._) {
         const project = argv._[a];

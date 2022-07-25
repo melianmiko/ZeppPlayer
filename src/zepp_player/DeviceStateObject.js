@@ -46,7 +46,7 @@ export function createDeviceState() {
             shift: () => (state.SECOND.value + 1) % 60
         },
         DAY: {
-            value: 15,
+            value: 25,
             type: "number",
             maxLength: 2,
             groupIcon: "calendar_month",
@@ -55,7 +55,7 @@ export function createDeviceState() {
             shift: () => (state.DAY.value + 1) % 31
         },
         MONTH: {
-            value: 9,
+            value: 7,
             type: "number",
             maxLength: 2,
             groupIcon: "calendar_month",

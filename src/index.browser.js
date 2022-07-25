@@ -37,7 +37,7 @@ const start = async () => {
     const ctx = root.getContext("2d");
 
     // Preload font
-    const font = new FontFace("allfont", "url(/app/allfont-Regular.ttf)");
+    const font = new FontFace("allfont", "url(/app/allfont-Medium.ttf)");
     await font.load();
     document.fonts.add(font);
 
