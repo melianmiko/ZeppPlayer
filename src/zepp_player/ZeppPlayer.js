@@ -376,7 +376,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     performShift() {
-        for(var i in this._deviceState) {
+        for(let i in this._deviceState) {
             if(this._deviceState[i].shift) {
                 const v = this._deviceState[i].shift(this.render_counter, this._deviceState[i]);
                 if(v !== null) this.setDeviceState(i, v);
@@ -392,8 +392,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         ctx.globalAlpha = widget.config.alpha !== undefined ? widget.config.alpha / 255 : 1;
 
-        if((show_level & this.current_level) == 0 && show_level) return;
-        if(!widget.config.visible) return;
+        if((show_level & this.current_level) === 0 && show_level) return;
+            if(!widget.config.visible) return;
 
         try {
             await widget.render(canvas, this);

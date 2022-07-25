@@ -36,6 +36,11 @@ const start = async () => {
     const root = document.getElementById("display");
     const ctx = root.getContext("2d");
 
+    // Preload font
+    const font = new FontFace("allfont", "url(/app/allfont-Regular.ttf)");
+    await font.load();
+    document.fonts.add(font);
+
     const player = new ChromeZeppPlayer();
     player.system_fps = DISPLAY_FPS;
 

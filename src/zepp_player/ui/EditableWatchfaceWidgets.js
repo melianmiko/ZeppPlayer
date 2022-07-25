@@ -136,14 +136,16 @@ export class EditGroupWidget extends BaseWidget {
 
             const textImg = await TextWidget.drawText({
                 color: 0, text, text_size: 18,
-                w: config.tips_width, h: 0,
-                align_h: "center_h"
+                w: config.tips_width,
+                h: tipsBg.height,
+                align_h: "center_h",
+                align_v: "center_v"
             }, player);
 
             const croppedTextImg = player.newCanvas();
-            croppedTextImg.width = config.tips_width;
-            croppedTextImg.height = config.tips_margin + textImg.height;
-            croppedTextImg.getContext("2d").drawImage(textImg, 0, config.tips_margin);
+            croppedTextImg.width = config.tips_width + config.tips_margin;
+            croppedTextImg.height = textImg.height;
+            croppedTextImg.getContext("2d").drawImage(textImg, config.tips_margin, 0);
 
             ctx.drawImage(croppedTextImg, dx + config.tips_x, dy + config.tips_y);
         } catch(e) {

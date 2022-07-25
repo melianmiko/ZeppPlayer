@@ -25,7 +25,7 @@ import { ImageWidget } from "./ImagingWidgets.js";
  */
 export class TextWidget extends BaseWidget {
     static async drawText(config, player) {
-        const fontConf = (config.text_size ? config.text_size : 22) + "px sans";
+        const fontConf = (config.text_size ? config.text_size : 22) + "px allfont";
         const colorConf = config.color ? zeppColorToHex(config.color) : "#000000";
         const offsetX = config.char_space ? config.char_space : 0;
 
@@ -35,36 +35,34 @@ export class TextWidget extends BaseWidget {
         context.font = fontConf;
         
         // Split to lines
-        let lines = [], preLines = config.text.toString().split("\n");
-        let currentLine = -1, width, word, newLine, forceBreak;
-        for(var i in preLines) {
+        let lines = [],
+            preLines = config.text.toString().split("\n");
+
+        let currentLine = -1,
+            width,
+            word,
+            newLine,
+            forceBreak;
+
+        for(let i in preLines) {
             let data = preLines[i];
             currentLine++;
-            while(data != "") {
+
+            while(data !== "") {
                 if(!lines[currentLine]) lines[currentLine] = "";
-                data = data.trim();
-    
-                if(data[0] == "\n") {
-                    lines[currentLine] = lines[currentLine].trim();
-                    data = data.substring(1);
-                    currentLine++;
-                    continue;
-                }
-    
                 if(config.text_style >= 1) {
                     forceBreak = false;
-    
-                    if(config.text_style == 2) {
+                    if(config.text_style === 2) {
                         // Per word
                         word = data.indexOf(" ") >= 0 ? data.substring(0, data.indexOf(" ") + 1) : data;
-                    } else if(config.text_style == 1) {
+                    } else if(config.text_style === 1) {
                         // Per-symbol
                         word = data[0];
                     }
     
                     newLine = lines[currentLine] + word;
                     width = context.measureText(newLine).width + (offsetX * (newLine.length-1));
-                    if((width < config.w || lines[currentLine].length == 0)) {
+                    if((width < config.w || lines[currentLine].length === 0)) {
                         lines[currentLine] += word;
                         data = data.substring(word.length);
                     } else {
@@ -79,14 +77,12 @@ export class TextWidget extends BaseWidget {
             }
         }
 
-        // console.log(lines);
-
         // Render each line
         let maxWidth = config.w ? config.w : 0, 
             maxHeight = config.h ? config.h : 0,
             totalHeight = 0, px;
 
-        for(var i in lines) {
+        for(let i in lines) {
             let data = lines[i];
 
             let lineCanvas = player.newCanvas();
@@ -102,7 +98,7 @@ export class TextWidget extends BaseWidget {
             lineContext.font = fontConf;
             
             px = 0;
-            for(var j in data) {
+            for(let j in data) {
                 lineContext.fillText(data[j], px, sizes.fontBoundingBoxDescent);
                 px += lineContext.measureText(data[j]).width + offsetX;
             }
@@ -118,15 +114,15 @@ export class TextWidget extends BaseWidget {
         canvas.height = maxHeight;
 
         let py = (canvas.height - totalHeight) / 2
-        if(config.align_v == "top") py = 0;
-        if(config.align_v == "bottom") py = canvas.height - totalHeight;
+        if(config.align_v === "top") py = 0;
+        if(config.align_v === "bottom") py = canvas.height - totalHeight;
 
-        for(var i in lines) {
+        for(let i in lines) {
             let lineCanvas = lines[i];
 
             let px = 0;
-            if(config.align_h == "center_h") px = (maxWidth - lineCanvas.width) / 2;
-            if(config.align_h == "right") px = maxWidth - lineCanvas.width;
+            if(config.align_h === "center_h") px = (maxWidth - lineCanvas.width) / 2;
+            if(config.align_h === "right") px = maxWidth - lineCanvas.width;
 
             context.drawImage(lineCanvas, px, py);
             py += lineCanvas.height + (config.line_space ? config.line_space : 0);
