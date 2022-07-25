@@ -80,17 +80,22 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         PersistentStorage.wipe();
     }
 
-    setPause(val) {
-        const delegateName = val ? "pause_call" : "resume_call";
+    callDelegates(delegateName) {
         for(var i in this.widgets) {
             const w = this.widgets[i].config;
             if(w.__widget == "WIDGET_DELEGATE" && w[delegateName]) {
                 w[delegateName]();
             }
         }
+    }
+
+    setPause(val) {
+        this.callDelegates(val ? "pause_call" : "resume_call");
 
         const handlername = val ? "onHide" : "onShow";
         if(this.page[handlername]) this.page[handlername];
+
+        this.uiPause = val;
     }
 
     handleScriptError(e) {
@@ -377,6 +382,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 if(v !== null) this.setDeviceState(i, v);
             }
         }
+
+        this.callDelegates("resume_call");
     }
 
     async renderWidget(widget, canvas) {

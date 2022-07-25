@@ -77,7 +77,7 @@ export function createDeviceState() {
             maxLength: 1,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 6,
-            shift: (tick) => tick % 2 == 0 ? (state.WEEKDAY.value + 1) % 7 : null
+            shift: (tick) => tick % 2 === 0 ? (state.WEEKDAY.value + 1) % 7 : null
         },
         AM_PM: {
             value: "hide",
@@ -239,7 +239,8 @@ export function createDeviceState() {
             maxLength: 3,
             groupIcon: "monitor_heart",
             getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 100
+            getProgress: (t) => t.value / 100,
+            shift: () => (state.SPO2.value + 2 % 100)
         },
         PAI_WEEKLY: {
             value: 55,

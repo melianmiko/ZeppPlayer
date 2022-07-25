@@ -36,6 +36,9 @@ export default class ZeppPlayerConfig {
     set current_level(val) {
         this._currentRenderLevel = val;
         this.refresh_required = true; 
+
+        this.finish();
+        this.init();
     }
 
     get render_overlay() {

@@ -68,11 +68,14 @@
 
         // Fixed
         this.utc = Date.now();
-        this.week = 2;
         this.lunar_day = this.day;
         this.lunar_month = this.month;
         this.lunar_solar_term = "ZeppPlayer";
         this.solar_festival = "New year";
+    }
+
+    get week() {
+        return this.player.getDeviceState("WEEKDAY") + 1;
     }
 
     get hour() {
@@ -117,15 +120,17 @@
  * hmSensor.id.BATTERY
  */
 class BatterySensor {
+    get current() {
+        return this.player.getDeviceState("BATTERY");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("BATTERY");
     }
 
     addEventListener(name, callback) {
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("BATTERY", () => {
-                this.current = this.player.getDeviceState("BATTERY");
                 callback();
             });
         }
@@ -136,16 +141,21 @@ class BatterySensor {
  * hmSensor.id.STEP
  */
 class StepSensor {
+    get target() {
+        return this.player.getDeviceState("STEP_TARGET");
+    }
+
+    get current() {
+        return this.player.getDeviceState("STEP");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("STEP");
-        this.target = player.getDeviceState("STEP_TARGET");
     }
 
     addEventListener(name, callback) {
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("STEP", () => {
-                this.current = this.player.getDeviceState("STEP");
                 callback();
             });
         }
@@ -156,17 +166,21 @@ class StepSensor {
  * hmSensor.id.CALORIE
  */
  class CalorieSensor {
+    get current() {
+        return this.player.getDeviceState("CAL");
+    }
+
+    get target() {
+        return this.player.getDeviceState("CAL_TARGET");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("CAL");
-        this.target = player.getDeviceState("CAL_TARGET");
     }
 
     addEventListener(name, callback) {
-        const player = this.player;
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("CAL", () => {
-                this.current = this.player.getDeviceState("CAL");
                 callback();
             });
         }
@@ -181,24 +195,26 @@ class HeartSensor {
         CURRENT: "CHANGE",
         LAST: "LAST"
     }
+
+    get current() {
+        return this.player.getDeviceState("HEART");
+    }
+
+    get last() {
+        return this.player.getDeviceState("HEART");
+    }
     
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("HEART");
-        this.last = player.getDeviceState("HEART") * 1.1;
         this.today = [];
 
         for(let i = 0; i < 3600; i++) {
             this.today[i] = Math.round(90 + 90 * (i % 120)/120);
         }
-
-        console.log(this.today);
     }
 
     addEventListener(name, callback) {
-        const player = this.player;
         this.player.addDeviceStateChangeEvent("HEART", () => {
-            this.current = this.player.getDeviceState("HEART");
             callback();
         });
     }
@@ -227,16 +243,17 @@ class PaiSensor {
  * hmSensor.id.DISTANCE
  */
  class DistanceSensor {
+    get current() {
+        return this.player.getDeviceState("DISTANCE");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = this.player.getDeviceState("DISTANCE");
     }
 
     addEventListener(name, callback) {
-        const player = this.player;
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("DISTANCE", () => {
-                this.current = this.player.getDeviceState("DISTANCE");
                 callback();
             });
         }
@@ -247,17 +264,21 @@ class PaiSensor {
  * hmSensor.id.STAND
  */
  class StandSensor {
+    get target() {
+        return this.player.getDeviceState("STAND_TARGET");
+    }
+
+    get current() {
+        return this.player.getDeviceState("STAND");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("STAND");
-        this.target = player.getDeviceState("STAND_TARGET");
     }
 
     addEventListener(name, callback) {
-        const player = this.player;
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("STAND", () => {
-                this.current = this.player.getDeviceState("STAND");
                 callback();
             });
         }
@@ -313,17 +334,21 @@ class WeatherSensor {
  * hmSensor.id.FAT_BURNING
  */
  class FatBurningSensor {
+    get target() {
+        return this.player.getDeviceState("FAT_BURNING_TARGET");
+    }
+
+    get current() {
+        return this.player.getDeviceState("FAT_BURNING");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("FAT_BURNING");
-        this.target = player.getDeviceState("FAT_BURNING_TARGET");
     }
 
     addEventListener(name, callback) {
-        const player = this.player;
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("FAT_BURNING", () => {
-                this.current = this.player.getDeviceState("FAT_BURNING");
                 callback();
             });
         }
@@ -334,9 +359,12 @@ class WeatherSensor {
  * hmSensor.id.SPO2
  */
 class SPO2Sensor {
+    get current() {
+        return this.player.getDeviceState("SPO2");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("SPO2");
         this.time = 0;
         this.hourAvgofDay = [];
         for(let i = 0; i < 24; i++) {
@@ -345,10 +373,8 @@ class SPO2Sensor {
     }
 
     addEventListener(name, callback) {
-        const player = this.player;
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("SPO2", () => {
-                this.current = this.player.getDeviceState("SPO2");
                 callback();
             });
         }
@@ -373,16 +399,18 @@ class BodyTempSensor {
  * hmSensor.id.STRESS
  */
  class StressSensor {
+    get current() {
+        return this.player.getDeviceState("STRESS");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("STRESS");
         this.time = Date.now();
     }
 
     addEventListener(name, callback) {
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("STRESS", () => {
-                this.current = this.player.getDeviceState("STRESS");
                 callback();
             });
         }
@@ -401,11 +429,11 @@ class VibrateSensor {
     }
 
     start() {
-        console.log("[VIBRATE] bzzzzzzz");
+        console.log("[VIBRATE] start");
     }
 
     stop() {
-        console.log("[VIBRATE] stop bzzzzz");
+        console.log("[VIBRATE] stop");
     }
 }
 
@@ -413,15 +441,17 @@ class VibrateSensor {
  * hmSensor.id.WEAR
  */
 class WearSensor {
+    get current() {
+        return this.player.getDeviceState("WEAR_STATE");
+    }
+
     constructor(player) {
         this.player = player;
-        this.current = player.getDeviceState("WEAR_STATE");
     }
 
     addEventListener(name, callback) {
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("WEAR_STATE", () => {
-                this.current = this.player.getDeviceState("WEAR_STATE");
                 callback();
             });
         }
@@ -433,7 +463,7 @@ class WearSensor {
  */
 class WorldClockSensor {
     constructor(player) {
-        this.player = player
+        this.player = player;
     }
 
     init() {
@@ -451,8 +481,8 @@ class WorldClockSensor {
     getWorldClockInfo() {
         return {
             city: "Moscow",
-            hour: this.player.gertDeviceState("HOUR") - 4,
-            minute: this.player.gertDeviceState("MINUTE")
+            hour: this.player.getDeviceState("HOUR") - 4,
+            minute: this.player.getDeviceState("MINUTE")
         }
     }
 }
@@ -466,12 +496,15 @@ class SleepSensor {
     }
 
     getSleepStageData() {
-        let out = [];
+        const out = [];
+
         for(let i = 0; i < 4; i++) out.push({
             model: i,
             start: i*60 + 22*60,
             stop: i*60 + 23*60
         });
+
+        return out;
     }
 
     getSleepStageModel() {
@@ -488,11 +521,20 @@ class SleepSensor {
  * hmSensor.id.MUSIC
  */
 class MusicSensor {
+    get title() {
+        return this.player.getDeviceState("MUSIC_TITLE");
+    }
+
+    get artist() {
+        return this.player.getDeviceState("MUSIC_ARTIST");
+    }
+
+    get isPlaying() {
+        return this.player.getDeviceState("MUSIC_IS_PLAYING");
+    }
+
     constructor(player) {
         this.player = player;
-        this.title = this.player.getDeviceState("MUSIC_TITLE");
-        this.artist = this.player.getDeviceState("MUSIC_ARTIST");
-        this.isPlaying = this.player.getDeviceState("MUSIC_IS_PLAYING");
     }
 
     audInit() {}
@@ -515,17 +557,14 @@ class MusicSensor {
     }
 
     addEventListener(name, callback) {
-        if(name == "CHANGE") {
+        if(name === "CHANGE") {
             this.player.addDeviceStateChangeEvent("MUSIC_TITLE", () => {
-                this.title = this.player.getDeviceState("MUSIC_TITLE");
                 callback();
             });
             this.player.addDeviceStateChangeEvent("MUSIC_ARTIST", () => {
-                this.artist = this.player.getDeviceState("MUSIC_ARTIST");
                 callback();
             });
             this.player.addDeviceStateChangeEvent("MUSIC_IS_PLAYING", () => {
-                this.isPlaying = this.player.getDeviceState("MUSIC_IS_PLAYING");
                 callback();
             });
         }

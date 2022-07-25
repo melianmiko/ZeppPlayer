@@ -19,6 +19,7 @@
 import { PersistentStorage } from "../PersistentStorage.js";
 import { BaseWidget } from "./BaseWidget.js";
 import { ImageWidget } from "./ImagingWidgets.js";
+import {TextWidget} from "./DrawingWidgets";
 
 export class EditableBackground extends BaseWidget {
     constructor(config) {
@@ -29,16 +30,16 @@ export class EditableBackground extends BaseWidget {
         if(!config.current_type) config.current_type = config.default_id;
 
         this.addEventListener("onmouseup", () => {
-            if(this.player.current_level != this.player.LEVEL_EDIT) return;
+            if(this.player.current_level !== this.player.LEVEL_EDIT) return;
             this._switch();
         })
     }
 
     _findCurrent() {
         const id = this.config.current_type;
-        for(var i in this.config.bg_config) {
+        for(let i in this.config.bg_config) {
             i = parseInt(i);
-            if(this.config.bg_config[i].id == id) {
+            if(this.config.bg_config[i].id === id) {
                 return i;
             }
         }
@@ -58,7 +59,7 @@ export class EditableBackground extends BaseWidget {
         const config = this.config;
         const data = this.config.bg_config[this._findCurrent()];
 
-        if(this.player.current_level == this.player.LEVEL_EDIT) {
+        if(this.player.current_level === this.player.LEVEL_EDIT) {
             const img = await player.getAssetImage(data.preview);
             const fg = await player.getAssetImage(config.fg);
             const tips = await player.getAssetImage(config.tips_bg);
@@ -87,7 +88,7 @@ export class EditGroupWidget extends BaseWidget {
         if(!config.current_type) config.current_type = config.default_type;
 
         this.addEventListener("onmouseup", () => {
-            if(this.player.current_level != this.player.LEVEL_EDIT) return;
+            if(this.player.current_level !== this.player.LEVEL_EDIT) return;
             this._switch();
         })
     }
@@ -96,15 +97,17 @@ export class EditGroupWidget extends BaseWidget {
         const config = this.config;
         const ctx = canvas.getContext("2d");
 
-        const isActive = PersistentStorage.get("wfEdit", "focus") == config.edit_id
+        const isActive = PersistentStorage.get("wfEdit", "focus") === config.edit_id
         const currentType = config.current_type;
 
-        let preview = null;
+        let preview = null, text = null;
 
-        for(var i in config.optional_types) {
+        for(let i in config.optional_types) {
             const option = config.optional_types[i];
-            if(option.type == currentType)
+            if(option.type === currentType) {
                 preview = option.preview;
+                text = option.title_en;
+            }
         }
 
         try {
@@ -115,14 +118,36 @@ export class EditGroupWidget extends BaseWidget {
             preview = {width: config.w, height: config.h};
         }
 
+        let dx = config.x, dy = config.y;
+
         try {
             const overlay = await player.getAssetImage(
                 isActive ? config.select_image : config.un_select_image);
-            const dx = (overlay.width - preview.width) / 2;
-            const dy = (overlay.height - preview.height) / 2;
-            ctx.drawImage(overlay, config.x - dx, config.y - dy);
+            dx = config.x - (overlay.width - preview.width) / 2;
+            dy = config.y - (overlay.height - preview.height) / 2;
+            ctx.drawImage(overlay, dx, dy);
         } catch(e) {
-            // No overlay, ignore
+            console.log(e);
+        }
+
+        try {
+            const tipsBg = await player.getAssetImage(config.tips_BG);
+            ctx.drawImage(tipsBg, dx + config.tips_x, dy + config.tips_y);
+
+            const textImg = await TextWidget.drawText({
+                color: 0, text, text_size: 18,
+                w: config.tips_width, h: 0,
+                align_h: "center_h"
+            }, player);
+
+            const croppedTextImg = player.newCanvas();
+            croppedTextImg.width = config.tips_width;
+            croppedTextImg.height = config.tips_margin + textImg.height;
+            croppedTextImg.getContext("2d").drawImage(textImg, 0, config.tips_margin);
+
+            ctx.drawImage(croppedTextImg, dx + config.tips_x, dy + config.tips_y);
+        } catch(e) {
+            // No tips, ignore
         }
 
         this.dropEvents(player, [
@@ -135,16 +160,16 @@ export class EditGroupWidget extends BaseWidget {
 
     _switch() {
         const currentType = this.config.current_type;
-        for(var i in this.config.optional_types) {
+        for(let i in this.config.optional_types) {
             i = parseInt(i);
-            if(this.config.optional_types[i].type == currentType) {
+            if(this.config.optional_types[i].type === currentType) {
                 // Get next
                 const nextIndex = (i + 1) % this.config.optional_types.length;
                 const val = this.config.optional_types[nextIndex];
                 PersistentStorage.set("wfEdit", this.config.edit_id, val.type);
                 PersistentStorage.set("wfEdit", "focus", this.config.edit_id);
-                this.player.init();
-                return;
+                this.config.current_type = val.type;
+                this.player.refresh_required = "edit";
             }
         }
     }
