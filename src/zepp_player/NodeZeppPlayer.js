@@ -21,13 +21,9 @@ import ZeppPlayer from "./ZeppPlayer.js";
 import TGA from "tga";
 import * as fs from 'fs';
 import { PersistentStorage } from "./PersistentStorage.js";
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export class NodeZeppPlayer extends ZeppPlayer {
-    pathOverlay = __dirname + "/../overlay.png";
+    pathOverlay = __dirname + "/overlay.png";
 
     constructor() {
         super();

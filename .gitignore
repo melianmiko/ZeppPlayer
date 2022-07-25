@@ -1,8 +1,12 @@
+/app/index.browser.js
+/app/index.cli.js
+
 /_*
 /projects/*
 /win32_server/build
 /win32_server/dist
 /dist
+
 node_modules
 __pycache__
 

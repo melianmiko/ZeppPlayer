@@ -3,9 +3,14 @@
   "version": "0.11.2",
   "description": "Mi Band 7 preview tool",
   "main": "app/zepp_player/cli.js",
-  "type": "module",
+  "scripts": {
+    "browser:build": "esbuild --bundle --outdir=app src/index.browser.js",
+    "cli:build": "esbuild --bundle --platform=node --external:canvas --outdir=app src/index.cli.js",
+    "browser:watch": "esbuild --bundle --outdir=app src/index.browser.js --watch",
+    "build": "npm run browser:build && npm run cli:build"
+  },
   "bin": {
-    "zepp-preview": "app/zepp_player/cli.js"
+    "zepp-preview": "app/index.cli.js"
   },
   "repository": {
     "type": "git",
@@ -15,7 +20,10 @@
   "license": "Apache 2.0",
   "dependencies": {
     "canvas": "^2.9.3",
-    "fs": "^0.0.1-security",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.49",
     "gif-encoder-2": "^1.0.5",
     "tga": "^1.0.7",
     "yargs": "^17.5.1"

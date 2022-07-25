@@ -149,7 +149,6 @@ export default class HuamiUIMock {
         H: "h",
         POS_X: "pos_x",
         POS_Y: "pos_y",
-        ANGLE: "angle",
         CENTER_X: "center_x",
         CENTER_Y: "center_y",
         TEXT: "text",

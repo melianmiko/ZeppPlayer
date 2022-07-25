@@ -21,7 +21,7 @@
 
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
-import { NodeZeppPlayer } from "./NodeZeppPlayer.js";
+import { NodeZeppPlayer } from "./zepp_player/NodeZeppPlayer";
 import GIFEncoder from "gif-encoder-2";
 import * as fs from 'fs';
 

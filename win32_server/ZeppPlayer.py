@@ -16,7 +16,6 @@
 
 import os
 import threading
-from typing import Dict
 import webbrowser
 import sys
 
