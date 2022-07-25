@@ -129,7 +129,6 @@ export class PointerWidget extends BaseWidget {
 export class MissingWidget extends ImageWidget {
     constructor(config) {
         super(config);
-        config.src = "../../../app/no_widget.png";
     }
 
     async render(a, b) {

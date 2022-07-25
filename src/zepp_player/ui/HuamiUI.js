@@ -135,6 +135,22 @@ export default class HuamiUIMock {
         // todo
     }
 
+    getTextLayout(text, options) {
+        const canvas = TextWidget.drawText({
+            text,
+            text_size: options.text_size,
+            w: options.text_width,
+            text_style: options.wrapped ? 2 : 0
+        }, this.player);
+
+        console.log(text, canvas.width, canvas.height);
+
+        return {
+            width: canvas.width,
+            height: canvas.height
+        }
+    }
+
     prop = {
         VISIBLE: "visible",
         ANIM_STATUS: "anim_status",

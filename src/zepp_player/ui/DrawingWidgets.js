@@ -24,7 +24,7 @@ import { ImageWidget } from "./ImagingWidgets.js";
  * hmUI.widget.TEXT
  */
 export class TextWidget extends BaseWidget {
-    static async drawText(config, player) {
+    static drawText(config, player) {
         const textSize = config.text_size ? config.text_size : 22;
         const fontConf = textSize + "px sans";
         const colorConf = config.color ? zeppColorToHex(config.color) : "#000000";
@@ -68,7 +68,6 @@ export class TextWidget extends BaseWidget {
                         lines[currentLine] += word;
                         data = data.substring(word.length);
                     } else {
-                        lines[currentLine] = lines[currentLine].trim();
                         currentLine++;
                     }
                 } else {
@@ -116,7 +115,7 @@ export class TextWidget extends BaseWidget {
 
         // Build full image
         canvas.width = maxWidth;
-        canvas.height = maxHeight;
+        canvas.height = Math.max(maxHeight, totalHeight);
 
         let py = 0;
         if(config.align_v === "center_v") py = (canvas.height - totalHeight) / 2;

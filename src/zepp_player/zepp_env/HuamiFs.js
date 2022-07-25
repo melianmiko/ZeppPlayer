@@ -40,9 +40,10 @@ export default class HuamiFsMock {
     }
 
     stat_asset(path) {
-        const f = this.player.getAssetText(path);
+        console.log("stat", path);
+        let f = this.player.readCache[this.player.getAssetPath(path)];
         return [{
-            size: f.length,
+            size: f.byteLength,
             mtime: 0 // no access
         }, 0];
     }
@@ -54,9 +55,8 @@ export default class HuamiFsMock {
     }
 
     open_asset(path, flag) {
-        let f = this.player.getAssetText(path);
-        if(!f) f = "";
-        return {data: f, flag, path, position: flag == 1 ? f.length : 0, store: "appFs"};
+        let f = this.player.readCache[this.player.getAssetPath(path)];
+        return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
     }
 
     stat(path) {
@@ -76,11 +76,12 @@ export default class HuamiFsMock {
 
     read(file, buffer, buffOffset, len) {
         const view = new Uint8Array(buffer);
-        const {data, position} = file;
+        const {position} = file;
+        const fileView = new Uint8Array(file.data);
 
         console.log("read", file.path, "to", buffOffset, "from", position, "len", len);
-        for(var i = 0; i < len; i++) {
-            view[buffOffset + i] = data.charCodeAt(position + i);
+        for(let i = 0; i < len; i++) {
+            view[buffOffset + i] = fileView[position + i];
         }
 
         file.position += len;

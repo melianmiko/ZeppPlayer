@@ -37,7 +37,7 @@ export default class Overlay {
     }
 
     static async loadMask(player) {
-        const mask = await player.getAssetImage(player.pathOverlay, true);
+        const mask = await player.getAssetImage("player_overlay.png", true);
         const maskCanvas = player.newCanvas();
         maskCanvas.width = mask.width;
         maskCanvas.height = mask.height;

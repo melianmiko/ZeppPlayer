@@ -88,7 +88,7 @@ const start = async () => {
             canvas = await player.render();
         } catch(e) {
             console.error("Render err", e);
-            canvas = await player.getAssetImage("app/render_fail.png", true);
+            canvas = await player.getAssetImage("render_fail.png", true);
             player.refresh_required = false;
         }
         const rotation = player.rotation;

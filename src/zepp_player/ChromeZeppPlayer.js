@@ -16,15 +16,60 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { PersistentStorage } from "./PersistentStorage.js";
 import ZeppPlayer from "./ZeppPlayer.js";
 
 export class ChromeZeppPlayer extends ZeppPlayer {
-    pathOverlay = "../../../app/overlay.png";
+    imgCache = {};
 
     constructor() {
         super();
         this.rotation = 0;
+    }
+
+    async loadFile(path) {
+        const resp = await fetch(path);
+
+        return await resp.arrayBuffer();
+    }
+
+    async getAssetImage(path, noPrefix=false) {
+        if(!noPrefix) path = this.getAssetPath(path);
+        if(this.imgCache[path]) return this.imgCache[path];
+        if(!this.readCache[path]) throw new Error("Undefined asset");
+
+        const data = this.readCache[path];
+        const uint = new Uint8Array(data);
+
+        let img;
+        if(uint[2] === 1) {
+            img = await this._loadTGA(data);
+        } else {
+            img = await this._loadPNG(data);
+        }
+
+        this.imgCache[path] = img;
+        return img;
+    }
+
+    async listDirectory(path) {
+        const resp = await fetch(path);
+        const html = await resp.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const links = Array.from(doc.getElementsByTagName("a"));
+        const content = [];
+
+        for(let i in links) {
+            const name = links[i].innerText;
+
+            let type = "file";
+            if(name.endsWith("/")) type = "dir";
+            content.push({name: name, type: type});
+        }
+
+        return content;
     }
 
     getEvalAdditionalData() {
@@ -32,12 +77,9 @@ export class ChromeZeppPlayer extends ZeppPlayer {
     }
 
     setupHTMLEvents(block) {
-        this._swipeStartCoords = [0, 0];
-
         block.onmousedown = (e) => {
             e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
-            this._swipeStartCoords = [x, y];
             this.handleEvent("onmousedown", x, y, {x, y});
         };
 
@@ -45,11 +87,6 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
             this.handleEvent("onmouseup", x, y, {x, y});
-
-            const ss = this._getSwipeState(x, y);
-            if(ss != null) {
-                this.handleEvent("move", x, y, ss);
-            }
         };
 
         block.oncontextmenu = (e) => {
@@ -87,23 +124,23 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         return [Math.floor(x), Math.floor(y)];
     }
 
-    _getSwipeState(x, y) {
-        const [sx, sy] = this._swipeStartCoords;
-
-        if(sx - x > 30) return "left";
-        if(x - sx > 30) return "right";
-        if(sy - y > 30) return "top";
-        if(y - sy > 30) return "bottom";
-        return null;
+    _loadPNG(data) {
+        return new Promise((resolve) => {
+            const blob = new Blob( [ data ] );
+            const url = URL.createObjectURL( blob );
+            const img = document.createElement("img");
+            img.onload = () => resolve(img);
+            img.src = url;
+        });
     }
 
     /**
      * Load TGA image
      * 
-     * @param {string} url URL or path
+     * @param {ArrayBuffer} data URL or path
      * @returns image
      */
-     async _loadTGA(url) {
+     async _loadTGA(data) {
         if(!this.__tga_first_use) {
             this.onConsole("ZeppPlayer", [
                 "We're using TGA images loader. This will reduce performance."
@@ -111,7 +148,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             this.__tga_first_use = true;
         }
 
-        const tga = TGAImage.imageWithURL(url);
+        const tga = TGAImage.imageWithData(data);
         await tga.didLoad;
 
         if(tga._colorMapType !== 1 || tga._colorMapDepth !== 32) {
@@ -121,68 +158,5 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         }
 
         return tga.image;
-    }
-
-    /**
-     * Load app asset file to persistent storage,
-     * this will allow you to edit this file.
-     * 
-     * @param {string} path File path
-     */
-     getAssetText(path, noprefix=false) {
-        if(PersistentStorage.get("appFs", path)) 
-            return PersistentStorage.get("appFs", path);
-
-        if(!this._auFlag) {
-            this.onConsole("ZeppPlayer", ["Notice that stat/open asset enulation works bad for now, "
-                + "becouse we need to fetch file from \"server\". Browser may hang."]);
-            this._auFlag = true;
-        }
-
-        let url = this.path_project + "/assets/" + path;
-        if(noprefix) url = path;
-        const rq = new XMLHttpRequest();
-        rq.open('GET', url, false);
-        rq.send();
-
-        this.onConsole("ZeppPlayer", ["Fetched asset", path]);
-        return rq.responseText;
-    }
-
-    async getFileContent(path) {
-        const resp = await fetch(path);
-        const text = await resp.text();
-        return text;
-    }
-
-    getAssetImage(path, noprefix=false) {
-        return new Promise((resolve, reject) => {
-            if(this._img_cache[path] === false) {
-                reject();
-                return
-            }
-
-            if(this._img_cache[path]) {
-                resolve(this._img_cache[path]);
-                return;
-            }
-
-            const image = new Image();
-            image.onload = () => {
-                this._img_cache[path] = image;
-                resolve(image);
-            };
-            image.onerror = () => {
-                this._loadTGA(this.path_project + "/assets/" + path).then((image) => {
-                    this._img_cache[path] = image;
-                    resolve(image);
-                }).catch((e) => {
-                    console.warn("Failed to fetch image", path);
-                    this._img_cache[path] = false;
-                    reject();
-                })
-            };
-            image.src = noprefix ? path : this.path_project + "/assets/" + path;
-        })
     }
 }

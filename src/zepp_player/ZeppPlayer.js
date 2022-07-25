@@ -16,9 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { setupEnvironment } from "./SyystemEnvironment.js";
-import { createDeviceState } from "./DeviceStateObject.js";
-import { PersistentStorage } from "./PersistentStorage.js";
+import {setupEnvironment} from "./SyystemEnvironment.js";
+import {createDeviceState} from "./DeviceStateObject.js";
+import {PersistentStorage} from "./PersistentStorage.js";
 import ZeppPlayerConfig from "./ZeppPlayerConfig.js";
 import Overlay from "./ui/Overlay.js";
 
@@ -37,6 +37,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
     withStagingDump = false;
     stages = [];
+    readCache = {};
+    _img_cache = {};
 
     constructor() {
         super();
@@ -49,7 +51,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         // Render stage data
         this.currentCanvas = null;
         this.events = {};
-        this._img_cache = {};
         this.render_counter = 0;
 
         // Script data
@@ -83,7 +84,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     callDelegates(delegateName) {
         for(var i in this.widgets) {
             const w = this.widgets[i].config;
-            if(w.__widget == "WIDGET_DELEGATE" && w[delegateName]) {
+            if(w.__widget === "WIDGET_DELEGATE" && w[delegateName]) {
                 w[delegateName]();
             }
         }
@@ -92,8 +93,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     setPause(val) {
         this.callDelegates(val ? "pause_call" : "resume_call");
 
-        const handlername = val ? "onHide" : "onShow";
-        if(this.page[handlername]) this.page[handlername];
+        const handleName = val ? "onHide" : "onShow";
+        if(this.page[handleName]) this.page[handleName]();
 
         this.uiPause = val;
     }
@@ -107,6 +108,10 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 this.mustRestart = true;
             }
         }
+    }
+
+    getAssetPath(path) {
+        return this.path_project + "/assets/" + path;
     }
 
     exportAll() {
@@ -152,35 +157,62 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         throw new Error("not overriden");
     }
 
-    getAssetText(path) {
-        throw new Error("not overriden");
-    }
-
-    async getFileContent(path) {
-        throw new Error("not overriden");
-    }
-
     newCanvas() {
         throw new Error("not overriden");
     }
 
     async setProject(path) {
-        const appConfig = JSON.parse(await this.getFileContent(path + '/app.json'));
+        const jsonFile = await this.loadFile(path + '/app.json');
+        const jsonText = new TextDecoder().decode(jsonFile);
+        const appConfig = JSON.parse(jsonText);
         this.path_project = path;
 
         // Find init page
         let modulePath = null;
-        if(appConfig.app.appType == "watchface") {
+        if(appConfig.app.appType === "watchface") {
             // Run as watchface
             modulePath = "/watchface/index";
             if(appConfig.module && appConfig.module.watchface)
                 modulePath = appConfig.module.watchface.path;
-        } else if(appConfig.app.appType == "app") {
+        } else if(appConfig.app.appType === "app") {
             // Run as app (experimental)
             modulePath = appConfig.module.page.pages[0];
         }
 
+        // Preload content
+        this.onConsole("ZeppPlayer", ['loading assets...']);
+        await this.preloadProjectAssets(path + "/assets/");
+        this.onConsole("ZeppPlayer", ['Assets loaded.']);
+
         this.setPage(modulePath);
+    }
+
+    async readDirectoryRecursive(path, arr=null) {
+        if(!arr) arr = [];
+
+        const dirContent = await this.listDirectory(path);
+        for(let i in dirContent) {
+            const filePath = path + dirContent[i].name;
+            if(dirContent[i].type === "file") {
+                arr.push(filePath);
+            } else {
+                await this.readDirectoryRecursive(filePath, arr);
+            }
+        }
+
+        return arr;
+    }
+
+    async preloadProjectAssets(path) {
+        const urls = await this.readDirectoryRecursive(path);
+        const contents = await Promise.all(urls.map(this.loadFile));
+
+        for(let i = 0; i < urls.length; i++) {
+            this.readCache[urls[i]] = contents[i];
+        }
+
+        this.readCache["player_overlay.png"] = await this.loadFile("/app/overlay.png");
+        this.readCache["render_fail.png.png"] = await this.loadFile("/app/render_fail.png");
     }
 
     setPage(modulePath) {
@@ -210,7 +242,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         await this.finish();
         
         const extra = this.getEvalAdditionalData();
-        const text = await this.getFileContent(this.path_script);
+        const scriptFile = await this.loadFile(this.path_script);
+        const text = new TextDecoder().decode(scriptFile);
         this.script_data = text;
 
         // Eval this script
@@ -304,7 +337,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const canvas = this.newCanvas();
         const ctx = canvas.getContext("2d");
 
-        if(this.render_counter % 500 == 0) {
+        if(this.render_counter % 500 === 0) {
             // Drop info
             console.log("[ZeppPlayer] Render stats",
                 "last_refresh_request=", this.refresh_required,
@@ -360,7 +393,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         // Shifts
         if(this.withShift) {
-            if(this.render_counter % 15 == 0) this.performShift();
+            if(this.render_counter % 15 === 0) this.performShift();
             this.refresh_required = "shift";
         }
 
@@ -419,4 +452,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             this.stages.push(st);
         }
     }
+
+    async listDirectory(path) {}
+
+    async loadFile() {}
 }
