@@ -279,6 +279,24 @@ export function createDeviceState() {
             getProgress: () => state.WEATHER_CURRENT_ICON.value / 29, //redir to icon
             shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
         },
+        WEATHER_HIGH: {
+            value: 14,
+            type: "number",
+            groupIcon: "sunny",
+            displayName: "High",
+            maxLength: 3,
+            getString: (t) => t.value.toString(),
+            shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
+        },
+        WEATHER_LOW: {
+            value: 14,
+            type: "number",
+            groupIcon: "sunny",
+            displayName: "Low",
+            maxLength: 3,
+            getString: (t) => t.value.toString(),
+            shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
+        },
         WEATHER_CURRENT_ICON: {
             value: 0,
             maxLength: 2,
