@@ -1,7 +1,8 @@
-import sys
 import json
 import shutil
 import os
+import subprocess
+
 from zipfile import ZipFile, ZIP_DEFLATED
 from pathlib import Path
 
@@ -16,6 +17,8 @@ def get_version():
 def main():
 	if os.path.isdir("dist"):
 		shutil.rmtree("dist")
+
+	subprocess.check_output(["npm", "run", "build"])
 
 	os.mkdir("dist")
 	with ZipFile(f"dist/ZeppPlayer_v{get_version()}.zip", "w", ZIP_DEFLATED) as zip:

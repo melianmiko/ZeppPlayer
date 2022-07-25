@@ -177,6 +177,11 @@ class StepSensor {
  * hmSensor.id.HEART
  */
 class HeartSensor {
+    event = {
+        CURRENT: "CHANGE",
+        LAST: "LAST"
+    }
+    
     constructor(player) {
         this.player = player;
         this.current = player.getDeviceState("HEART");
