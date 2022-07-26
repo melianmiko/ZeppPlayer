@@ -83,7 +83,6 @@ export class EditGroupWidget extends BaseWidget {
         this.player = config.__player;
         this._renderStage = "post";
 
-        config.show_level = 4;
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
         if(!config.current_type) config.current_type = config.default_type;
 
@@ -94,6 +93,8 @@ export class EditGroupWidget extends BaseWidget {
     }
 
     async render(canvas, player) {
+        if(player.current_level !== 4) return;
+        
         const config = this.config;
         const ctx = canvas.getContext("2d");
 
@@ -127,7 +128,7 @@ export class EditGroupWidget extends BaseWidget {
             dy = config.y - (overlay.height - preview.height) / 2;
             ctx.drawImage(overlay, dx, dy);
         } catch(e) {
-            console.log(e);
+            // No overlay
         }
 
         try {
@@ -149,7 +150,7 @@ export class EditGroupWidget extends BaseWidget {
 
             ctx.drawImage(croppedTextImg, dx + config.tips_x, dy + config.tips_y);
         } catch(e) {
-            // No tips, ignore
+            // No tips BG
         }
 
         this.dropEvents(player, [

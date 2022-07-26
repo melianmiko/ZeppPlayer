@@ -28,6 +28,16 @@ export class BaseWidget {
         if(!this.config.visible) this.config.visible = true;
     }
 
+    _isVisible() {
+        if(!this.config.visible) return false;
+
+        const show_level = this.config.show_level;
+        if((show_level & this.player.current_level) === 0 && show_level) 
+            return false;
+        
+        return true;
+    }
+
     _export() {
         const obj = {
             _renderClass: this.constructor.name,
@@ -49,6 +59,10 @@ export class BaseWidget {
     }
 
     setProperty(prop, val) {
+        if(!this._isVisible()) {
+            return;
+        }
+
         if(prop == undefined) {
             console.warn("This prop was missing in simulator. Please, debug me...");
         }
@@ -72,6 +86,11 @@ export class BaseWidget {
     }
 
     getProperty(key, second) {
+        if(!this._isVisible()) {
+            console.warn("attempt to getprop on invisible", this, key);
+            return undefined;
+        }
+
         if(key == "more") {
             if(typeof second !== "object") 
                 this.player.onConsole("SystemWarning", [

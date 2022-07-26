@@ -365,7 +365,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const postRender = [];
         for(let i in this.widgets) {
             const widget = this.widgets[i];
-
             if(widget._renderStage === "post") {
                 postRender.push(widget);
                 continue;
@@ -426,12 +425,12 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         ctx.globalAlpha = widget.config.alpha !== undefined ? widget.config.alpha / 255 : 1;
 
         if((show_level & this.current_level) === 0 && show_level) return;
-            if(!widget.config.visible) return;
+        if(!widget.config.visible) return;
 
         try {
             await widget.render(canvas, this);
         } catch(e) {
-            console.error("render failed with error", e, "widget", widget._export());
+            console.error("render failed with error", e);
             throw new Error("Render failed");
         }
 

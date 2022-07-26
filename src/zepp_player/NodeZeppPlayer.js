@@ -23,7 +23,7 @@ import * as fs from 'fs';
 import { PersistentStorage } from "./PersistentStorage.js";
 
 export class NodeZeppPlayer extends ZeppPlayer {
-    pathOverlay = __dirname + "/overlay.png";
+    imgCache = {};
 
     constructor() {
         super();
@@ -33,40 +33,54 @@ export class NodeZeppPlayer extends ZeppPlayer {
         this.withScriptConsole = false;
     }
 
-    getFileContent(path) {
-        return new Promise((resolve, reject) => {
-            fs.readFile(path, "utf8", (err, data) => {
-                if(err) return reject(err);
-                resolve(data);
+    async listDirectory(path) {
+        const out = [];
+        const content = fs.readdirSync(path);
+
+        for(let i in content) {
+            const stat = fs.statSync(path + "/" + content[i]);
+            out.push({
+                name: content[i] + (stat.isDirectory() ? "/" : ""),
+                type: stat.isDirectory() ? "dir" : "file"
             });
-        })
+        }
+
+        return out;
+    }
+
+    async loadFile(path) {
+        if(path.startsWith("/app"))
+            path = __dirname + "/" + path.substring(4);
+
+        return fs.readFileSync(path);
     }
 
     newCanvas() {
         return createCanvas(20, 20);
     }
 
-    getAssetText(path) {
-        if(PersistentStorage.get("appFs", path)) 
-            return PersistentStorage.get("appFs", path);
+    async getAssetImage(path, noPrefix=false) {
+        if(!noPrefix) path = this.getAssetPath(path);
+        if(this.imgCache[path]) return this.imgCache[path];
+        if(!this.readCache[path]) throw "Undefined asset";
 
-        const fullPath = this.path_project + "/assets/" + path;
-        return fs.readFileSync(fullPath, "utf8");
-    }
+        const data = this.readCache[path];
+        const uint = new Uint8Array(data);
 
-    async getAssetImage(path, noprefix=false) {
-        const fullPath = this.path_project + "/assets/" + path;
-        try {
-            const image = await loadImage(noprefix ? path : fullPath);
-            return image;
-        } catch(e) {
-            return await this._loadTga(noprefix ? path : fullPath);
+        let img;
+        if(uint[2] === 1) {
+            img = await this._loadTga(data);
+        } else {
+            img = await loadImage(data);
         }
+
+        this.imgCache[path] = img;
+        return img;
     }
 
-    _loadTga(fullPath) {
+    _loadTga(data) {
         return new Promise((resolve, reject) => {
-            const tga = new TGA(fs.readFileSync(fullPath), {
+            const tga = new TGA(data, {
                 dontFixAlpha: true
             });
 

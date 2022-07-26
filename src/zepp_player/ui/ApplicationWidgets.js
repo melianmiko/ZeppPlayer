@@ -31,6 +31,14 @@ export class DelegateWidget extends BaseWidget {
  * hmUI.widget.GROUP
  */
 export class GroupWidget extends BaseWidget {
+    static banlist = [
+        "WATCHFACE_EDIT_MASK",
+        "WATCHFACE_EDIT_FG_MASK",
+        "WATCHFACE_EDIT_BG",
+        "WATCHFACE_EDIT_GROUP",
+        "GROUP"
+    ];
+
     constructor(config) {
         super(config);
         this.widgets = [];
@@ -68,6 +76,11 @@ export class GroupWidget extends BaseWidget {
 
         if(typeof config !== "object") {
             config = {};
+        }
+
+        if(GroupWidget.banlist.indexOf(type) > -1) {
+            this.player.onConsole("SystemWarning", ["You can't place", type, 'into group']);
+            return null;
         }
 
         config.__widget = type;

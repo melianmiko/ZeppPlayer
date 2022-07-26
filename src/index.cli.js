@@ -95,24 +95,26 @@ async function main() {
             let output = argv.o.replace("{}", project);
     
             if(argv.png) {
+                console.log("[ZeppPlayer] Rendering PNG...");
                 const png = await player.render();
                 fs.writeFileSync(output + "/preview.png", png.toBuffer());
                 console.log("[ZeppPlayer] PNG saved to: " + output + "/preview.png");
             }
 
             if(argv.stage) {
-                for(var i in player.stages) {
+                for(let i in player.stages) {
                     fs.writeFileSync(output + "/stage_" + i + ".png", player.stages[i].toBuffer());
                 }
             }
             
             if(argv.gif) {
+                console.log("[ZeppPlayer] Rendering GIF...");
                 const gif = await createGif(player);
                 fs.writeFileSync(output + "/preview.gif", gif);
                 console.log("[ZeppPlayer] GIF saved to: " + output + "/preview.gif");
             }
 
-            player.finish();
+            await player.finish();
 
             success++;
         } catch(e) {

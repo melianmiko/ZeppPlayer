@@ -38,7 +38,7 @@ export class ImageWidget extends BaseWidget {
             posY = config.pos_y ? config.pos_y : 0;
 
         const ctx = canvas.getContext("2d");
-        if(config.angle === undefined || config.angle == 0) {
+        if(config.angle === undefined || config.angle === 0) {
             ctx.drawImage(img, x + posX, y + posY);
             return [
                 x + posX, 
@@ -298,7 +298,6 @@ export class TextImageWidget extends BaseWidget {
 export class AnimationWidget extends BaseWidget {
     constructor(config) {
         super(config);
-        config.show_level = 1;
     }
     
     async render(canvas, player) {

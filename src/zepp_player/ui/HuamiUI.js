@@ -182,7 +182,7 @@ export default class HuamiUIMock {
         ONLY_AOD: 2,
         ONAL_AOD: 2,
         ONLY_EDIT: 4,
-        ALL: 1 & 2 
+        ALL: 1 | 2 | 4
     }
 
     align = {
