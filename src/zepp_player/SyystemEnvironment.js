@@ -26,22 +26,22 @@ import TimerMock from "./zepp_env/Timer.js";
 import { HuamiBLEMock } from "./zepp_env/HuamiBLE.js";
 import { HmAppMock } from "./zepp_env/HmAppMock.js";
 
-export function setupEnvironment(player) {
+export function setupEnvironment(runtime) {
     const object = {};
 
     // Glob constants
     object.SLEEP_REFERENCE_ZERO = 24 * 60;
 
     // Base libraries
-    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player);
-    object.hmUI = new HuamiUIMock(player);
-    object.hmFS = new HuamiFsMock(player);
-    object.hmApp = new HmAppMock(player);
+    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock();
+    object.hmUI = new HuamiUIMock(runtime);
+    object.hmFS = new HuamiFsMock(runtime);
+    object.hmApp = new HmAppMock(runtime);
     object.hmBle = new HuamiBLEMock();
-    object.hmSensor = new HuamiSensorMock(player);
-    object.hmSetting = new HuamiSettingMock(player);
-    object.timer = new TimerMock(player);
-    object.console = new ConsoleMock(player, console);
+    object.hmSensor = new HuamiSensorMock(runtime);
+    object.hmSetting = new HuamiSettingMock(runtime);
+    object.timer = new TimerMock(runtime);
+    object.console = new ConsoleMock(runtime, console);
     object.px = (n) => n; // looks like some legacy shit
 
     // Links

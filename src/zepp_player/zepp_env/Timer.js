@@ -17,11 +17,11 @@
 */
 
 export default class TimerMock {
-    constructor(player) {
-        this.player = player;
+    constructor(runtime) {
+        this.runtime = runtime;
         this.timers = [];
 
-        player.onDestroy.push(() => {
+        runtime.onDestroy.push(() => {
             for(var a in this.timers) try {
                 this.stopTimer(a);
             } catch(e) {};
@@ -29,7 +29,7 @@ export default class TimerMock {
     }
 
     createTimer(delay, period, callable, option) {
-        const player = this.player;
+        const runtime = this.runtime;
         const id = this.timers.length;
         const ctx = this;
 
@@ -47,7 +47,7 @@ export default class TimerMock {
                 if(!ctx.timers[id]) return;
 
                 ctx.timers[id].interval = setInterval(() => {
-                    if(player.uiPause) return;
+                    if(runtime.uiPause) return;
                     callable.apply(this, option);
                 }, period);
             }

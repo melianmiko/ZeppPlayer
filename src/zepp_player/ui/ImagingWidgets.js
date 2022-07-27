@@ -92,7 +92,7 @@ export class ClickableImageWidget extends ImageWidget {
         super(config);
         this.addEventListener("onmousedown", () => {
             console.info("[IMG_CLICK] " + config.type);
-            config.__player.onConsole("IMG_CLICK", ["clicked", config.type]);
+            config.__runtime.onConsole("IMG_CLICK", ["clicked", config.type]);
         })
     }
 }
@@ -302,7 +302,7 @@ export class AnimationWidget extends BaseWidget {
     
     async render(canvas, player) {
         const config = this.config;
-        const currentFrame = Math.floor(player.render_counter / player.system_fps * config.anim_fps);
+        const currentFrame = Math.floor(player.render_counter / 60 * config.anim_fps);
 
         if(config.anim_status == 0) return;
 

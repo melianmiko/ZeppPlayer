@@ -59,7 +59,7 @@ async function createGif(player) {
     gif.start();
 
     for(let i = 0; i < FPS*SECONDS*2; i++) {
-        if(i === FPS*SECONDS) player.current_level = 2;
+        if(i === FPS*SECONDS) player.setRenderLevel(2);
 
         const canvas = await player.render();
         gif.addFrame(canvas.getContext("2d"));

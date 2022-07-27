@@ -24,13 +24,13 @@ import {TextWidget} from "./DrawingWidgets";
 export class EditableBackground extends BaseWidget {
     constructor(config) {
         super(config);
-        this.player = config.__player;
+        this.runtime = config.__runtime;
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
         if(!config.current_type) config.current_type = config.default_id;
 
         this.addEventListener("onmouseup", () => {
-            if(this.player.current_level !== this.player.LEVEL_EDIT) return;
+            if(this.runtime.showLevel !== 4) return;
             this._switch();
         })
     }
@@ -52,14 +52,14 @@ export class EditableBackground extends BaseWidget {
         const nextIndex = (i + 1) % this.config.bg_config.length;
         const val = this.config.bg_config[nextIndex].id;
         PersistentStorage.set("wfEdit", this.config.edit_id, val);
-        this.player.init();
+        this.runtime.refresh_required = "edit";
     }
 
     async render(canvas, player) {
         const config = this.config;
         const data = this.config.bg_config[this._findCurrent()];
 
-        if(this.player.current_level === this.player.LEVEL_EDIT) {
+        if(this.runtime.showLevel === 4) {
             const img = await player.getAssetImage(data.preview);
             const fg = await player.getAssetImage(config.fg);
             const tips = await player.getAssetImage(config.tips_bg);
@@ -80,20 +80,19 @@ export class EditableBackground extends BaseWidget {
 export class EditGroupWidget extends BaseWidget {
     constructor(config) {
         super(config);
-        this.player = config.__player;
+        this.player = config.__runtime;
         this._renderStage = "post";
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
         if(!config.current_type) config.current_type = config.default_type;
 
         this.addEventListener("onmouseup", () => {
-            if(this.player.current_level !== this.player.LEVEL_EDIT) return;
             this._switch();
         })
     }
 
     async render(canvas, player) {
-        if(player.current_level !== 4) return;
+        if(player.showLevel !== 4) return;
         
         const config = this.config;
         const ctx = canvas.getContext("2d");

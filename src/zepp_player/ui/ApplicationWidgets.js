@@ -85,11 +85,11 @@ export class GroupWidget extends BaseWidget {
 
         config.__widget = type;
         config.__id = (this.config.__id+1 << 8) + this.widgets.length;
-        config.__player = this.config.__player;
+        config.__runtime = this.config.__runtime;
 
         const i = new Widget(config);
         this.widgets.push(i);
-        this.config.__player.refresh_required = "add_widget_group";
+        this.config.__runtime.refresh_required = "add_widget_group";
 
         return i;
     }

@@ -37,7 +37,7 @@ export default class GifRecorder {
         this.player.withShift = false;
         this.player.showEventZones = false;
         this.player.render_counter = 0;
-        this.player.current_level = 1;
+        await this.player.setRenderLevel(1);
 
         // Create
         const gif = new GIF({
@@ -50,7 +50,7 @@ export default class GifRecorder {
         this.player.wipeSettings();
         await this.player.init();
         for(let i = 0; i < FPS*SECONDS*2; i++) {
-            if(i == FPS*SECONDS) this.player.current_level = 2;
+            if(i === FPS*SECONDS) await this.player.setRenderLevel(2);
 
             const canvas = await this.player.render();
             gif.addFrame(canvas, {delay: Math.round(1000 / FPS)});
@@ -64,7 +64,7 @@ export default class GifRecorder {
 
         this.blob = blob;
 
-        this.player.current_level = 1;
+        await this.player.setRenderLevel(1);
         this.player.uiPause = false;
         ToolbarManager._refresh();
     }

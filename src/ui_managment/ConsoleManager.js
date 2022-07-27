@@ -27,27 +27,34 @@ export class ConsoleManager {
         this.player = player;
 
         player.onRestart = () => this.wipe();
-        player.onConsole = (level, data) => this.write(level, data);
+        player.onConsole = (level, data, extra) => this.write(level, data, extra);
     }
 
     wipe() {
         this.view.innerHTML = "";
     }
 
-    write(level, data) {
+    write(level, data, extra) {
         const div = document.createElement("div");
         const lv = document.createElement("span");
         lv.className = "type " + level;
         lv.innerText = level;
         div.appendChild(lv);
 
-        for(var i in data) {
+        for(let i in data) {
             let arg = document.createElement("span");
             if(data[i] instanceof Object) {
                 arg.innerText = JSON.stringify(data[i]);
             } else {
                 arg.innerText = data[i].toString();
             }
+            div.appendChild(arg);
+        }
+
+        if(extra && extra.runtimeID) {
+            let arg = document.createElement("span");
+            arg.style.opacity = "0.5";
+            arg.innerText = extra.runtimeID;
             div.appendChild(arg);
         }
 

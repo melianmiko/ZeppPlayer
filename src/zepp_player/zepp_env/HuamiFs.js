@@ -29,8 +29,8 @@ export default class HuamiFsMock {
 
     SEEK_SET = 0;
 
-    constructor(player) {
-        this.player = player;
+    constructor(runtime) {
+        this.runtime = runtime;
 
         const setters = ["SysProSetBool", "SysProSetInt64", "SysProSetDouble", "SysProSetChars"];
         const getters = ["SysProGetBool", "SysProGetInt64", "SysProGetDouble", "SysProGetChars"];
@@ -41,7 +41,7 @@ export default class HuamiFsMock {
 
     stat_asset(path) {
         console.log("stat", path);
-        let f = this.player.readCache[this.player.getAssetPath(path)];
+        let f = this.runtime.readCache[this.runtime.getAssetPath(path)];
         return [{
             size: f.byteLength,
             mtime: 0 // no access
@@ -55,7 +55,7 @@ export default class HuamiFsMock {
     }
 
     open_asset(path, flag) {
-        let f = this.player.readCache[this.player.getAssetPath(path)];
+        let f = this.runtime.readCache[this.runtime.getAssetPath(path)];
         return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
     }
 

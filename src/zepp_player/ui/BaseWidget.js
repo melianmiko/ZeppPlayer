@@ -23,7 +23,7 @@ export class BaseWidget {
     constructor(config) {
         this.config = config;
         this.events = [];
-        this.player = config.__player;
+        this.runtime = config.__runtime;
 
         if(!this.config.visible) this.config.visible = true;
     }
@@ -32,7 +32,7 @@ export class BaseWidget {
         if(!this.config.visible) return false;
 
         const show_level = this.config.show_level;
-        if((show_level & this.player.current_level) === 0 && show_level) 
+        if((show_level & this.runtime.showLevel) === 0 && show_level) 
             return false;
         
         return true;
@@ -59,7 +59,7 @@ export class BaseWidget {
     }
 
     setProperty(prop, val) {
-        if(!this._isVisible()) {
+        if(!this._isVisible() && prop != "visible") {
             return;
         }
 
@@ -71,18 +71,18 @@ export class BaseWidget {
             for(var a in val) {
                 if(this.setPropertyBanlist.indexOf(a) > -1) {
                     const info = `You can't set ${a} in ${this.constructor.name} via hmUI.prop.MORE. Player crashed.`;
-                    this.player.onConsole("SystemWarning", [info]);
-                    this.player.finish();
+                    this.runtime.onConsole("SystemWarning", [info]);
+                    this.runtime.destroy();
                     throw new Error(info);
                 }
                 this.config[a] = val[a];
             }
-            this.player.refresh_required = "set_prop";
+            this.runtime.refresh_required = "set_prop";
             return;
         }
 
         this.config[prop] = val;
-        this.player.refresh_required = "set_prop";
+        this.runtime.refresh_required = "set_prop";
     }
 
     getProperty(key, second) {

@@ -17,10 +17,6 @@
 */
 
 export default class DeviceRuntimeCoreMock {
-    constructor(player) {
-        this.player = player;
-    }
-
     WidgetFactory = class {
         constructor(a1, a2, a3) {}
     }
@@ -38,12 +34,10 @@ export default class DeviceRuntimeCoreMock {
     }
 
     WatchFace(config) {
-        this.player.page = config;
         return config;
     }
 
     Page(config) {
-        this.player.page = config;
         return config;
     }
 }

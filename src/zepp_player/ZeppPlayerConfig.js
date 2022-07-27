@@ -18,7 +18,6 @@
 
 export default class ZeppPlayerConfig {
     refresh_required = true;            // Must screen be refreshed
-    system_fps = 60;
 
     _currentRenderLevel = 1;
     _renderEventZones = false;
@@ -33,12 +32,8 @@ export default class ZeppPlayerConfig {
         return this._currentRenderLevel;
     }
 
-    set current_level(val) {
-        this._currentRenderLevel = val;
-        this.refresh_required = true; 
-
-        this.finish();
-        this.init();
+    set current_level(_) {
+        throw new Error("Can't set directly, use setRenderLevel()")
     }
 
     get render_overlay() {

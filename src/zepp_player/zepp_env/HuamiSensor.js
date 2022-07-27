@@ -22,12 +22,12 @@
  * Fully implemented, but not tested =)
  */
  export default class HuamiSensorMock {
-    constructor(player) {
-        this._player = player;
+    constructor(runtime) {
+        this._runtime = runtime;
     }
 
     createSensor(id) {
-        return new id(this._player);
+        return new id(this._runtime);
     }
 
     id = {

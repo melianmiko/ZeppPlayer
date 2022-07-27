@@ -39,8 +39,8 @@ export default class HuamiSettingMock {
         APP: 16
     }
 
-    constructor(player) {
-        this.player = player;
+    constructor(runtime) {
+        this.runtime = runtime;
         this.store = [];
 
         for(var a in this.proped) {
@@ -54,13 +54,13 @@ export default class HuamiSettingMock {
         this[getter] = () => this.store[getter];
         if(setter !== "") this[setter] = (val) => {
             console.info("[hmSettings]", getter, "=", val);
-            this.player.onConsole("hmSettings", [getter, "=", val]);
+            this.runtime.onConsole("hmSettings", [getter, "=", val]);
             this.store[getter] = val;
         };
     }
 
     getLanguage() {
-        return this.player.language;
+        return this.runtime.language;
     }
 
     getUserData() {
@@ -87,8 +87,8 @@ export default class HuamiSettingMock {
 
     getDeviceInfo() {
         return {
-            width: this.player.screen[0],
-            height: this.player.screen[1],
+            width: this.runtime.screen[0],
+            height: this.runtime.screen[1],
             screenShape: 1,
             deviceName: "ZeppPlayer",
             keyNumber: 0,
@@ -97,11 +97,11 @@ export default class HuamiSettingMock {
     }
 
     getTimeFormat() {
-        return this.player.getDeviceState("AM_PM") == "hide" ? 1 : 0;
+        return this.runtime.getDeviceState("AM_PM") == "hide" ? 1 : 0;
     }
 
     getScreenType() {
-        return this.player.current_level;
+        return this.runtime.showLevel;
     }
 
     getDateFormat() {

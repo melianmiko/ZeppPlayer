@@ -144,9 +144,9 @@ export class ToolbarManager {
         ToolbarManager.player.refresh_required = "ui";
     }
 
-    static doToggleMode(val) {
+    static async doToggleMode(val) {
         const player = ToolbarManager.player;
-        player.current_level = val;
+        await player.setRenderLevel(val);
         ToolbarManager._refresh();
     }
 

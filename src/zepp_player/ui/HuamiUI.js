@@ -55,8 +55,8 @@ export default class HuamiUIMock {
         HISTOGRAM: HistogramWidget
     }
 
-    constructor(player) {
-        this.player = player;
+    constructor(runtime) {
+        this.runtime = runtime;
         this.widget = {};
         this.toastWidget = null;
 
@@ -64,19 +64,19 @@ export default class HuamiUIMock {
     }
 
     deleteWidget(widget) {
-        const widgets = this.player.widgets;
+        const widgets = this.runtime.widgets;
         const targetId = widget.config.__id;
         for(var i in widgets) {
             if(widgets[i].config.__id == targetId) {
                 widgets.splice(i, 1);
-                this.player.refresh_required = "del_widget";
+                this.runtime.refresh_required = "del_widget";
                 return;
             } else if(widgets[i].config.__content) {
                 const groupContent = widgets[i].config.__content;
                 for(var j in groupContent) {
                     if(groupContent[j].config.__id == targetId) {
                         widgets[i].config.__content.splice(j, 1);
-                        this.player.refresh_required = "del_widget";
+                        this.runtime.refresh_required = "del_widget";
                         return;
                     }
                 }
@@ -98,12 +98,12 @@ export default class HuamiUIMock {
         }
 
         config.__widget = type;
-        config.__id = this.player.widgets.length;
-        config.__player = this.player;
+        config.__id = this.runtime.widgets.length;
+        config.__runtime = this.runtime;
 
         const i = new Widget(config);
-        this.player.widgets.push(i);
-        this.player.refresh_required = "add_widget";
+        this.runtime.widgets.push(i);
+        this.runtime.refresh_required = "add_widget";
 
         return i;
     }
@@ -141,7 +141,7 @@ export default class HuamiUIMock {
             text_size: options.text_size,
             w: options.text_width,
             text_style: options.wrapped ? 2 : 0
-        }, this.player);
+        }, this.runtime);
 
         console.log(text, canvas.width, canvas.height);
 
