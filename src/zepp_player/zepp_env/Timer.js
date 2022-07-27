@@ -22,44 +22,35 @@ export default class TimerMock {
         this.timers = [];
 
         runtime.onDestroy.push(() => {
-            for(var a in this.timers) try {
+            for(let a in this.timers) try {
                 this.stopTimer(a);
-            } catch(e) {};
+            } catch(e) {}
         })
     }
 
-    createTimer(delay, period, callable, option) {
+    createTimer(_, period, callable, option) {
         const runtime = this.runtime;
         const id = this.timers.length;
         const ctx = this;
 
+        if(period === 0) return;
+
         this.timers[id] = {
-            timeout: -1,
             interval: -1,
             func: callable,
-            delay: delay,
             period: period
         };
 
-        ctx.timers[id].timeout = setTimeout(() => {
+        ctx.timers[id].interval = setInterval(() => {
+            if(runtime.uiPause) return;
             callable.apply(this, option);
-            if(period > 0) {
-                if(!ctx.timers[id]) return;
-
-                ctx.timers[id].interval = setInterval(() => {
-                    if(runtime.uiPause) return;
-                    callable.apply(this, option);
-                }, period);
-            }
-        }, Math.max(25, delay));
+        }, Math.max(period, 25));
 
         return id;
     }
     
     stopTimer(timerID) {
         if(!this.timers[timerID]) return;
-        if(this.timers[timerID].timeout > -1) 
-            clearTimeout(this.timers[timerID].timeout);
         if(this.timers[timerID].interval > -1)
             clearInterval(this.timers[timerID].interval);
         

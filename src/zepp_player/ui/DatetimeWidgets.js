@@ -227,7 +227,7 @@ export class DateWidget extends BaseWidget {
         }
 
         let images = [];
-        for(var i in data) {
+        for(let i in data) {
             let [prefix, value, fullLength] = data[i];
             if(!config[prefix + lang + "_array"]) continue;
             const imgs = config[prefix + lang + "_array"];

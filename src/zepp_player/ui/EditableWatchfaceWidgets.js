@@ -131,6 +131,7 @@ export class EditGroupWidget extends BaseWidget {
         }
 
         try {
+            if(!isActive) throw new Error("ignore");
             const tipsBg = await player.getAssetImage(config.tips_BG);
             ctx.drawImage(tipsBg, dx + config.tips_x, dy + config.tips_y);
 

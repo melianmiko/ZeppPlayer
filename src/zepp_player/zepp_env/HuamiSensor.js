@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 /*
     ZeppPlayer - ZeppOS, mostly Mi Band 7, simulator for PC
     Copyright (C) 2022  MelianMiko
@@ -135,6 +137,10 @@ class BatterySensor {
             });
         }
     }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
+    }
 }
 
 /**
@@ -160,6 +166,10 @@ class StepSensor {
             });
         }
     }
+
+    removeEventListener(_) {
+       this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
+    }
 }
 
 /**
@@ -184,6 +194,10 @@ class StepSensor {
                 callback();
             });
         }
+    }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
     }
 }
 
@@ -211,6 +225,10 @@ class HeartSensor {
         for(let i = 0; i < 3600; i++) {
             this.today[i] = Math.round(90 + 90 * (i % 120)/120);
         }
+    }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
     }
 
     addEventListener(name, callback) {
@@ -258,6 +276,10 @@ class PaiSensor {
             });
         }
     }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
+    }
 }
 
 /**
@@ -282,6 +304,10 @@ class PaiSensor {
                 callback();
             });
         }
+    }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
     }
 }
 
@@ -353,6 +379,10 @@ class WeatherSensor {
             });
         }
     }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
+    }
 }
 
 /**
@@ -383,6 +413,10 @@ class SPO2Sensor {
     start() {
         console.log("[SPO2] start()");
     }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
+    }
 }
 
 /**
@@ -406,6 +440,10 @@ class BodyTempSensor {
     constructor(player) {
         this.player = player;
         this.time = Date.now();
+    }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
     }
 
     addEventListener(name, callback) {
@@ -447,6 +485,10 @@ class WearSensor {
 
     constructor(player) {
         this.player = player;
+    }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
     }
 
     addEventListener(name, callback) {
@@ -554,6 +596,10 @@ class MusicSensor {
 
     audNext() {
         console.log("[MUSIC] next track");
+    }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
     }
 
     addEventListener(name, callback) {

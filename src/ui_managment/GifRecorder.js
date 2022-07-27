@@ -33,11 +33,11 @@ export default class GifRecorder {
         this.loading.style.display = "";
 
         // Force set uiPause to prevent auto-render
-        this.player.uiPause = true;
         this.player.withShift = false;
         this.player.showEventZones = false;
-        this.player.render_counter = 0;
         await this.player.setRenderLevel(1);
+        await this.player.init()
+        this.player.currentRuntime.uiPause = true;
 
         // Create
         const gif = new GIF({

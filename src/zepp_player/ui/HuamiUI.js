@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 /*
     ZeppPlayer - ZeppOS, mostly Mi Band 7, simulator for PC
     Copyright (C) 2022  MelianMiko
@@ -60,22 +62,22 @@ export default class HuamiUIMock {
         this.widget = {};
         this.toastWidget = null;
 
-        for(var a in this._widget) this.widget[a] = a;
+        for(let a in this._widget) this.widget[a] = a;
     }
 
     deleteWidget(widget) {
         const widgets = this.runtime.widgets;
         const targetId = widget.config.__id;
-        for(var i in widgets) {
-            if(widgets[i].config.__id == targetId) {
-                widgets.splice(i, 1);
+        for(let i in widgets) {
+            if(widgets[i].config.__id === targetId) {
+                widgets.splice(parseInt(i), 1);
                 this.runtime.refresh_required = "del_widget";
                 return;
             } else if(widgets[i].config.__content) {
                 const groupContent = widgets[i].config.__content;
-                for(var j in groupContent) {
-                    if(groupContent[j].config.__id == targetId) {
-                        widgets[i].config.__content.splice(j, 1);
+                for(let j in groupContent) {
+                    if(groupContent[j].config.__id === targetId) {
+                        widgets[i].config.__content.splice(parseInt(j), 1);
                         this.runtime.refresh_required = "del_widget";
                         return;
                     }
@@ -84,7 +86,6 @@ export default class HuamiUIMock {
         }
 
         console.warn("can't delete undefined widget", widget);
-        return;
     }
 
     createWidget(type, config) {
@@ -112,23 +113,27 @@ export default class HuamiUIMock {
         if(!this.toastWidget) {
             this.toastWidget = this.createWidget(this.widget.BUTTON, {
                 x: 10,
-                y: 150,
+                y: 70,
                 w: 172,
-                h: 190,
+                h: 50,
                 text: "",
                 visible: false,
-                text_size: 16,
-                radius: 8,
+                text_size: 22,
+                radius: 25,
                 press_color: 0x222222,
                 normal_color: 0x222222,
                 click_func: () => this.toastWidget.setProperty(this.prop.VISIBLE, false)
             });
         }
 
+        this.toastWidget.setProperty('visible', true);
         this.toastWidget.setProperty(this.prop.MORE, {
-            text: options.text,
-            visible: true
+            text: options.text
         });
+
+        setTimeout(() => {
+            this.toastWidget.setProperty("visible", false);
+        }, 3000);
     }
 
     setLayerScrolling(val) {
@@ -204,8 +209,8 @@ export default class HuamiUIMock {
 
     text_style = {
         WRAP: 2,
-        CHAR_WRAP: 1,
-        ELLIPSIS: 0,
+        CHAR_WRAP: 2,
+        ELLIPSIS: 3,
         NONE: 0
     }
 

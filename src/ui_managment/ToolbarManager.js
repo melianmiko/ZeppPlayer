@@ -35,7 +35,6 @@ export class ToolbarManager {
     static toggleFrames = document.getElementById("toggle_overlay");
     
     static doReloadBtn = document.getElementById("do_reload");
-    static doExportBtn = document.getElementById("do_export");
     static doGifBtn = document.getElementById("do_gif");
     static doRotateBtn = document.getElementById("do_rotate");
 
@@ -67,7 +66,6 @@ export class ToolbarManager {
         ToolbarManager.toggleMode4.onclick = () => ToolbarManager.doToggleMode(4);
         ToolbarManager.toggleEventZones.onclick = ToolbarManager.doToggleEventZones;
         ToolbarManager.togglePause.onclick = ToolbarManager.doTogglePause;
-        ToolbarManager.doExportBtn.onclick = ToolbarManager.doExport;
         ToolbarManager.toggleShift.onclick = ToolbarManager.doToggleShift;
         ToolbarManager.doReloadBtn.onclick = ToolbarManager.doReload;
         ToolbarManager.toggleConsole.onclick = ToolbarManager.doToggleConsole;
@@ -103,9 +101,6 @@ export class ToolbarManager {
             case "W":
                 ToolbarManager.doReload();
                 return;
-            case "D":
-                ToolbarManager.doExport();
-                return;
             case "c":
                 ToolbarManager.doToggleConsole();
                 return;
@@ -124,12 +119,12 @@ export class ToolbarManager {
             [ToolbarManager.toggleConsole, localStorage.zepp_player_console === "true"],
             [ToolbarManager.toggleExplorer, localStorage.zepp_player_explorer === "true"],
             [ToolbarManager.toggleEventZones, ToolbarManager.player.showEventZones],
-            [ToolbarManager.togglePause, ToolbarManager.player.uiPause],
+            [ToolbarManager.togglePause, ToolbarManager.player.currentRuntime && ToolbarManager.player.currentRuntime.uiPause],
             [ToolbarManager.toggleShift, ToolbarManager.player.withShift],
             [ToolbarManager.toggleFrames, ToolbarManager.player.render_overlay],
-            [ToolbarManager.toggleMode1, ToolbarManager.player.current_level == 1],
-            [ToolbarManager.toggleMode2, ToolbarManager.player.current_level == 2],
-            [ToolbarManager.toggleMode4, ToolbarManager.player.current_level == 4]
+            [ToolbarManager.toggleMode1, ToolbarManager.player.current_level === 1],
+            [ToolbarManager.toggleMode2, ToolbarManager.player.current_level === 2],
+            [ToolbarManager.toggleMode4, ToolbarManager.player.current_level === 4]
         ];
 
         for(let i in data) {
@@ -141,7 +136,7 @@ export class ToolbarManager {
     static doRotate() {
         ToolbarManager.player.rotation = (ToolbarManager.player.rotation + 90) % 360;
         localStorage.zepp_player_rotation = ToolbarManager.player.rotation;
-        ToolbarManager.player.refresh_required = "ui";
+        ToolbarManager.player.currentRuntime.refresh_required = "ui";
     }
 
     static async doToggleMode(val) {
@@ -153,12 +148,12 @@ export class ToolbarManager {
     static doToggleFrames() {
         ToolbarManager.player.render_overlay = !ToolbarManager.player.render_overlay;
         ToolbarManager._refresh();
-        ToolbarManager.player.refresh_required = "ui";
+        ToolbarManager.player.currentRuntime.refresh_required = "ui";
     }
 
     static doTogglePause() {
         const player = ToolbarManager.player;
-        player.setPause(!player.uiPause);
+        player.setPause(!player.currentRuntime.uiPause);
         ToolbarManager._refresh();
     }
     
@@ -166,12 +161,6 @@ export class ToolbarManager {
         const player = ToolbarManager.player;
         player.showEventZones = !player.showEventZones;
         ToolbarManager._refresh();
-    }
-
-    static doExport() {
-        const player = ToolbarManager.player;
-        const out = player.exportAll();
-        console.info(out);
     }
 
     static doToggleShift() {

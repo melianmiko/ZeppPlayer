@@ -43,7 +43,7 @@ export default class HuamiSettingMock {
         this.runtime = runtime;
         this.store = [];
 
-        for(var a in this.proped) {
+        for(let a in this.proped) {
             this.makeProped(...this.proped[a]);
         }
     }
@@ -56,6 +56,7 @@ export default class HuamiSettingMock {
             console.info("[hmSettings]", getter, "=", val);
             this.runtime.onConsole("hmSettings", [getter, "=", val]);
             this.store[getter] = val;
+            return 0;
         };
     }
 
@@ -97,7 +98,7 @@ export default class HuamiSettingMock {
     }
 
     getTimeFormat() {
-        return this.runtime.getDeviceState("AM_PM") == "hide" ? 1 : 0;
+        return this.runtime.getDeviceState("AM_PM") === "hide" ? 1 : 0;
     }
 
     getScreenType() {

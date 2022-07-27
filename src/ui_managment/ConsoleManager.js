@@ -59,5 +59,6 @@ export class ConsoleManager {
         }
 
         this.view.appendChild(div);
+        this.view.scrollTop = this.view.scrollHeight;
     }
 }

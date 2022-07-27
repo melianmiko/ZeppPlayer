@@ -83,7 +83,8 @@ const start = async () => {
     };
     
     const performRefresh = async () => {
-        if(document.hidden || player.uiPause || !player.refresh_required) return;
+        if(!player.currentRuntime) return;
+        if(document.hidden || player.currentRuntime.uiPause || !player.currentRuntime.refresh_required) return;
 
         let canvas;
         try {

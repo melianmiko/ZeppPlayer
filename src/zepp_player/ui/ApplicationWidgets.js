@@ -79,13 +79,13 @@ export class GroupWidget extends BaseWidget {
         }
 
         if(GroupWidget.banlist.indexOf(type) > -1) {
-            this.player.onConsole("SystemWarning", ["You can't place", type, 'into group']);
+            this.runtime.onConsole("SystemWarning", ["You can't place", type, 'into group']);
             return null;
         }
 
         config.__widget = type;
         config.__id = (this.config.__id+1 << 8) + this.widgets.length;
-        config.__runtime = this.config.__runtime;
+        config.__runtime = this.runtime;
 
         const i = new Widget(config);
         this.widgets.push(i);

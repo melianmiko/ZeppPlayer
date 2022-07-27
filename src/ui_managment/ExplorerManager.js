@@ -30,11 +30,11 @@ export default class ExplorerManager {
 
     static doReloadWidgets() {
         ExplorerManager.view.innerHTML = "";
-        ExplorerManager.addWidgetsArray(ExplorerManager.player.widgets, ExplorerManager.view);
+        ExplorerManager.addWidgetsArray(ExplorerManager.player.currentRuntime.widgets, ExplorerManager.view);
     }
 
     static doReloadTimers() {
-        const timers = ExplorerManager.player.zeppEnv.timer.timers;
+        const timers = ExplorerManager.player.currentRuntime.env.timer.timers;
         ExplorerManager.view.innerHTML = "";
 
         for(let i in timers) {

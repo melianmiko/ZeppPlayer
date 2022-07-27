@@ -51,8 +51,8 @@ export class ButtonWidget extends BaseWidget {
                 y: config.y + Math.max(0, (h - img.height) / 2)
             });
         } else {
-            const normalColor = config.normal_color ? zeppColorToHex(config.normal_color) : "#111111";
-            const pressedColor = config.press_color ? zeppColorToHex(config.press_color) : "#1f1f1f";
+            const normalColor = config.normal_color ? zeppColorToHex(config.normal_color) : "#000000";
+            const pressedColor = config.press_color ? zeppColorToHex(config.press_color) : "#CCCCCC";
             const color = this.pressed ? pressedColor : normalColor;
 
             FillRectWidget.draw(canvas, {
@@ -65,8 +65,7 @@ export class ButtonWidget extends BaseWidget {
             ...config,
             align_h: "center_h",
             align_v: "center_v",
-            color: config.color !== undefined ? config.color : 0xffffff,
-            text_style: 1
+            color: config.color !== undefined ? config.color : 0xffffff
         }, player);
         canvas.getContext("2d").drawImage(textLayer, config.x, config.y);
 

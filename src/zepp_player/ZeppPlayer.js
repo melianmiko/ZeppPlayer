@@ -71,19 +71,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         PersistentStorage.wipe();
     }
 
-    callDelegates(delegateName) {
-        for(let i in this.widgets) {
-            const w = this.widgets[i].config;
-            if(w.__widget === "WIDGET_DELEGATE" && w[delegateName]) {
-                w[delegateName]();
-            }
-        }
-    }
-
     setPause(val) {
-        this.callDelegates(val ? "pause_call" : "resume_call");
-
-        this.wfBaseRuntime.uiPause = val;
+        this.currentRuntime.callDelegates(val ? "pause_call" : "resume_call");
+        this.currentRuntime.uiPause = val;
     }
 
     handleScriptError(e) {
@@ -255,7 +245,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 this.wfSubRuntime.destroy();
                 this.wfSubRuntime = null;
 
-                if(this.current_level === 4 && val === 1)
+                if(this.current_level === 4)
                     // Re-init after settings
                     await this.init()
             }
@@ -265,6 +255,14 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 this.wfSubRuntime = new ZeppRuntime(this, this.path_script, val);
                 await this.wfSubRuntime.start();
             }
+        }
+
+        if(val === 1) {
+            this.wfBaseRuntime.callDelegates("resume_call");
+            this.wfBaseRuntime.uiPause = false;
+        } else if(this._currentRenderLevel === 1) {
+            this.wfBaseRuntime.callDelegates("pause_call");
+            this.wfBaseRuntime.uiPause = true;
         }
 
         this._currentRenderLevel = val;
@@ -341,7 +339,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         if(this.withShift) {
             if(this.render_counter % 15 === 0) 
                 this.performShift();
-            this.refresh_required = "shift";
+            runtime.refresh_required = "shift";
         }
 
         // Overlay
@@ -363,7 +361,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             }
         }
 
-        this.callDelegates("resume_call");
+        this.currentRuntime.callDelegates("resume_call");
     }
 
     async listDirectory(path) {}

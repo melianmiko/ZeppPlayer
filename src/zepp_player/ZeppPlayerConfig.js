@@ -42,7 +42,7 @@ export default class ZeppPlayerConfig {
 
     set render_overlay(val) {
         this._renderOverlay = val;
-        this.refresh_required = true; 
+        if(this.currentRuntime) this.currentRuntime.refresh_required = true;
     }
 
     get showEventZones() {
@@ -51,7 +51,7 @@ export default class ZeppPlayerConfig {
 
     set showEventZones(val) {
         this._renderEventZones = val;
-        this.refresh_required = true; 
+        if(this.currentRuntime) this.currentRuntime.refresh_required = true;
     }
 
     get language() {
@@ -79,6 +79,6 @@ export default class ZeppPlayerConfig {
 
     set withShift(val) {
         this._renderAutoShift = val;
-        this.refresh_required = true; 
+        if(this.currentRuntime) this.currentRuntime.refresh_required = true;
     }
 }

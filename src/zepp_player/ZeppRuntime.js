@@ -52,6 +52,8 @@ export default class ZeppRuntime {
 
         if(this.module.onInit) this.module.onInit();
         if(this.module.build) this.module.build();
+
+        this.callDelegates("resume_call");
     }
 
     destroy() {
@@ -86,8 +88,21 @@ export default class ZeppRuntime {
         return await this.player.getAssetImage(...arguments);
     }
 
+    addDeviceStateChangeEvent() {
+        this.player.addDeviceStateChangeEvent(...arguments);
+    }
+
     newCanvas() {
         return this.player.newCanvas(...arguments);
+    }
+
+    callDelegates(delegateName) {
+        for(let i in this.widgets) {
+            const w = this.widgets[i].config;
+            if(w.__widget === "WIDGET_DELEGATE" && w[delegateName]) {
+                w[delegateName]();
+            }
+        }
     }
 
     onRenderBegin() {
