@@ -107,6 +107,12 @@ export class ToolbarManager {
             case "e":
                 ToolbarManager.doToggleEdit();
                 return;
+            case "+":
+                ToolbarManager.switchProject(1);
+                return;
+            case "_":
+                ToolbarManager.switchProject(-1);
+                return;
         }
     }
 
@@ -131,6 +137,26 @@ export class ToolbarManager {
             const [button, enabled] = data[i];
             enabled ? button.classList.add("active") : button.classList.remove("active");
         }
+    }
+
+    static switchProject(delta) {
+        const picker = document.getElementById("project_select");
+        const current = picker.value;
+
+        let index = -1;
+        for(let i = 0; i < picker.options.length; i++) {
+            if(picker.options[i].value === current) {
+                index = i;
+                break;
+            }
+        }
+
+        index += delta;
+        if(!picker.options[index]) return;
+
+        console.log("switch to", picker.options[index].value);
+        picker.value = picker.options[index].value;
+        picker.onchange();
     }
 
     static doRotate() {

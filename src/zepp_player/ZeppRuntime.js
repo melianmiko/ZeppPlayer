@@ -23,6 +23,9 @@ export default class ZeppRuntime {
     }
 
     async start() {
+        if(this.initTime) this.destroy();
+        this.onConsole("runtime", ["Begin runtime init", `SL:${this.showLevel}`]);
+
         const extra = this.player.getEvalAdditionalData();
         const scriptFile = await this.player.loadFile(this.scriptPath);
         const text = new TextDecoder().decode(scriptFile);
@@ -59,8 +62,17 @@ export default class ZeppRuntime {
 
     destroy() {
         if(this.module && this.module.onDestroy) this.module.onDestroy();
-        for(let i in this.onDestroy) this.onDestroy[i]();
+        for(let i in this.onDestroy) {
+            this.onDestroy[i]();
+        }
+
         this.onDestroy = [];
+        this.widgets = [];
+        this.events = [];
+        this.module = null;
+        this.env = null;
+        this.initTime = null;
+        this.onConsole("runtime", ["Runtime destroyed", `SL:${this.showLevel}`]);
     }
 
     getDeviceState() {
@@ -74,7 +86,7 @@ export default class ZeppRuntime {
     registerEvent(name, x1, y1, x2, y2, fn) {
         if(!this.events[name]) {
             this.events[name] = [];
-        };
+        }
 
         this.events[name].push({
             x1, y1, x2, y2, fn

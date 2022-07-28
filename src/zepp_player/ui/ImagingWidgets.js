@@ -169,16 +169,16 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Pre-calculate width of text + load imgs
-        if((text == "" || text == null || text == undefined) && config.invalid_image) {
+        if((text === "" || text === null || text === undefined) && config.invalid_image) {
             const invalid = await player.getAssetImage(config.invalid_image);
             imgs.push([invalid, offset]);
         } else for(let i in text) {
             let img = null;
-            if(text[i] == "-") {
+            if(text[i] === "-") {
                 img = await player.getAssetImage(config.negative_image);
-            } else if(text[i] == ".") {
+            } else if(text[i] === "." || text[i] === ":") {
                 img = await player.getAssetImage(config.dot_image);
-            } else if(text[i] == "u") {
+            } else if(text[i] === "u") {
                 img = await player.getAssetImage(config["unit_" + player.language]);
             } else {
                 i = parseInt(text[i]);
@@ -303,13 +303,14 @@ export class AnimationWidget extends BaseWidget {
     async render(canvas, player) {
         const config = this.config;
         const currentFrame = Math.floor(player.render_counter / 60 * config.anim_fps);
+        player.refresh_required = "img_anim";
 
-        if(config.anim_status == 0) return;
+        if(config.anim_status === 0) return;
 
         let x = config.x, y = config.y;
 
         let frame = currentFrame % config.anim_size;
-        if(config.repeat_count == 1 && currentFrame > config.anim_size)
+        if(config.repeat_count === 1 && currentFrame > config.anim_size)
             frame = config.anim_size - 1;
 
         const path = config.anim_path + "/" + config.anim_prefix + "_" + frame 
@@ -319,7 +320,6 @@ export class AnimationWidget extends BaseWidget {
         canvas.getContext("2d").drawImage(img, x, y);
 
         super.dropEvents(player, [x, y, x + img.widget, y + img.height]);
-        player.refresh_required = "img_anim";
     }
 }
 

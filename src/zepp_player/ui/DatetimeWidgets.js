@@ -67,7 +67,7 @@ export class DatePointer extends BaseWidget {
             ["second_", player.getDeviceState("SECOND", "progress")],
         ];
 
-        for(var i in data) {
+        for(let i in data) {
             const [prefix, value] = data[i];
             let img;
 
@@ -82,7 +82,7 @@ export class DatePointer extends BaseWidget {
                 });
             }
 
-            if(config[prefix + "cover_path"]) {
+            if(config[prefix + "cover_path"] && config[prefix + "cover_y"] && config[prefix + "cover_x"]) {
                 img = await player.getAssetImage(config[prefix + "cover_path"]);
                 ImageWidget.draw(img, canvas, {
                     x: config[prefix + "cover_x"],
@@ -110,7 +110,7 @@ export class DatePointer extends BaseWidget {
         ];
 
         let images = [];
-        for(var i in timeParts) {
+        for(let i in timeParts) {
             let [prefix, value] = timeParts[i];
             if(!config[prefix + "array"]) continue;
 
@@ -152,15 +152,17 @@ export class DatePointer extends BaseWidget {
                 if(!offset) offset = 0;
                 let expectedWidth = 2 * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
-                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
-                    expectedWidth += unit.width;
+                    try {
+                        let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                        expectedWidth += unit.width;
+                    } catch(e) {}
                 }
 
                 images.push([img, prefix, expectedWidth]);
             }
         }
 
-        for(var i in images) {
+        for(let i in images) {
             const [img, prefix, expWidth] = images[i];
             let x = config[prefix + "startX"];
             let y = config[prefix + "startY"];

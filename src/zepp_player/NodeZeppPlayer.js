@@ -68,7 +68,7 @@ export class NodeZeppPlayer extends ZeppPlayer {
         const uint = new Uint8Array(data);
 
         let img;
-        if(uint[2] === 1) {
+        if(uint[1] === 1) {
             img = await this._loadTga(data);
         } else {
             img = await loadImage(data);

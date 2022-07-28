@@ -185,11 +185,11 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     async finish() {
-        if(!this.path_script || !this.wfBaseRuntime) return;
+        if(!this.wfBaseRuntime) return;
 
         this.wfBaseRuntime.destroy();
-        this.render_counter = 0;
         this.wfBaseRuntime = null;
+        this.render_counter = 0;
         this._deviceStateChangeEvents = {};
         this.mustRestart = false;
         this.onDestroy = [];
@@ -202,21 +202,30 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     async init() {
         await this.finish();
         await this.onRestart();
-        
-        try {
-            const runtime = new ZeppRuntime(this, this.path_script, 1);
-            await runtime.start();
 
-            this.wfBaseRuntime = runtime;
+        this.mustRestart = false;
+
+        const runtime = new ZeppRuntime(this, this.path_script, 1);
+        this.wfBaseRuntime = runtime;
+
+        try {
+            await runtime.start();
             this.currentRuntime = runtime;
         } catch(e) {
+            console.error(e);
             this.handleScriptError(e);
-            if(!this.mustRestart) console.error(e);
         }
 
         if(this.mustRestart) {
             log("context fixed, restarting...")
             await this.init();
+            return;
+        }
+
+        if(this._currentRenderLevel !== 1) {
+            const val = this._currentRenderLevel;
+            this._currentRenderLevel = 1;
+            await this.setRenderLevel(val);
         }
     }
 
@@ -238,29 +247,26 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
     async setRenderLevel(val) {
         if(this.appType !== "watchface") return;
+        if(val === this.current_level) return;
 
-        if(val !== this.current_level) {
-            if(this.wfSubRuntime) {
-                // Destroy sub runtime
-                this.wfSubRuntime.destroy();
-                this.wfSubRuntime = null;
+        const currentVal = this._currentRenderLevel;
 
-                if(this.current_level === 4)
-                    // Re-init after settings
-                    await this.init()
-            }
-
-            if(val !== 1) {
-                // Prepare sub-runtime
-                this.wfSubRuntime = new ZeppRuntime(this, this.path_script, val);
-                await this.wfSubRuntime.start();
-            }
+        if(this.wfSubRuntime) {
+            // Destroy sub runtime
+            this.wfSubRuntime.destroy();
+            this.wfSubRuntime = null;
         }
 
-        if(val === 1) {
+        if(val !== 1) {
+            // Prepare sub-runtime
+            this.wfSubRuntime = new ZeppRuntime(this, this.path_script, val);
+            await this.wfSubRuntime.start();
+        }
+
+        if(val === 1 && currentVal !== 4) {
             this.wfBaseRuntime.callDelegates("resume_call");
             this.wfBaseRuntime.uiPause = false;
-        } else if(this._currentRenderLevel === 1) {
+        } else if(currentVal === 1) {
             this.wfBaseRuntime.callDelegates("pause_call");
             this.wfBaseRuntime.uiPause = true;
         }
@@ -268,6 +274,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this._currentRenderLevel = val;
         this.currentRuntime = val === 1 ? this.wfBaseRuntime : this.wfSubRuntime;
         this.currentRuntime.refresh_required = true;
+
+        if(currentVal === 4)
+            await this.init();
     }
 
     /**
@@ -310,6 +319,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const postRender = [];
         for(let i in runtime.widgets) {
             const widget = runtime.widgets[i];
+            if(!widget) continue;
             if(widget._renderStage === "post") {
                 postRender.push(widget);
                 continue;
@@ -360,8 +370,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 if(v !== null) this.setDeviceState(i, v);
             }
         }
-
-        this.currentRuntime.callDelegates("resume_call");
     }
 
     async listDirectory(path) {}

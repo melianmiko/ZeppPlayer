@@ -123,9 +123,16 @@ export class TextWidget extends BaseWidget {
             totalHeight += lineCanvas.height + (config.line_space ? config.line_space : 0);
         }
 
+        if(config._metricsOnly) return {
+            height: totalHeight,
+            width: maxWidth
+        }
+
         // Build full image
         canvas.width = config.w;
         canvas.height = config.h;
+        if(!canvas.height) canvas.height = totalHeight;
+        if(!canvas.width) canvas.width = maxWidth;
 
         let py = 0;
         if(config.align_v === "center_v") py = (canvas.height - totalHeight) / 2;

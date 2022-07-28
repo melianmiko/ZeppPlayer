@@ -25,9 +25,9 @@ import { initVersionUI } from "./ui_managment/Updater.js";
 import { ChromeZeppPlayer } from "./zepp_player/ChromeZeppPlayer.js";
 import { PersistentStorage } from "./zepp_player/PersistentStorage.js";
 
-const DISPLAY_FPS = 25;
+// const DISPLAY_FPS = 25;
 
-const DISPLAY_DELTA = 1000 / DISPLAY_FPS;
+// const DISPLAY_DELTA = 1000 / DISPLAY_FPS;
 
 /**
  * Start all
@@ -42,7 +42,7 @@ const start = async () => {
     document.fonts.add(font);
 
     const player = new ChromeZeppPlayer();
-    player.system_fps = DISPLAY_FPS;
+    // player.system_fps = DISPLAY_FPS;
 
     initVersionUI().then(() => {
         console.log("Version UI ready")
@@ -75,10 +75,7 @@ const start = async () => {
     let lastRefresh = 0;
 
     const refresh = async () => {
-        if(Date.now() - lastRefresh >= DISPLAY_DELTA) {
-            await performRefresh();
-            lastRefresh = Date.now();
-        }
+        await performRefresh();
         requestAnimationFrame(refresh);
     };
     

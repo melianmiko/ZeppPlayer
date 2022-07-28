@@ -52,7 +52,9 @@ export class EditableBackground extends BaseWidget {
         const nextIndex = (i + 1) % this.config.bg_config.length;
         const val = this.config.bg_config[nextIndex].id;
         PersistentStorage.set("wfEdit", this.config.edit_id, val);
+        this.config.current_type = val;
         this.runtime.refresh_required = "edit";
+        console.log(1);
     }
 
     async render(canvas, player) {

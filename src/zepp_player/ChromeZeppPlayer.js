@@ -41,7 +41,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         const uint = new Uint8Array(data);
 
         let img;
-        if(uint[2] === 1) {
+        if(uint[1] === 1) {
             img = await this._loadTGA(data);
         } else {
             img = await this._loadPNG(data);
@@ -125,11 +125,12 @@ export class ChromeZeppPlayer extends ZeppPlayer {
     }
 
     _loadPNG(data) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const blob = new Blob( [ data ] );
             const url = URL.createObjectURL( blob );
             const img = document.createElement("img");
             img.onload = () => resolve(img);
+            img.onerror = (e) => reject(e);
             img.src = url;
         });
     }

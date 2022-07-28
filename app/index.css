@@ -171,6 +171,10 @@ select {
     color: #f90;
 }
 
+#view_console .runtime {
+    color: #4cf;
+}
+
 #view_console .ZeppPlayer {
     color: #09f;
 }

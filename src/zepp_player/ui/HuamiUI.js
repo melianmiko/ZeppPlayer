@@ -145,10 +145,9 @@ export default class HuamiUIMock {
             text,
             text_size: options.text_size,
             w: options.text_width,
-            text_style: options.wrapped ? 2 : 0
+            text_style: options.wrapped ? 2 : 0,
+            _metricsOnly: true
         }, this.runtime);
-
-        console.log(text, canvas.width, canvas.height);
 
         return {
             width: canvas.width,
@@ -284,6 +283,7 @@ export default class HuamiUIMock {
         "UVI": "UVI",
         "AQI": "AQI",
         "HUMIDITY": "HUMIDITY",
+        "FAT_BURN": "FAT_BURNING",
         "FAT_BURNING": "FAT_BURNING",
         "FAT_BURNING_TARGET": "FAT_BURNING_TARGET",
         "SUN_CURRENT": "SUN_CURRENT",
@@ -299,6 +299,7 @@ export default class HuamiUIMock {
         "ALARM_CLOCK": "ALARM_CLOCK",
         "COUNT_DOWN": "COUNT_DOWN",
         "STOP_WATCH": "STOP_WATCH",
+        "WEATHER": "WEATHER",
         "SLEEP": "SLEEP"
     }
 }
