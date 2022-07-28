@@ -28,32 +28,52 @@ export default class TimerMock {
         })
     }
 
-    createTimer(_, period, callable, option) {
+    createTimer(delay, period, callable, option) {
         const runtime = this.runtime;
         const id = this.timers.length;
-        const ctx = this;
-
-        if(period === 0) return;
 
         this.timers[id] = {
             interval: -1,
-            func: callable,
-            period: period
+            timeout: -1
         };
 
-        ctx.timers[id].interval = setInterval(() => {
-            if(runtime.uiPause) return;
-            callable.apply(this, option);
-        }, Math.max(period, 25));
+        (async () => {
+            // If init not complete, ignore delay
+            if(!!runtime.initTime) {
+                await this.wait(delay, id);
+            }
+
+            // One-time delay
+            if(!period) {
+                callable.apply(this, option);
+                return;
+            }
+
+            // Setup interval
+            this.timers[id].interval = setInterval(() => {
+                if(runtime.uiPause) return;
+                callable.apply(this, option);
+            }, Math.max(period, 25))
+        })();
 
         return id;
+    }
+
+    wait(delay, id) {
+        return new Promise((resolve) => {
+            if(delay === 0) return resolve();
+
+            this.timers[id].timeout = setTimeout(() => resolve(), delay);
+        });
     }
     
     stopTimer(timerID) {
         if(!this.timers[timerID]) return;
+        if(this.timers[timerID].timeout > -1)
+            clearTimeout(this.timers[timerID].timeout);
         if(this.timers[timerID].interval > -1)
             clearInterval(this.timers[timerID].interval);
-        
+
         this.timers[timerID] = null;
     }
 }

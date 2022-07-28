@@ -47,13 +47,14 @@ export default class ZeppRuntime {
 
         this.env = env;
         this.module = env.__$$hmAppManager$$__.currentApp.current.module;
-        this.initTime = Date.now();
         this.render_counter = 0;
 
         if(this.module.onInit) this.module.onInit();
         if(this.module.build) this.module.build();
 
         this.callDelegates("resume_call");
+
+        this.initTime = Date.now();
     }
 
     destroy() {
