@@ -1,1 +1,33 @@
-try{(()=>{var e=__$$hmAppManager$$__.currentApp;try{__$$hmAppManager$$__.currentApp.app=DeviceRuntimeCore.App({globalData:{},onCreate(e){},onShow(e){},onHide(e){},onDestory(e){},onError(e){},onPageNotFound(e){},onUnhandledRejection(e){}})}catch(e){console.log(e)}e.app.__globals__={lang:new DeviceRuntimeCore.HmUtils.Lang(DeviceRuntimeCore.HmUtils.getLanguage()),px:DeviceRuntimeCore.HmUtils.getPx(192)}})()}catch(e){console.log(e)}
+try {
+  (() => {
+  
+var __$$app$$__ = __$$hmAppManager$$__.currentApp;
+
+'use strict';
+
+__$$app$$__.app = DeviceRuntimeCore.App({
+    globalData: {},
+    onCreate(options) {
+    },
+    onShow(options) {
+    },
+    onHide(options) {
+    },
+    onDestory(options) {
+    },
+    onError(error) {
+    },
+    onPageNotFound(obj) {
+    },
+    onUnhandledRejection(obj) {
+    }
+});
+/*
+* end js
+*/
+
+  })()
+} catch(e) {
+  console.log(e)
+  /* todo */
+}

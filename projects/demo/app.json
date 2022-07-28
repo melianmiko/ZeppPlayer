@@ -1,1 +1,74 @@
-{"configVersion":"v2","app":{"appId":166230009,"appName":"多彩机甲自定义","appType":"watchface","version":{"code":1,"name":"1.0"},"vender":"zepp","description":"多彩机甲自定义","icon":"images/preview_en.png"},"permissions":["gps"],"runtime":{"apiVersion":{"compatible":"1.0.0","target":"1.0.1","minVersion":"1.0.0"},"type":2},"i18n":{"en-US":{"icon":"images/preview_en.png"},"zh-CN":{"icon":"images/preview_sc.png"},"zh-TW":{"icon":"images/preview_tc.png"}},"defaultLanguage":"en-US","debug":false,"module":{"watchface":{"path":"watchface/192x490_s_l66/index","main":1,"editable":1,"lockscreen":1,"hightCost":0}},"platforms":[{"name":"l66","deviceSource":260},{"name":"l66w","deviceSource":261},{"name":"l66_1","deviceSource":262},{"name":"l66w_2","deviceSource":263},{"name":"l66_3","deviceSource":264},{"name":"l66_4","deviceSource":265},{"name":"l66_5","deviceSource":266}],"designWidth":192,"packageInfo":{"mode":"production","timeStamp":1648633829,"expiredTime":172800,"zpm":"2.1.49"}}
+{
+  "configVersion": "v1",
+  "app": {
+    "appId": 8479565,
+    "appName": "MiBand7",
+    "appType": "watchface",
+    "version": {
+      "code": 1,
+      "name": "1.0"
+    },
+    "icon": "preview.png",
+    "vender": "MelianMiko",
+    "description": ""
+  },
+  "permissions": [
+    "gps"
+  ],
+  "runtime": {
+    "apiVersion": {
+      "compatible": "1.0.0",
+      "target": "1.0.1",
+      "minVersion": "1.0.0"
+    }
+  },
+  "device": {
+    "targets": [
+      "gts"
+    ],
+    "platforms": [
+      "nxp"
+    ]
+  },
+  "module": {
+    "page": {
+      "pages": [
+        "pages/index"
+      ],
+      "window": {
+        "navigationBarBackgroundColor": "#ffffff",
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "",
+        "backgroundColor": "#eeeeee",
+        "backgroundTextStyle": "light"
+      }
+    },
+    "app-widget": {
+      "widgets": [
+        "app-widget/index"
+      ]
+    },
+    "watch-widget": {
+      "widgets": []
+    },
+	"watchface": {
+		"path": "watchface/index",
+		"main":1,
+		"editable":1,
+		"lockscreen":1,
+		"hightCost":1
+	},
+    "app-side": {
+      "path": "app-side/index"
+    },
+    "setting": {
+      "path": "setting/index"
+    }
+  },
+  "i18n": {
+    "en-US": {
+      "name": "zepp"
+    }
+  },
+  "defaultLanguage": "en-US"
+}

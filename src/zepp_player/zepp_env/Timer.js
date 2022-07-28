@@ -34,7 +34,8 @@ export default class TimerMock {
 
         this.timers[id] = {
             interval: -1,
-            timeout: -1
+            timeout: -1,
+            func: callable
         };
 
         (async () => {
