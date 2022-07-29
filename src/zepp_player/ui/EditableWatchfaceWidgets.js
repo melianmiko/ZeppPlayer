@@ -65,16 +65,16 @@ export class EditableBackground extends BaseWidget {
             const img = await player.getAssetImage(data.preview);
             const fg = await player.getAssetImage(config.fg);
             const tips = await player.getAssetImage(config.tips_bg);
-            const eventsZone = ImageWidget.draw(img, canvas, config);
-            ImageWidget.draw(fg, canvas, config);
-            ImageWidget.draw(tips, canvas, {
+            const eventsZone = ImageWidget.draw(img, canvas, player, config);
+            ImageWidget.draw(fg, canvas, player, config);
+            ImageWidget.draw(tips, canvas, player, {
                 x: config.tips_x,
                 y: config.tips_y
             });
             this.dropEvents(player, eventsZone);
         } else {
             const img = await player.getAssetImage(data.path);
-            ImageWidget.draw(img, canvas, config);
+            ImageWidget.draw(img, canvas, player, config);
         }
     }
 }

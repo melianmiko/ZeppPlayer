@@ -31,12 +31,13 @@ export class DatePointer extends BaseWidget {
     }
 
     async render(canvas, player) {
-        const config = this.conf;
+        const config = this.config;
 
         let angle = 360 * player.getDeviceState(config.type, "progress");
 
         const pointer = await player.getAssetImage(config.src);
-        ImageWidget.draw(pointer, canvas, {
+        ImageWidget.draw(pointer, canvas, player, {
+            x: 0, y: 0, w: canvas.width, h: canvas.height,
             center_x: config.center_x,
             center_y: config.center_y,
             pos_x: config.center_x - config.posX,
@@ -46,7 +47,7 @@ export class DatePointer extends BaseWidget {
 
         if (config.cover_path) {
             const cover = await player.getAssetImage(config.cover_path);
-            ImageWidget.draw(cover, canvas, {
+            ImageWidget.draw(cover, player, canvas, {
                 x: config.cover_x,
                 y: config.cover_y
             });
@@ -73,7 +74,8 @@ export class DatePointer extends BaseWidget {
 
             if(config[prefix + "path"]) {
                 img = await player.getAssetImage(config[prefix + "path"]);
-                ImageWidget.draw(img, canvas, {
+                ImageWidget.draw(img, canvas, player, {
+                    x: 0, y: 0, w: canvas.width, h: canvas.height,
                     center_x: config[prefix + "centerX"],
                     center_y: config[prefix + "centerY"],
                     pos_x: config[prefix + "centerX"] - (config[prefix + "posX"]),
@@ -84,7 +86,7 @@ export class DatePointer extends BaseWidget {
 
             if(config[prefix + "cover_path"] && config[prefix + "cover_y"] && config[prefix + "cover_x"]) {
                 img = await player.getAssetImage(config[prefix + "cover_path"]);
-                ImageWidget.draw(img, canvas, {
+                ImageWidget.draw(img, canvas, player, {
                     x: config[prefix + "cover_x"],
                     y: config[prefix + "cover_y"]
                 });

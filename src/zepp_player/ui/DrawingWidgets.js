@@ -16,9 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { BaseWidget } from "./BaseWidget.js";
-import { zeppColorToHex } from "../Utils.js";
-import { ImageWidget } from "./ImagingWidgets.js";
+import {BaseWidget} from "./BaseWidget.js";
+import {zeppColorToHex} from "../Utils.js";
+import {ImageWidget} from "./ImagingWidgets.js";
 
 /**
  * hmUI.widget.TEXT
@@ -242,16 +242,20 @@ export class FillRectWidget extends BaseWidget {
 
         ctx[mode]();
 
-        // canvas.getContext("2d").drawImage(img, 0, 0);
-        const box = ImageWidget.draw(img, canvas, {
-            pos_x: config.x,
-            pos_y: config.y,
-            center_x: config.x + img.width / 2,
-            center_y: config.y + img.height / 2,
+        const rad = (config.angle % 180) / 180 * Math.PI;
+        const b = Math.abs(config.w * Math.sin(rad)) + Math.abs(config.h * Math.cos(rad));
+        const a = Math.abs(config.w * Math.cos(rad)) + Math.abs(config.h * Math.sin(rad));
+        return ImageWidget.draw(img, canvas, player, {
+            x: config.x,
+            y: config.y,
+            w: config.w,
+            h: config.h,
+            pos_x: (a - config.w) / 2,
+            pos_y: (b - config.h) / 2,
+            center_x: config.w / 2 + (a - config.w) / 2,
+            center_y: config.h / 2 + (b - config.h) / 2,
             angle: config.angle
         });
-
-        return box;
     }
 
     async render(canvas, player) {

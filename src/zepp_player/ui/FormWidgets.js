@@ -46,7 +46,7 @@ export class ButtonWidget extends BaseWidget {
             // Img bg
             const src = this.pressed ? config.press_src : config.normal_src;
             const img = await player.getAssetImage(src);
-            ImageWidget.draw(img, canvas, {
+            ImageWidget.draw(img, canvas, player, {
                 x: config.x + Math.max(0, (w - img.width) / 2),
                 y: config.y + Math.max(0, (h - img.height) / 2)
             });

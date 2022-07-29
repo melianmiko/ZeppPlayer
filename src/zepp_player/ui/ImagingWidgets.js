@@ -25,39 +25,33 @@ import { BaseWidget } from "./BaseWidget.js";
  * w, h, x, y, src
  */
 export class ImageWidget extends BaseWidget {
-    static draw(img, canvas, config) {
+    static draw(img, canvas, player, config) {
         let w = config.w, h = config.h;
         if(!config.w) w = img.width;
         if(!config.h) h = img.height;
 
-        let x = config.x ? config.x : 0,
-            y = config.y ? config.y : 0,
-            centerX = config.center_x ? config.center_x : 0,
+        const cnv = player.newCanvas();
+        cnv.width = w;
+        cnv.height = h;
+
+        let centerX = config.center_x ? config.center_x : 0,
             centerY = config.center_y ? config.center_y : 0,
             posX = config.pos_x ? config.pos_x : 0,
             posY = config.pos_y ? config.pos_y : 0;
 
-        const ctx = canvas.getContext("2d");
+        const ctx = cnv.getContext("2d");
         if(config.angle === undefined || config.angle === 0) {
-            ctx.drawImage(img, x + posX, y + posY);
-            return [
-                x + posX, 
-                y + posY, 
-                x + posX + w, 
-                y + posY + h
-            ];
+            ctx.drawImage(img, posX, posY);
         } else {
             ctx.save();
             ctx.translate(centerX, centerY);
             ctx.rotate(config.angle * Math.PI / 180);
             ctx.drawImage(img, posX - centerX, posY - centerY);
             ctx.restore();
-            return [
-                posX, posY,
-                posX + img.width,
-                posY + img.height
-            ];
         }
+
+        canvas.getContext("2d").drawImage(cnv, config.x, config.y);
+        return [posX, posY, posX + w, posY + h];
     }
 
     async render(canvas, player) {
@@ -66,7 +60,7 @@ export class ImageWidget extends BaseWidget {
 
         try {
             img = await player.getAssetImage(item.src);
-            evZone = ImageWidget.draw(img, canvas, item);
+            evZone = ImageWidget.draw(img, canvas, player, item);
         } catch(e) {
             // Fallback evZone
             evZone = [
@@ -112,6 +106,7 @@ export class PointerWidget extends BaseWidget {
         }
 
         const conf = {
+            x: 0, y: 0, w: canvas.width, h: canvas.height,
             center_x: config.center_x,
             center_y: config.center_y,
             pos_x: config.center_x - config.x,
@@ -119,7 +114,7 @@ export class PointerWidget extends BaseWidget {
             angle
         };
 
-        ImageWidget.draw(img, canvas, conf);
+        ImageWidget.draw(img, canvas, player, conf);
     }
 }
 
