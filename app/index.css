@@ -151,6 +151,7 @@ select {
     margin-bottom: 8px;
     border-radius: 5px;
     box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 #view_console {
@@ -165,6 +166,10 @@ select {
 
 #view_console .type {
     color: #999;
+}
+
+#view_console .error {
+    color: #f22;
 }
 
 #view_console .SystemWarning {

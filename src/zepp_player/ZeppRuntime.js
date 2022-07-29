@@ -40,8 +40,13 @@ export default class ZeppRuntime {
                 " without var/let/const, this is legacy way. List:", this.player.globalScopeFix]);
         }
 
-        const fnc = eval(`(${Object.keys(env).toString() }) => {${text}; \n${extra}\n}`)
-        fnc(...Object.values(env));
+        try {
+            const fnc = eval(`(${Object.keys(env).toString() }) => {${text}; \n${extra}\n}`)
+            fnc(...Object.values(env));
+        } catch(e) {
+            this.onConsole("error", ["Script load failed", e]);
+            throw e;
+        }
 
         if(!env.__$$hmAppManager$$__.currentApp.current.module) {
             this.onConsole("SystemWarning", ["Page/Watchface don't exported."]);
@@ -52,8 +57,13 @@ export default class ZeppRuntime {
         this.module = env.__$$hmAppManager$$__.currentApp.current.module;
         this.render_counter = 0;
 
-        if(this.module.onInit) this.module.onInit();
-        if(this.module.build) this.module.build();
+        try {
+            if(this.module.onInit) this.module.onInit();
+            if(this.module.build) this.module.build();
+        } catch(e) {
+            this.onConsole("error", ["Module start failed", e]);
+            throw e;
+        }
 
         this.callDelegates("resume_call");
 

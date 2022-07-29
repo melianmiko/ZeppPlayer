@@ -102,6 +102,9 @@ export class EditGroupWidget extends BaseWidget {
         const isActive = PersistentStorage.get("wfEdit", "focus") === config.edit_id
         const currentType = config.current_type;
 
+        let width = config.w ? config.w : 0;
+        let height = config.h ? config.h : 0;
+
         let preview = null, text = null;
 
         for(let i in config.optional_types) {
@@ -114,10 +117,14 @@ export class EditGroupWidget extends BaseWidget {
 
         try {
             preview = await player.getAssetImage(preview);
-            ctx.drawImage(preview, config.x, config.y);
+            if(width === 0) width = preview.width;
+            if(height === 0) height = preview.height;
+
+            const ox = (width - preview.width) / 2;
+            const oy = (height - preview.height) / 2;
+            ctx.drawImage(preview, config.x + ox, config.y + oy);
         } catch(e) {
             // No preview, ignore
-            preview = {width: config.w, height: config.h};
         }
 
         let dx = config.x, dy = config.y;
@@ -125,9 +132,9 @@ export class EditGroupWidget extends BaseWidget {
         try {
             const overlay = await player.getAssetImage(
                 isActive ? config.select_image : config.un_select_image);
-            dx = config.x - (overlay.width - preview.width) / 2;
-            dy = config.y - (overlay.height - preview.height) / 2;
-            ctx.drawImage(overlay, dx, dy);
+            const ox = (width - overlay.width) / 2;
+            const oy = (height - overlay.height) / 2;
+            ctx.drawImage(overlay, config.x + ox, config.y + oy);
         } catch(e) {
             // No overlay
         }
@@ -139,7 +146,7 @@ export class EditGroupWidget extends BaseWidget {
 
             const textImg = await TextWidget.drawText({
                 color: 0, text, text_size: 18,
-                w: config.tips_width,
+                w: config.tips_width - (config.tips_margin*2),
                 h: tipsBg.height,
                 align_h: "center_h",
                 align_v: "center_v"
@@ -158,8 +165,8 @@ export class EditGroupWidget extends BaseWidget {
         this.dropEvents(player, [
             config.x,
             config.y,
-            config.x + preview.width,
-            config.y + preview.height
+            config.x + width,
+            config.y + height
         ])
     }
 

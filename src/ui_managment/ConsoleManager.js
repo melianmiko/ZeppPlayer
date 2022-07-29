@@ -43,7 +43,9 @@ export class ConsoleManager {
 
         for(let i in data) {
             let arg = document.createElement("span");
-            if(data[i] instanceof Object) {
+            if(data[i] instanceof Error) {
+                arg.innerText = data[i].stack;
+            }else if(data[i] instanceof Object) {
                 arg.innerText = JSON.stringify(data[i]);
             } else {
                 arg.innerText = data[i].toString();

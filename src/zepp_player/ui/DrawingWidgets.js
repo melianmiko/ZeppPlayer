@@ -142,12 +142,15 @@ export class TextWidget extends BaseWidget {
             let lineCanvas = lines[i];
 
             let px = 0;
-            if(config.align_h === "center_h") px = (config.w - lineCanvas.width) / 2;
-            if(config.align_h === "right") px = config.w - lineCanvas.width;
+            if(config.align_h === "center_h") px = Math.max(0, (config.w - lineCanvas.width) / 2);
+            if(config.align_h === "right") px = Math.max(0, config.w - lineCanvas.width);
 
             if(!config.text_style && maxWidth > config.w) {
                 // scroll
-                px -= (player.render_counter % 100) / 100 * (maxWidth + config.w);
+                const progress = ((player.render_counter+100) % 300) / 100;
+                const w = maxWidth + config.w;
+                if(progress < 1) px += (1-progress) * w;
+                else if(progress > 2) px -= (progress-2) * w;
                 player.refresh_required = "text_scroll";
             }
 
