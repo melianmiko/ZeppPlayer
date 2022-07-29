@@ -75,8 +75,8 @@ export class EditorManager {
         } else {
             edit = document.createElement('input');
             edit.type = "number";
-            if(data.type == "string") edit.type = "text";
-            if(data.type == "boolean") edit.type = "checkbox";
+            if(data.type === "string") edit.type = "text";
+            if(data.type === "boolean") edit.type = "checkbox";
         }
 
         edit.value = data.value;
@@ -88,12 +88,12 @@ export class EditorManager {
         });
 
         const maxLength = 14 * (data.maxLength ? data.maxLength : 1) + 14;
-        if(data.type != "boolean") edit.style.width = maxLength + "px";
+        if(data.type !== "boolean") edit.style.width = maxLength + "px";
 
         row.appendChild(edit);
     
         edit.onchange = () => {
-            if(data.type != "boolean") return;
+            if(data.type !== "boolean") return;
             player.setDeviceState(name, edit.checked);
         };
         edit.oninput = () => {

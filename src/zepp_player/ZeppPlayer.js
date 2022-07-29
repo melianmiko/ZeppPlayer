@@ -121,7 +121,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             }
         }
 
-        this.refresh_required = true;
+        this.currentRuntime.refresh_required = "set_state";
     }
 
     async setProject(path) {
