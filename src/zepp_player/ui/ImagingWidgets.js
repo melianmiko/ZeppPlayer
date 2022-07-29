@@ -50,8 +50,10 @@ export class ImageWidget extends BaseWidget {
             ctx.restore();
         }
 
-        canvas.getContext("2d").drawImage(cnv, config.x, config.y);
-        return [posX, posY, posX + w, posY + h];
+        const x = config.x ? config.x : 0;
+        const y = config.y ? config.y : 0;
+        canvas.getContext("2d").drawImage(cnv, x, y);
+        return [x, y, x + w, y + h];
     }
 
     async render(canvas, player) {
@@ -223,7 +225,7 @@ export class TextImageWidget extends BaseWidget {
         
         if(boxWidth > tmp.width) tmp.width = boxWidth;
         if(boxHeight > tmp.height) tmp.height = boxHeight;
-        if(tmp.width == 0 || tmp.height == 0) return null;
+        if(tmp.width === 0 || tmp.height === 0) return null;
 
         // Align
         let px = 0;

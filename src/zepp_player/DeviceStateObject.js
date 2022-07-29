@@ -304,6 +304,24 @@ export function createDeviceState() {
             displayName: "Icon",
             shift: () => (state.WEATHER_CURRENT_ICON.value + 1) % 29
         },
+        WIND: {
+            value: 2,
+            type: "number",
+            maxLength: 3,
+            groupIcon: "sunny",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 100,
+            shift: () => state.HUMIDITY.value % 16 + 1
+        },
+        AQI: {
+            value: 20,
+            type: "number",
+            maxLength: 3,
+            groupIcon: "sunny",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 100,
+            shift: () => state.HUMIDITY.value % 100 + 5
+        },
         HUMIDITY: {
             value: 10,
             type: "number",

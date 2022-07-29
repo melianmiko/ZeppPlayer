@@ -35,7 +35,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
     async getAssetImage(path, noPrefix=false) {
         if(!noPrefix) path = this.getAssetPath(path);
         if(this.imgCache[path]) return this.imgCache[path];
-        if(!this.readCache[path]) throw new Error("Undefined asset");
+        if(!this.readCache[path]) throw new Error("Undefined asset: " + path);
 
         const data = this.readCache[path];
         const uint = new Uint8Array(data);
