@@ -222,25 +222,23 @@ export class FillRectWidget extends BaseWidget {
         ctx.strokeStyle = zeppColorToHex(config.color);
         ctx.lineWidth = config.line_width ? config.line_width : 1;
 
+
+        // Ext. circle
         ctx.beginPath();
+        FillRectWidget._makePath(ctx, config.w, config.h, 0, 0, round);
+        ctx.fill();
 
-        ctx.moveTo(round, 0);
-        ctx.lineTo(config.w - round, 0);
-        ctx.arc(config.w - round, round, round, 3*Math.PI / 2, 0);
-
-        // ctx.moveTo(config.w, round);
-        ctx.lineTo(config.w, config.h - round);
-        ctx.arc(config.w - round, config.h - round, round, 0, Math.PI / 2);
-
-        // ctx.moveTo(config.w - round, config.h);
-        ctx.lineTo(round, config.h);
-        ctx.arc(round, config.h - round, round, Math.PI/2, Math.PI);
-
-        // ctx.moveTo(0, config.h - round);
-        ctx.lineTo(0, round);
-        ctx.arc(round, round, round, Math.PI, -Math.PI / 2);
-
-        ctx[mode]();
+        if(mode === "stroke") {
+            ctx.beginPath();
+            ctx.globalCompositeOperation = "destination-out";
+            FillRectWidget._makePath(ctx,
+                config.w - ctx.lineWidth*2,
+                config.h - ctx.lineWidth*2,
+                ctx.lineWidth,
+                ctx.lineWidth,
+                round - ctx.lineWidth);
+            ctx.fill();
+        }
 
         const rad = (config.angle % 180) / 180 * Math.PI;
         const b = Math.abs(config.w * Math.sin(rad)) + Math.abs(config.h * Math.cos(rad));
@@ -256,6 +254,18 @@ export class FillRectWidget extends BaseWidget {
             center_y: config.h / 2 + (b - config.h) / 2,
             angle: config.angle
         });
+    }
+
+    static _makePath(ctx, w, h, x, y, round) {
+        ctx.moveTo(x + round, y);
+        ctx.lineTo(x + w - round, y);
+        ctx.arc(x + w - round, y + round, round, 3*Math.PI / 2, 0);
+        ctx.lineTo(x + w, y + h - round);
+        ctx.arc(x + w - round, y + h - round, round, 0, Math.PI / 2);
+        ctx.lineTo(x + round, y +h);
+        ctx.arc(x + round, y + h - round, round, Math.PI/2, Math.PI);
+        ctx.lineTo(x, y + round);
+        ctx.arc(x + round, y + round, round, Math.PI, -Math.PI / 2);
     }
 
     async render(canvas, player) {
