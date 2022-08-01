@@ -146,8 +146,15 @@ export default class ZeppRuntime {
         try {
             await widget.render(canvas, this);
         } catch(e) {
-            console.error("render failed with error", e);
-            throw new Error("Render failed");
+            const [title, subtitle] = widget.playerWidgetIdentify();
+            console.warn(`%c Widget %c${title} %c${subtitle} %crender failed`,
+                "font-weight: bold",
+                "color: initial; font-weight: bold",
+                "color: #999; font-weight: bold",
+                "font-weight: bold", "\n\n",
+                "CONFIG: ", widget.config, "\n",
+                "ERROR: ", e);
+            throw new Error("widget_fail");
         }
 
         ctx.globalAlpha = 1;
@@ -169,10 +176,8 @@ export default class ZeppRuntime {
     }
 
     onConsole(tag, data) {
-        const fn = this.scriptPath.substring(this.scriptPath.lastIndexOf("/") + 1);
-
         this.player.onConsole(tag, data, {
-            runtimeID: `${fn} (SL:${this.showLevel})`
+            runtimeID: `SL:${this.showLevel}`
         });
     }
 

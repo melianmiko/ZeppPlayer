@@ -28,6 +28,23 @@ export class BaseWidget {
         if(!this.config.visible) this.config.visible = true;
     }
 
+    playerWidgetIdentify() {
+        let title = this.config.__widget;
+        let subtitle = "", subtitleClass = "";
+        if(this.config._name) {
+            subtitle = this.config._name;
+            subtitleClass = "userDefined";
+        } else if(this.config.type) {
+            subtitle = this.config.type;
+        } else if(this.config.src) {
+            subtitle = this.config.src;
+        } else if(this.config.text) {
+            subtitle = this.config.text;
+        }
+
+        return [title, subtitle, subtitleClass];
+    }
+
     _isVisible() {
         if(!this.config.visible) return false;
 

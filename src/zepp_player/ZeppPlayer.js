@@ -22,10 +22,6 @@ import ZeppPlayerConfig from "./ZeppPlayerConfig.js";
 import Overlay from "./ui/Overlay.js";
 import ZeppRuntime from "./ZeppRuntime.js";
 
-function log() {
-    console.log("[ZeppPlayer]", ...arguments);
-}
-
 export default class ZeppPlayer extends ZeppPlayerConfig {
     LEVEL_NORMAL = 1;
     LEVEL_AOD = 2;
@@ -80,7 +76,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         if(e.message.endsWith("is not defined")) {
             const name = e.message.split(" ")[0];
             if(this.globalScopeFix.indexOf(name) < 0) {
-                log("Attempt to fix strict mode global defination of", name);
+                console.log("%cAuto-fix global define of " + name, 'color: #8cf')
                 this.globalScopeFix.push(name);
                 this.mustRestart = true;
             }
@@ -143,9 +139,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         // Preload content
-        this.onConsole("ZeppPlayer", ['loading assets...']);
+        this.onConsole("ZeppPlayer", ['Preloading assets, please be patient...']);
         await this.preloadProjectAssets(path + "/assets/");
-        this.onConsole("ZeppPlayer", ['Assets loaded.']);
+        // this.onConsole("ZeppPlayer", ['Assets loaded.']);
 
         this.appType = appConfig.app.appType;
         this.setPage(modulePath);
@@ -176,12 +172,12 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         this.readCache["player_overlay.png"] = await this.loadFile("/app/overlay.png");
-        this.readCache["render_fail.png.png"] = await this.loadFile("/app/render_fail.png");
+        this.readCache["render_fail.png"] = await this.loadFile("/app/render_fail.png");
     }
 
     setPage(modulePath) {
         this.path_script = this.path_project + "/" + modulePath + ".js";
-        log("use script", this.path_script);
+        console.info("Continue with page", this.path_script);
     }
 
     async finish() {
@@ -208,18 +204,22 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const runtime = new ZeppRuntime(this, this.path_script, 1);
         this.wfBaseRuntime = runtime;
 
+        let error = null;
         try {
             await runtime.start();
             this.currentRuntime = runtime;
         } catch(e) {
-            console.error(e);
+            error = e;
             this.handleScriptError(e);
         }
 
         if(this.mustRestart) {
-            log("context fixed, restarting...")
+            this.onConsole("ZeppPlayer", ["Auto-fix applied, restarting..."])
             await this.init();
             return;
+        } else if(error !== null) {
+            console.error(error);
+            this.onConsole("ZeppPlayer", ["Init failed"]);
         }
 
         if(this._currentRenderLevel !== 1) {
@@ -291,16 +291,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         const canvas = this.newCanvas();
         const ctx = canvas.getContext("2d");
-
-        if(this.render_counter % 500 === 0) {
-            // Drop info
-            console.log("[ZeppPlayer] Render stats",
-                "last_refresh_request=", runtime.refresh_required,
-                "glob_render_counter=", this.render_counter,
-                "rt_render_counter=", runtime.render_counter,
-                "widgets_count=", runtime.countWidgets(),
-                "from_init=", Date.now() - runtime.initTime);
-        }
 
         canvas.width = this.screen[0];
         canvas.height = this.screen[1];

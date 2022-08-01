@@ -19,6 +19,14 @@
 export class ConsoleManager {
     view = document.getElementById("view_console");
 
+    colors = {
+        ZeppPlayer: "#0099ff",
+        SystemWarning: "#ff9900",
+        runtime: "#4cf",
+        error: "#f22",
+        warn: "#ff6600"
+    }
+
     static init(player) {
         new ConsoleManager(player);
     }
@@ -27,19 +35,41 @@ export class ConsoleManager {
         this.player = player;
 
         player.onRestart = () => this.wipe();
-        player.onConsole = (level, data, extra) => this.write(level, data, extra);
+        player.onConsole = (level, data, extra) => {
+            this.writeBrowserConsole(level, data, extra)
+            this.write(level, data, extra);
+        }
     }
 
     wipe() {
         this.view.innerHTML = "";
     }
 
+    writeBrowserConsole(level, data, extra) {
+        const color = this.colors[level] ? this.colors[level] : "initial";
+        const id = (extra && extra.runtimeID) ? extra.runtimeID : "";
+        const args = [`%c[${level}] %c${id}`, `color: ${color}`, `color: #999`];
+
+        if(['log', 'error', 'warn', 'info'].indexOf(level) > -1) {
+            console[level](...args, ...data);
+        } else {
+            console.log(...args, ...data);
+        }
+    }
+
     write(level, data, extra) {
         const div = document.createElement("div");
         const lv = document.createElement("span");
-        lv.className = "type " + level;
+        lv.style.color = this.colors[level] ? this.colors[level] : "#999";
         lv.innerText = level;
         div.appendChild(lv);
+
+        if(extra && extra.runtimeID) {
+            let arg = document.createElement("span");
+            arg.style.opacity = "0.5";
+            arg.innerText = extra.runtimeID;
+            div.appendChild(arg);
+        }
 
         for(let i in data) {
             let arg = document.createElement("span");
@@ -50,13 +80,6 @@ export class ConsoleManager {
             } else {
                 arg.innerText = data[i].toString();
             }
-            div.appendChild(arg);
-        }
-
-        if(extra && extra.runtimeID) {
-            let arg = document.createElement("span");
-            arg.style.opacity = "0.5";
-            arg.innerText = extra.runtimeID;
             div.appendChild(arg);
         }
 

@@ -164,26 +164,6 @@ select {
     margin-right: 1em;
 }
 
-#view_console .type {
-    color: #999;
-}
-
-#view_console .error {
-    color: #f22;
-}
-
-#view_console .SystemWarning {
-    color: #f90;
-}
-
-#view_console .runtime {
-    color: #4cf;
-}
-
-#view_console .ZeppPlayer {
-    color: #09f;
-}
-
 #view_edit {
     font-size: .9em;
     height: 450px;

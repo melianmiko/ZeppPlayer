@@ -39,7 +39,7 @@ export async function initVersionUI() {
         return;
     }
 
-    if(data.version == APP_VERSION) return;
+    if(data.version === APP_VERSION) return;
 
     const updateLink = document.createElement("a");
     updateLink.className = "update";

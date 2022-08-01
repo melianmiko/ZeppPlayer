@@ -40,7 +40,6 @@ export default class HuamiFsMock {
     }
 
     stat_asset(path) {
-        console.log("stat", path);
         let f = this.runtime.readCache[this.runtime.getAssetPath(path)];
         return [{
             size: f.byteLength,
@@ -70,7 +69,6 @@ export default class HuamiFsMock {
     }
 
     seek(file, pos) {
-        console.log("seek", file.path, "to", pos);
         file.position = pos;
     }
 
@@ -79,7 +77,6 @@ export default class HuamiFsMock {
         const {position} = file;
         const fileView = new Uint8Array(file.data);
 
-        console.log("read", file.path, "to", buffOffset, "from", position, "len", len);
         for(let i = 0; i < len; i++) {
             view[buffOffset + i] = fileView[position + i];
         }

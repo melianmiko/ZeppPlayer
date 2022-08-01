@@ -75,18 +75,7 @@ export default class ExplorerManager {
         widgetView.appendChild(header);
 
         // Title
-        let title = widget.config.__widget;
-        let subtitle = "", subtitleClass = "";
-        if(widget.config._name) {
-            subtitle = widget.config._name;
-            subtitleClass = "userDefined";
-        } else if(widget.config.type) {
-            subtitle = widget.config.type;
-        } else if(widget.config.src) {
-            subtitle = widget.config.src;
-        } else if(widget.config.text) {
-            subtitle = widget.config.text;
-        }
+        const [title, subtitle, subtitleClass] = widget.playerWidgetIdentify();
 
         header.innerHTML = title + " <aside class='" + subtitleClass + "'>" + subtitle + "</aside>";
 

@@ -44,10 +44,6 @@ const start = async () => {
     const player = new ChromeZeppPlayer();
     // player.system_fps = DISPLAY_FPS;
 
-    initVersionUI().then(() => {
-        console.log("Version UI ready")
-    });
-
     ToolbarManager.init(player);
     EditorManager.init(player);
     ConsoleManager.init(player);
@@ -109,4 +105,5 @@ const start = async () => {
         refresh();
 };
 
+initVersionUI();
 start();
