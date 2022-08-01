@@ -255,6 +255,8 @@ class PaiSensor {
             this.prepai3 + this.prepai4 + this.prepai5 + 
             this.prepai6 + this.dailypai;
     }
+
+    addEventListener(name, callback) {}
 }
 
 /**

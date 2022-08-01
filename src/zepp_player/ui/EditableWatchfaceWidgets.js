@@ -97,6 +97,13 @@ export class EditGroupWidget extends BaseWidget {
         return this._isActive() ? "toplevel" : "post";
     }
 
+    getProperty(key, second) {
+        if(key === "current_type" && this.runtime.showLevel === 4)
+            return -1;
+
+        return super.getProperty(key, second);
+    }
+
     _isActive() {
         return PersistentStorage.get("wfEdit", "focus") === this.config.edit_id;
     }
