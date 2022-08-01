@@ -136,11 +136,11 @@ export class DatePointer extends BaseWidget {
                 let offset = config[lastPrefix + "space"];
                 if(!offset) offset = 0;
                 const combinedImg = player.newCanvas();
-                combinedImg.width = lastImg.width + img.width + offset;
+                combinedImg.width = lastImg.width + img.width;
                 combinedImg.height = Math.max(lastImg.height, img.height);
                 const cctx = combinedImg.getContext("2d");
                 cctx.drawImage(lastImg, 0, 0);
-                cctx.drawImage(img, lastImg.width + offset, 0);
+                cctx.drawImage(img, lastImg.width, 0);
                 
                 expectedWidth += 2 * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
@@ -188,12 +188,12 @@ export class DatePointer extends BaseWidget {
         const lang = player.language;
         const ampmData = ["am", "pm"];
 
-        for(var i in ampmData) {
+        for(let i in ampmData) {
             let value = ampmData[i];
             let prefix = value + "_", 
                 langPrefix = prefix + lang + "_";
 
-            if(config[langPrefix + "path"] && ampmState == value) {
+            if(config[langPrefix + "path"] && ampmState === value) {
                 const img = await player.getAssetImage(config[langPrefix + "path"]);
                 ctx.drawImage(img, config[prefix + "x"], config[prefix + "y"]);
                 this.dropEvents(player, [

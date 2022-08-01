@@ -35,7 +35,7 @@ export default class HuamiSettingMock {
     screen_type = {
         WATCHFACE: 1,
         AOD: 2,
-        SETTINGS: 8,
+        SETTINGS: 4,
         APP: 16
     }
 

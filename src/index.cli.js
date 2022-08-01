@@ -126,6 +126,8 @@ async function main() {
     console.log("");
     console.info("Processed: " + success);
     if(fail > 0) console.warn("Failed: " + fail);
+
+    process.exit();
 }
 
 main();

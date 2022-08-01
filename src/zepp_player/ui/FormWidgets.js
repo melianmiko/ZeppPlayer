@@ -25,6 +25,7 @@ export class ButtonWidget extends BaseWidget {
     constructor(config) {
         super(config);
         this.pressed = false;
+        config.alpha = undefined;
 
         this.addEventListener("onmousedown", () => {
             this.pressed = true;
@@ -35,6 +36,8 @@ export class ButtonWidget extends BaseWidget {
             config.__runtime.refresh_required = "button"; // we changed color/bg
             if(config.click_func) config.click_func(info);
         });
+
+        this.addEventListener = () => {}; // ignore other events
     }
 
     async render(canvas, player) {

@@ -27,7 +27,7 @@ export class TextWidget extends BaseWidget {
     static drawText(config, player) {
         const textSize = config.text_size ? config.text_size : 18;
         const fontConf = textSize + "px allfont";
-        const colorConf = config.color ? zeppColorToHex(config.color) : "#000000";
+        const colorConf = config.color ? zeppColorToHex(config.color) : "#0099ff";
         const offsetX = config.char_space ? config.char_space : 0;
 
         let canvas = player.newCanvas();
@@ -208,6 +208,7 @@ export class FillRectWidget extends BaseWidget {
     constructor(config) {
         super(config);
         this.mode = "fill";
+        config.alpha = undefined;
     }
 
     static draw(canvas, config, mode, player) {
@@ -231,12 +232,13 @@ export class FillRectWidget extends BaseWidget {
         if(mode === "stroke") {
             ctx.beginPath();
             ctx.globalCompositeOperation = "destination-out";
+            // noinspection JSSuspiciousNameCombination
             FillRectWidget._makePath(ctx,
                 config.w - ctx.lineWidth*2,
                 config.h - ctx.lineWidth*2,
                 ctx.lineWidth,
                 ctx.lineWidth,
-                round - ctx.lineWidth);
+                Math.max(0, round - ctx.lineWidth));
             ctx.fill();
         }
 
@@ -279,6 +281,7 @@ export class StrokeRectWidget extends FillRectWidget {
     constructor(config) {
         super(config);
         this.mode = "stroke";
+        config.alpha = undefined;
     }
 }
 
