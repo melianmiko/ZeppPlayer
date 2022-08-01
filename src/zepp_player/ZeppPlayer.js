@@ -316,21 +316,26 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         runtime.onRenderBegin();
 
         // Render all widgets
-        const postRender = [];
+        const stages = {
+            normal: [],
+            post: [],
+            toplevel: []
+        }
+
         for(let i in runtime.widgets) {
             const widget = runtime.widgets[i];
             if(!widget) continue;
-            if(widget._renderStage === "post") {
-                postRender.push(widget);
-                continue;
-            }
-
-            await runtime.renderWidget(widget, canvas);
+            const stage = widget._renderStage ? widget._renderStage : "normal";
+            stages[stage].push(widget);
         }
 
-        for(let i in postRender) {
-            const widget = postRender[i];
-            await runtime.renderWidget(widget, canvas);
+        for(let stage in stages) {
+            for(let i in stages[stage]) {
+                const widget = stages[stage][i];
+                if(!widget) continue;
+
+                await runtime.renderWidget(widget, canvas);
+            }
         }
 
         // Frames

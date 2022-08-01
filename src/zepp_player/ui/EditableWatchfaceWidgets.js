@@ -83,14 +83,26 @@ export class EditGroupWidget extends BaseWidget {
     constructor(config) {
         super(config);
         this.player = config.__runtime;
-        this._renderStage = "post";
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
         if(!config.current_type) config.current_type = config.default_type;
 
         this.addEventListener("onmouseup", () => {
+            if(!this._isActive()) return this._setActive();
             this._switch();
         })
+    }
+
+    get _renderStage() {
+        return this._isActive() ? "toplevel" : "post";
+    }
+
+    _isActive() {
+        return PersistentStorage.get("wfEdit", "focus") === this.config.edit_id;
+    }
+
+    _setActive() {
+        PersistentStorage.set("wfEdit", "focus", this.config.edit_id);
     }
 
     async render(canvas, player) {
@@ -99,7 +111,7 @@ export class EditGroupWidget extends BaseWidget {
         const config = this.config;
         const ctx = canvas.getContext("2d");
 
-        const isActive = PersistentStorage.get("wfEdit", "focus") === config.edit_id
+        const isActive = this._isActive();
         const currentType = config.current_type;
 
         let width = config.w ? config.w : 0;
@@ -139,8 +151,7 @@ export class EditGroupWidget extends BaseWidget {
             // No overlay
         }
 
-        try {
-            if(!isActive) throw new Error("ignore");
+        if(isActive) try {
             const tipsBg = await player.getAssetImage(config.tips_BG);
             ctx.drawImage(tipsBg, dx + config.tips_x, dy + config.tips_y);
 
@@ -179,7 +190,6 @@ export class EditGroupWidget extends BaseWidget {
                 const nextIndex = (i + 1) % this.config.optional_types.length;
                 const val = this.config.optional_types[nextIndex];
                 PersistentStorage.set("wfEdit", this.config.edit_id, val.type);
-                PersistentStorage.set("wfEdit", "focus", this.config.edit_id);
                 this.config.current_type = val.type;
                 this.player.refresh_required = "edit";
             }
