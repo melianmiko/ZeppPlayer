@@ -9,6 +9,7 @@ export default class ZeppRuntime {
     initTime = null;
     pause = null;
     refresh_required = false;
+    onInitParam = null;
     
     constructor(player, scriptPath, showLevel) {
         this.player = player;
@@ -17,8 +18,10 @@ export default class ZeppRuntime {
         this.render_counter = 0;
 
         this.readCache = this.player.readCache;
+        this.path_project = this.player.path_project;
         this.language = this.player.language;
         this.screen = this.player.screen;
+        this.appConfig = this.player.appConfig;
         this.withScriptConsole = this.player.withScriptConsole;
     }
 
@@ -58,7 +61,7 @@ export default class ZeppRuntime {
         this.render_counter = 0;
 
         try {
-            if(this.module.onInit) this.module.onInit();
+            if(this.module.onInit) this.module.onInit(this.onInitParam);
             if(this.module.build) this.module.build();
         } catch(e) {
             this.onConsole("error", ["Module start failed", e]);
@@ -68,6 +71,10 @@ export default class ZeppRuntime {
         this.callDelegates("resume_call");
 
         this.initTime = Date.now();
+    }
+
+    requestPageSwitch(conf) {
+        this.player.enterPage(conf.url, conf.param);
     }
 
     destroy() {

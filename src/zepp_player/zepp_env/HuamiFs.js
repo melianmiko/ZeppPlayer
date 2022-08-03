@@ -17,6 +17,7 @@
 */
 
 import { PersistentStorage } from "../PersistentStorage.js";
+import normalize from "path-normalize";
 
 export default class HuamiFsMock {
     O_RDONLY = 0;
@@ -35,37 +36,54 @@ export default class HuamiFsMock {
         const setters = ["SysProSetBool", "SysProSetInt64", "SysProSetDouble", "SysProSetChars"];
         const getters = ["SysProGetBool", "SysProGetInt64", "SysProGetDouble", "SysProGetChars"];
 
-        for(var a in setters) this[setters[a]] = this.SysProSetInt;
-        for(var a in getters) this[getters[a]] = this.SysProGetInt;
+        for(let a in setters) this[setters[a]] = this.SysProSetInt;
+        for(let a in getters) this[getters[a]] = this.SysProGetInt;
+
+        const id = runtime.appConfig.app.appId.toString(16).padStart(8, "0").toUpperCase();
+        const type = runtime.appConfig.app.appType;
+        const realPrefix = runtime.path_project + "/";
+        const vfsPrefix = "/storage/js_" + type + "s/" + id + "/";
+
+        this.vfs = {};
+        this.vfsPrefix = vfsPrefix;
+        for(let i in runtime.readCache) {
+            const newPath = i.replace(realPrefix, vfsPrefix);
+            this.vfs[newPath] = runtime.readCache[i];
+        }
     }
 
-    stat_asset(path) {
-        let f = this.runtime.readCache[this.runtime.getAssetPath(path)];
-        return [{
-            size: f.byteLength,
-            mtime: 0 // no access
-        }, 0];
-    }
+    getFile(path) {
+        const normalize = require('path-normalize')
 
-    open(path, flag) {
-        let f = PersistentStorage.get("fs", path);
-        if(!f) f = "";
-        return {data: f, flag, path, position: 0, store: "fs"};
-    }
+        if(path[0] !== "/")
+            path = this.vfsPrefix + "assets/" + path;
 
-    open_asset(path, flag) {
-        let f = this.runtime.readCache[this.runtime.getAssetPath(path)];
-        return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
+        const newPath = normalize(path);
+        return this.vfs[newPath]
     }
 
     stat(path) {
-        const f = PersistentStorage.get("fs", path);
+        let f = this.getFile(path);
 
-        if(!f) return [{}, 1];
         return [{
-            size: f.length,
+            mode: (f ? 32768 : 16384) + 511,
+            size: f ? f.byteLength : 0,
             mtime: Date.now()
         }, 0];
+    }
+
+    stat_asset(path) {
+        return this.stat(path);
+    }
+
+    open(path, flag) {
+        let f = this.getFile(path);
+        return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
+    }
+
+    open_asset(path, flag) {
+        let f = this.getFile(path);
+        return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
     }
 
     seek(file, pos) {
@@ -123,13 +141,15 @@ export default class HuamiFsMock {
     }
 
     readdir(path) {
-        let content = [];
-        if(path[path.length-1] != "/") path += "/";
+        const normalize = require('path-normalize');
+        path = normalize(path);
 
-        const keys = PersistentStorage.keys("fs");
-        for(var a in keys) {
-            if(keys[a].startsWith(path)) {
-                const fn = keys[a].substring(path.length).split("/")[0];
+        let content = [];
+        if(path[path.length-1] !== "/" && path !== "") path += "/";
+
+        for(let a in this.vfs) {
+            if(a.startsWith(path)) {
+                const fn = a.substring(path.length).split("/")[0];
                 if(content.indexOf(fn) < 0) content.push(fn);
             }
         }

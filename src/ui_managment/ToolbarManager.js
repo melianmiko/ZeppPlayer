@@ -38,6 +38,10 @@ export class ToolbarManager {
     static doGifBtn = document.getElementById("do_gif");
     static doRotateBtn = document.getElementById("do_rotate");
 
+    static doBackBtn = document.getElementById("app_back");
+    static doUpBtn = document.getElementById("app_up");
+    static doDownBtn = document.getElementById("app_down");
+
     static viewConsole = document.getElementById("view_console");
     static viewEditor = document.getElementById("view_edit");
     static viewExplorer = document.getElementById("view_explorer");
@@ -74,8 +78,14 @@ export class ToolbarManager {
         ToolbarManager.doGifBtn.onclick = ToolbarManager.doGif;
         ToolbarManager.doRotateBtn.onclick = ToolbarManager.doRotate;
         ToolbarManager.toggleFrames.onclick = ToolbarManager.doToggleFrames;
+        ToolbarManager.doBackBtn.onclick = ToolbarManager.doBack;
+        ToolbarManager.doUpBtn.onclick = () => ToolbarManager.doScroll(-1);
+        ToolbarManager.doDownBtn.onclick = () => ToolbarManager.doScroll(1);
 
-        document.addEventListener("keypress", ToolbarManager.handleKeypress);
+        document.addEventListener("keyup", ToolbarManager.handleKeypress);
+
+        // Add type class
+        document.getElementById("toolbar_side").classList.add(player.appType);
     }
 
     static handleKeypress(e) {
@@ -113,6 +123,9 @@ export class ToolbarManager {
             case "_":
                 ToolbarManager.switchProject(-1);
                 return;
+            case "Escape":
+                ToolbarManager.doBack();
+                return;
         }
     }
 
@@ -137,6 +150,14 @@ export class ToolbarManager {
             const [button, enabled] = data[i];
             enabled ? button.classList.add("active") : button.classList.remove("active");
         }
+    }
+
+    static doScroll(d) {
+        ToolbarManager.player.renderScroll += d * 40;
+    }
+
+    static doBack() {
+        ToolbarManager.player.back();
     }
 
     static switchProject(delta) {

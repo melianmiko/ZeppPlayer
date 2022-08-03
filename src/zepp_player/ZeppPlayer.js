@@ -49,6 +49,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.currentRuntime = null;
         this.wfBaseRuntime = null;
         this.wfSubRuntime = null;
+        this.backStack = [];
         this.globalScopeFix = [];
         this.initTime = 0;
         this.appType = "";
@@ -124,6 +125,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const jsonFile = await this.loadFile(path + '/app.json');
         const jsonText = new TextDecoder().decode(jsonFile);
         const appConfig = JSON.parse(jsonText);
+        this.appConfig = appConfig;
         this.path_project = path;
 
         // Find init page
@@ -140,7 +142,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         // Preload content
         this.onConsole("ZeppPlayer", ['Preloading assets, please be patient...']);
-        await this.preloadProjectAssets(path + "/assets/");
+        await this.preloadProjectAssets(path + "/");
         // this.onConsole("ZeppPlayer", ['Assets loaded.']);
 
         this.appType = appConfig.app.appType;
@@ -180,6 +182,42 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         console.info("Continue with page", this.path_script);
     }
 
+    async enterPage(url, param) {
+        this.currentRuntime.uiPause = true;
+        this.currentRuntime.callDelegates("pause_call");
+        this.backStack.push(this.currentRuntime);
+
+        // New runtime
+        this.setPage(url);
+        const runtime = new ZeppRuntime(this, this.path_script, 1);
+        runtime.onInitParam = param;
+        await runtime.start();
+        runtime.refresh_required = 'init';
+
+        this.currentRuntime = runtime;
+        this.renderScroll = 0;
+        this._lastCanvas = null;
+    }
+
+    async back() {
+        if(this.backStack.length < 1) return;
+
+        // Finish current
+        this.currentRuntime.callDelegates("pause_call");
+        this.currentRuntime.uiPause = true;
+        this.currentRuntime.destroy();
+
+        // Get prev
+        const runtime = this.backStack.pop();
+        runtime.uiPause = false;
+        runtime.callDelegates("resume_call");
+        runtime.refresh_required = "back";
+
+        this.path_script = runtime.scriptPath;
+        this.currentRuntime = runtime;
+        this._lastCanvas = null;
+    }
+
     async finish() {
         if(!this.wfBaseRuntime) return;
 
@@ -189,6 +227,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this._deviceStateChangeEvents = {};
         this.mustRestart = false;
         this.onDestroy = [];
+        this.backStack = [];
     }
 
     getEvalAdditionalData() {
@@ -230,8 +269,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     handleEvent(name, x, y, info) {
-        let events = this.wfBaseRuntime.events[name];
-        if(this.wfSubRuntime) events = this.wfSubRuntime.events[name];
+        let events = this.currentRuntime.events[name];
+        y += this.renderScroll;
 
         if(!events) return;
         if(events.length === 0) return;
@@ -289,11 +328,11 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         if(!runtime.refresh_required && this._lastCanvas && !force)
             return this._lastCanvas;
 
-        const canvas = this.newCanvas();
-        const ctx = canvas.getContext("2d");
+        let canvas = this.newCanvas();
+        let ctx = canvas.getContext("2d");
 
         canvas.width = this.screen[0];
-        canvas.height = this.screen[1];
+        canvas.height = this.screen[1] + this.renderScroll;
 
         // Fill with black
         if(this.withoutTransparency) {
@@ -345,6 +384,14 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             if(this.render_counter % 15 === 0) 
                 this.performShift();
             runtime.refresh_required = "shift";
+        }
+
+        if(this.renderScroll !== 0) {
+            const newCanvas = this.newCanvas();
+            newCanvas.width = canvas.width;
+            newCanvas.height = this.screen[1];
+            newCanvas.getContext("2d").drawImage(canvas, 0, -this.renderScroll);
+            canvas = newCanvas;
         }
 
         // Overlay

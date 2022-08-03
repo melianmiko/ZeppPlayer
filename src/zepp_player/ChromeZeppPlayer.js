@@ -89,6 +89,12 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             this.handleEvent("onmouseup", x, y, {x, y});
         };
 
+        block.onmousemove = (e) => {
+            e.preventDefault();
+            const [x, y] = this._fetchCoordinates(e);
+            this.handleEvent("onmousemove", x, y, {x, y});
+        };
+
         block.oncontextmenu = (e) => {
             const [x, y] = this._fetchCoordinates(e);
             console.log("click coords", x, y);

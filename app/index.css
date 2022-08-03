@@ -77,6 +77,15 @@ aside.caption {
     user-select: none;
 }
 
+.btn_wf, .btn_app {
+    display: none;
+}
+
+#toolbar_side.watchface > .btn_wf,
+#toolbar_side.app > .btn_app{
+    display: block;
+}
+
 #toolbar_top {
     left: 0;
     bottom: 100%;

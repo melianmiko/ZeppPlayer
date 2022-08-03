@@ -25,6 +25,7 @@ import { EditableBackground, EditGroupWidget } from "./EditableWatchfaceWidgets.
 import { ButtonWidget } from "./FormWidgets.js";
 import { HistogramWidget } from "./HistogramWidget.js";
 import { AnimationWidget, ClickableImageWidget, ImageProgressWidget, ImageStatusWidget, ImageWidget, LevelWidget, MissingWidget, PointerWidget, TextImageWidget } from "./ImagingWidgets.js";
+import {ScrollList} from "./ScrollList";
 
 export default class HuamiUIMock {
     _widget = {
@@ -54,7 +55,8 @@ export default class HuamiUIMock {
         TEXT: TextWidget,
         CIRCLE: CircleWidget,
         BUTTON: ButtonWidget,
-        HISTOGRAM: HistogramWidget
+        HISTOGRAM: HistogramWidget,
+        SCROLL_LIST: ScrollList
     }
 
     constructor(runtime) {

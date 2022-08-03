@@ -83,7 +83,7 @@ export class EditorManager {
         edit.checked = data.value;
 
         // Prevent player hotkey trigger.
-        edit.addEventListener("keypress", (e) => {
+        edit.addEventListener("keyup", (e) => {
             e.stopPropagation();
         });
 

@@ -44,11 +44,6 @@ const start = async () => {
     const player = new ChromeZeppPlayer();
     // player.system_fps = DISPLAY_FPS;
 
-    ToolbarManager.init(player);
-    EditorManager.init(player);
-    ConsoleManager.init(player);
-    ExplorerManager.init(player);
-
     // Make storage available from browser console
     window.PersistentStorage = PersistentStorage;
     window.player = player;
@@ -60,6 +55,12 @@ const start = async () => {
     // Load main script
     const proj = picker.getProject();
     await player.setProject(proj);
+
+    ToolbarManager.init(player);
+    EditorManager.init(player);
+    ConsoleManager.init(player);
+    ExplorerManager.init(player);
+
     await player.init();
 
     // Prepare canvas

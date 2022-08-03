@@ -25,8 +25,18 @@ export default class ZeppPlayerConfig {
     _renderAutoShift = false;
     _renderOverlay = true;
     _renderLanguage = "en";
+    _renderScroll = 0;
 
     withScriptConsole = true;
+
+    get renderScroll() {
+        return this._renderScroll;
+    }
+
+    set renderScroll(v) {
+        this._renderScroll = v;
+        if(this.currentRuntime) this.currentRuntime.refresh_required = true;
+    }
 
     get current_level() {
         return this._currentRenderLevel;

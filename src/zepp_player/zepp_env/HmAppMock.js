@@ -17,9 +17,9 @@
 */
 
 export class HmAppMock {
-    // constructor(player) {
-    //     this.player = player;
-    // }
+    constructor(runtime) {
+        this.runtime = runtime;
+    }
 
     startApp(options) {
         console.log("startApp", options);
@@ -27,12 +27,9 @@ export class HmAppMock {
 
     gotoPage(conf) {
         console.log("gotoPage", conf)
-        // if(!conf.url) return;
+        if(!conf.url) return;
 
-        // this.player.finish();
-        // this.player.setPage(conf.url);
-        // this.player.init();
-        // this.player.refresh_required = true;
+        this.runtime.requestPageSwitch(conf);
     }
 
     reloadPage() {}
@@ -41,8 +38,21 @@ export class HmAppMock {
     gotoHome() {}
     exit() {}
     goBack() {}
+
     setScreenKeep() {}
-    packageInfo() {}
+    packageInfo() {
+        const data = this.runtime.appConfig.app;
+        return {
+            type: data.appType,
+            appId: data.appId,
+            name: data.name,
+            version: data.version.name,
+            icon: data.icon,
+            description: data.description,
+            vendor: data.vendor,
+            pages: []
+        }
+    }
 
     registerGestureEvent() {}
     unregisterGestureEvent() {}

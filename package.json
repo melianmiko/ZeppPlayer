@@ -25,6 +25,7 @@
   "devDependencies": {
     "esbuild": "^0.14.49",
     "gif-encoder-2": "^1.0.5",
+    "path-normalize": "^6.0.6",
     "tga": "^1.0.7",
     "yargs": "^17.5.1"
   }
