@@ -59,39 +59,7 @@ export class NodeZeppPlayer extends ZeppPlayer {
         return createCanvas(20, 20);
     }
 
-    async getAssetImage(path, noPrefix=false) {
-        if(!noPrefix) path = this.getAssetPath(path);
-        if(this.imgCache[path]) return this.imgCache[path];
-        if(!this.readCache[path]) throw "Undefined asset";
-
-        const data = this.readCache[path];
-        const uint = new Uint8Array(data);
-
-        let img;
-        if(uint[1] === 1) {
-            img = await this._loadTga(data);
-        } else {
-            img = await loadImage(data);
-        }
-
-        this.imgCache[path] = img;
-        return img;
-    }
-
-    _loadTga(data) {
-        return new Promise((resolve, reject) => {
-            const tga = new TGA(data, {
-                dontFixAlpha: true
-            });
-
-            const canvas = createCanvas(tga.width, tga.height);
-            const ctx = canvas.getContext("2d");
-            const newData = ctx.createImageData(tga.width, tga.height);
-            for(var i = 0; i < tga.pixels.length; i++) {
-                newData.data[i] = tga.pixels[i];
-            }
-            ctx.putImageData(newData, 0, 0);
-            resolve(canvas);
-        });
+    async _loadPNG(data) {
+        return loadImage(data);
     }
 }

@@ -21,6 +21,7 @@ import {PersistentStorage} from "./PersistentStorage.js";
 import ZeppPlayerConfig from "./ZeppPlayerConfig.js";
 import Overlay from "./ui/Overlay.js";
 import ZeppRuntime from "./ZeppRuntime.js";
+import {TGAImage} from "./TgaImage";
 
 export default class ZeppPlayer extends ZeppPlayerConfig {
     LEVEL_NORMAL = 1;
@@ -63,7 +64,45 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.onRestart = () => null;
     }
 
-   wipeSettings() {
+    async getAssetImage(path, noPrefix=false) {
+        if(!noPrefix) path = this.getAssetPath(path);
+        if(this.imgCache[path]) return this.imgCache[path];
+        if(!this.readCache[path]) throw new Error("Undefined asset: " + path);
+
+        const data = this.readCache[path];
+        const uint = new Uint8Array(data);
+
+        let img;
+        if(uint[0] === 137 && uint[1] === 80) {
+            img = await this._loadPNG(data);
+        } else {
+            img = await this._loadTGA(data);
+        }
+
+        this.imgCache[path] = img;
+        return img;
+    }
+
+    async _loadTGA(data) {
+        if(!this.__tga_first_use) {
+            this.onConsole("ZeppPlayer", [
+                "We're using TGA images loader. This will reduce performance."
+            ]);
+            this.__tga_first_use = true;
+        }
+
+        const tga = TGAImage.imageWithData(data);
+        await tga.didLoad;
+
+        const id = (new TextDecoder()).decode(tga._imageID.slice(0, 4));
+        if(id !== "SOMH") this.onConsole("SystemWarning", [
+            "Some file(s) aren't ZeppOS-compatible TGA. This may not work on real device."
+        ]);
+
+        return tga.canvas;
+    }
+
+    wipeSettings() {
         this._deviceState = createDeviceState();
         PersistentStorage.wipe();
     }
@@ -417,10 +456,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     async listDirectory(path) {}
 
     async loadFile() {}
-
-    async getAssetImage(path) {
-        throw new Error("not overriden");
-    }
 
     newCanvas() {
         throw new Error("not overriden");

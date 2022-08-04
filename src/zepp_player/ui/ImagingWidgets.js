@@ -65,6 +65,7 @@ export class ImageWidget extends BaseWidget {
             evZone = ImageWidget.draw(img, canvas, player, item);
         } catch(e) {
             // Fallback evZone
+            console.log(e);
             evZone = [
                 item.x,
                 item.y,

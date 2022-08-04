@@ -17,6 +17,7 @@
 */
 
 import ZeppPlayer from "./ZeppPlayer.js";
+import {TGAImage} from "./TgaImage";
 
 export class ChromeZeppPlayer extends ZeppPlayer {
     imgCache = {};
@@ -30,25 +31,6 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         const resp = await fetch(path);
 
         return await resp.arrayBuffer();
-    }
-
-    async getAssetImage(path, noPrefix=false) {
-        if(!noPrefix) path = this.getAssetPath(path);
-        if(this.imgCache[path]) return this.imgCache[path];
-        if(!this.readCache[path]) throw new Error("Undefined asset: " + path);
-
-        const data = this.readCache[path];
-        const uint = new Uint8Array(data);
-
-        let img;
-        if(uint[1] === 1) {
-            img = await this._loadTGA(data);
-        } else {
-            img = await this._loadPNG(data);
-        }
-
-        this.imgCache[path] = img;
-        return img;
     }
 
     async listDirectory(path) {
@@ -139,31 +121,5 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             img.onerror = (e) => reject(e);
             img.src = url;
         });
-    }
-
-    /**
-     * Load TGA image
-     * 
-     * @param {ArrayBuffer} data URL or path
-     * @returns image
-     */
-     async _loadTGA(data) {
-        if(!this.__tga_first_use) {
-            this.onConsole("ZeppPlayer", [
-                "We're using TGA images loader. This will reduce performance."
-            ]);
-            this.__tga_first_use = true;
-        }
-
-        const tga = TGAImage.imageWithData(data);
-        await tga.didLoad;
-
-        if(tga._colorMapType !== 1 || tga._colorMapDepth !== 32) {
-            this.onConsole("SystemWarning", [`TGA file ${url.substring(url.lastIndexOf("/") + 1)} has ` +
-                `invalid colormap depth, ${tga._colorMapDepth} != 32. This `+
-                `file won't be accepted by ZeppOS.`]);
-        }
-
-        return tga.image;
     }
 }

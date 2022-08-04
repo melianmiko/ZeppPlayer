@@ -138,9 +138,9 @@ export default class HuamiUIMock {
         }, 3000);
     }
 
-    setLayerScrolling(val) {
-        // todo
-    }
+    setLayerScrolling(val) {}
+
+    setStatusBarVisible() {}
 
     getTextLayout(text, options) {
         const canvas = TextWidget.drawText({
