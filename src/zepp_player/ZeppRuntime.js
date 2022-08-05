@@ -74,7 +74,7 @@ export default class ZeppRuntime {
     }
 
     requestPageSwitch(conf) {
-        this.player.enterPage(conf.url, conf.param);
+        return this.player.enterPage(conf.url, conf.param);
     }
 
     destroy() {
@@ -92,14 +92,6 @@ export default class ZeppRuntime {
         this.onConsole("runtime", ["Runtime destroyed", `SL:${this.showLevel}`]);
     }
 
-    getDeviceState() {
-        return this.player.getDeviceState(...arguments);
-    }
-
-    handleScriptError() {
-        this.player.handleScriptError(...arguments);
-    }
-
     registerEvent(name, x1, y1, x2, y2, fn) {
         if(!this.events[name]) {
             this.events[name] = [];
@@ -108,22 +100,6 @@ export default class ZeppRuntime {
         this.events[name].push({
             x1, y1, x2, y2, fn
         });
-    }
-
-    getAssetPath() {
-        return this.player.getAssetPath(...arguments);
-    }
-
-    async getAssetImage() {
-        return await this.player.getAssetImage(...arguments);
-    }
-
-    addDeviceStateChangeEvent() {
-        this.player.addDeviceStateChangeEvent(...arguments);
-    }
-
-    newCanvas() {
-        return this.player.newCanvas(...arguments);
     }
 
     callDelegates(delegateName) {
@@ -188,16 +164,27 @@ export default class ZeppRuntime {
         });
     }
 
-    countWidgets() {
-        let count = 0;
+    async getAssetImage() {
+        return await this.player.getAssetImage(...arguments);
+    }
 
-        for(let i in this.widgets) {
-            if(this.widgets[i].config.__content) {
-                count += this.widgets[i].config.__content.length;
-            }
-            count++;
-        }
+    addDeviceStateChangeEvent() {
+        this.player.addDeviceStateChangeEvent(...arguments);
+    }
 
-        return count;
+    newCanvas() {
+        return this.player.newCanvas(...arguments);
+    }
+
+    getDeviceState() {
+        return this.player.getDeviceState(...arguments);
+    }
+
+    handleScriptError() {
+        this.player.handleScriptError(...arguments);
+    }
+
+    back() {
+        return this.player.back(...arguments);
     }
 }

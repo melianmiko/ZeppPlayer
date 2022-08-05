@@ -65,7 +65,6 @@ export class ImageWidget extends BaseWidget {
             evZone = ImageWidget.draw(img, canvas, player, item);
         } catch(e) {
             // Fallback evZone
-            console.log(e);
             evZone = [
                 item.x,
                 item.y,
@@ -148,7 +147,7 @@ export class TextImageWidget extends BaseWidget {
     
     static async draw(player, text, maxLength, config) {
         if(!config.font_array) return null;
-        // text = text.toString();
+        text = String(text);
 
         // Prepare
         let imgs = [];

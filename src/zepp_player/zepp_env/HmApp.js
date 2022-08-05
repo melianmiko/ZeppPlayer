@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export class HmAppMock {
+export class HmApp {
     constructor(runtime) {
         this.runtime = runtime;
     }
@@ -35,9 +35,17 @@ export class HmAppMock {
     reloadPage() {}
     setLayerX() {}
     setLayerY() {}
-    gotoHome() {}
     exit() {}
-    goBack() {}
+
+    gotoHome() {
+        this.runtime.onConsole("ZeppPlayer", [
+            "gotoHome requested"
+        ])
+    }
+
+    goBack() {
+        this.runtime.back();
+    }
 
     setScreenKeep() {}
     packageInfo() {

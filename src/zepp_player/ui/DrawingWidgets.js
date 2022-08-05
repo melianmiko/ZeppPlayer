@@ -27,7 +27,7 @@ export class TextWidget extends BaseWidget {
     static drawText(config, player) {
         const textSize = config.text_size ? config.text_size : 18;
         const fontConf = textSize + "px allfont";
-        const colorConf = config.color ? zeppColorToHex(config.color) : "#0099ff";
+        const colorConf = config.color ? zeppColorToHex(config.color) : "#000";
         const offsetX = config.char_space ? config.char_space : 0;
 
         let canvas = player.newCanvas();

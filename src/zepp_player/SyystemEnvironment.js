@@ -24,7 +24,7 @@ import HuamiSettingMock from "./zepp_env/HuamiSetting.js";
 import HuamiUIMock from "./ui/HuamiUI.js";
 import TimerMock from "./zepp_env/Timer.js";
 import { HuamiBLEMock } from "./zepp_env/HuamiBLE.js";
-import { HmAppMock } from "./zepp_env/HmAppMock.js";
+import { HmApp } from "./zepp_env/HmApp.js";
 
 export function setupEnvironment(runtime) {
     const object = {};
@@ -36,7 +36,7 @@ export function setupEnvironment(runtime) {
     object.DeviceRuntimeCore = new DeviceRuntimeCoreMock();
     object.hmUI = new HuamiUIMock(runtime);
     object.hmFS = new HuamiFsMock(runtime);
-    object.hmApp = new HmAppMock(runtime);
+    object.hmApp = new HmApp(runtime);
     object.hmBle = new HuamiBLEMock();
     object.hmSensor = new HuamiSensorMock(runtime);
     object.hmSetting = new HuamiSettingMock(runtime);
