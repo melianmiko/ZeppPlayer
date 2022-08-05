@@ -16,7 +16,48 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import {TextWidget} from "../ui/DrawingWidgets";
+
+class HmUtilsMock {
+    constructor(runtime) {
+        this.runtime = runtime;
+    }
+
+    gettextFactory(table, lang, fallback) {
+        let data = table[fallback];
+        if(table[lang]) data = table[lang];
+
+        return (key) => data[key];
+    }
+
+    Lang = class {
+        constructor(a) {}
+    }
+
+    getLanguage() {
+        return 'en-US';
+    }
+
+    getPx() {
+        return (v) => v;
+    }
+
+    measureTextWidth(text, text_size) {
+        const canvas = TextWidget.drawText({
+            text, text_size,
+            _metricsOnly: true
+        }, this.runtime);
+
+        return canvas.width;
+    }
+}
+
 export default class DeviceRuntimeCoreMock {
+    constructor(runtime) {
+        this.runtime = runtime;
+        this.HmUtils = new HmUtilsMock(runtime);
+    }
+
     WidgetFactory = class {
         constructor(a1, a2, a3) {}
     }
@@ -30,6 +71,18 @@ export default class DeviceRuntimeCoreMock {
             return {
                 log: (data) => console.log("hmLogger", "[" + name + "]", data)
             }
+        }
+    }
+
+    App(config) {
+        const defTemplate = {
+            __globals__: {},
+            onCreate: () => {}
+        }
+
+        return {
+            ...defTemplate,
+            ...config
         }
     }
 

@@ -70,6 +70,7 @@ export class HmApp {
 
     registerKeyEvent() {}
     unregisterKeyEvent() {}
+    unregistKeyEvent() {}
 
     registerSpinEvent() {}
     unregistSpinEvent() {}

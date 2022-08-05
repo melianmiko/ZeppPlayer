@@ -22,6 +22,7 @@ import ZeppPlayerConfig from "./ZeppPlayerConfig.js";
 import Overlay from "./ui/Overlay.js";
 import ZeppRuntime from "./ZeppRuntime.js";
 import {TGAImage} from "./TgaImage";
+import {createAppEnv} from "./SyystemEnvironment";
 
 export default class ZeppPlayer extends ZeppPlayerConfig {
     LEVEL_NORMAL = 1;
@@ -42,6 +43,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.screen = [192, 490];
         this.path_script = "";
         this.path_project = "";
+        this.appEnv = null;
 
         // Render stage data
         this.render_counter = 0;
@@ -173,11 +175,26 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.appConfig = appConfig;
         this.path_project = path;
 
+        // Try to execute app.js
+        const appJsFile = await this.loadFile(path + '/app.js');
+        const appJsText = new TextDecoder().decode(appJsFile);
+        const appEnv = createAppEnv(this);
+
+        try {
+            const str = `(${Object.keys(appEnv).toString() }) => {${appJsText};}`;
+            const appJs = eval(str);
+            appJs(...Object.values(appEnv));
+        } catch (e) {
+            console.warn("app.js exec failed", e);
+        }
+
+        this.appEnv = appEnv;
+
         // Find init page
         let modulePath = null;
         if(appConfig.app.appType === "watchface") {
             // Run as watchface
-            modulePath = "/watchface/index";
+            modulePath = "watchface/index";
             if(appConfig.module && appConfig.module.watchface)
                 modulePath = appConfig.module.watchface.path;
         } else if(appConfig.app.appType === "app") {

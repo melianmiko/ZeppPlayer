@@ -26,28 +26,11 @@ import TimerMock from "./zepp_env/Timer.js";
 import { HuamiBLEMock } from "./zepp_env/HuamiBLE.js";
 import { HmApp } from "./zepp_env/HmApp.js";
 
-export function setupEnvironment(runtime) {
+export function createAppEnv(player) {
     const object = {};
 
-    // Glob constants
-    object.SLEEP_REFERENCE_ZERO = 24 * 60;
-
-    // Base libraries
-    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock();
-    object.hmUI = new HuamiUIMock(runtime);
-    object.hmFS = new HuamiFsMock(runtime);
-    object.hmApp = new HmApp(runtime);
-    object.hmBle = new HuamiBLEMock();
-    object.hmSensor = new HuamiSensorMock(runtime);
-    object.hmSetting = new HuamiSettingMock(runtime);
-    object.timer = new TimerMock(runtime);
-    object.console = new ConsoleMock(runtime, console);
-    object.px = (n) => n; // looks like some legacy shit
-
-    // Links
-    object.Logger = object.DeviceRuntimeCore.HmLogger;
-    object.WatchFace = (conf) => object.DeviceRuntimeCore.WatchFace(conf);
-
+    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player);
+    object.__$$module$$__ = {};
     object.__$$hmAppManager$$__ = {
         currentApp: {
             pid: 10,
@@ -57,7 +40,38 @@ export function setupEnvironment(runtime) {
             }
         }
     };
+
+    return object;
+}
+
+export function createPageEnv(runtime, appRuntime) {
+    const object = {};
+
+    // Glob constants
+    object.SLEEP_REFERENCE_ZERO = 24 * 60;
+
+    // Base libraries
+    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(runtime);
+    object.hmUI = new HuamiUIMock(runtime);
+    object.hmFS = new HuamiFsMock(runtime);
+    object.hmApp = new HmApp(runtime);
+    object.hmBle = new HuamiBLEMock();
+    object.hmSensor = new HuamiSensorMock(runtime);
+    object.hmSetting = new HuamiSettingMock(runtime);
+    object.timer = new TimerMock(runtime);
+    object.console = new ConsoleMock(runtime, console);
+
+    // Links
     object.__$$module$$__ = {};
+    object.__$$hmAppManager$$__ = appRuntime.__$$hmAppManager$$__;
+    object.Logger = object.DeviceRuntimeCore.HmLogger;
+    object.WatchFace = (conf) => object.DeviceRuntimeCore.WatchFace(conf);
+
+    // Custom
+    const glob = appRuntime.__$$hmAppManager$$__.currentApp.app.__globals__;
+    for(let i in glob) {
+        object[i] = glob[i];
+    }
 
     return object;
 }

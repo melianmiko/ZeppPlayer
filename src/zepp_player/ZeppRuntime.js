@@ -1,4 +1,4 @@
-import { setupEnvironment } from "./SyystemEnvironment";
+import { createPageEnv } from "./SyystemEnvironment";
 
 export default class ZeppRuntime {
     widgets = [];
@@ -33,7 +33,7 @@ export default class ZeppRuntime {
         const scriptFile = await this.player.loadFile(this.scriptPath);
         const text = new TextDecoder().decode(scriptFile);
 
-        const env = setupEnvironment(this);
+        const env = createPageEnv(this, this.player.appEnv);
         if(this.player.globalScopeFix.length > 0) {
             for(let i in this.player.globalScopeFix) 
                 env[this.player.globalScopeFix[i]] = 0;
