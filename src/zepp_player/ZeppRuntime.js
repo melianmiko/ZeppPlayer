@@ -17,7 +17,7 @@ export default class ZeppRuntime {
         this.showLevel = showLevel;
         this.render_counter = 0;
 
-        this.readCache = this.player.readCache;
+        this.vfs = this.player.vfs;
         this.path_project = this.player.path_project;
         this.language = this.player.language;
         this.screen = this.player.screen;

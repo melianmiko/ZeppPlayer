@@ -33,7 +33,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
     withStagingDump = false;
     stages = [];
-    readCache = {};
+    vfs = {};
 
     constructor() {
         super();
@@ -67,9 +67,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     async getAssetImage(path, noPrefix=false) {
         if(!noPrefix) path = this.getAssetPath(path);
         if(this.imgCache[path]) return this.imgCache[path];
-        if(!this.readCache[path]) throw new Error("Undefined asset: " + path);
+        if(!this.vfs[path]) throw new Error("Undefined asset: " + path);
 
-        const data = this.readCache[path];
+        const data = this.vfs[path];
         const uint = new Uint8Array(data);
 
         let img;
@@ -123,8 +123,14 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
     }
 
+    getVfsAppPath() {
+        const pkg = this.appConfig.app;
+        const idn = pkg.appId.toString(16).padStart(8, "0").toUpperCase();
+        return '/storage/js_' + pkg.appType + "s/" + idn;
+    }
+
     getAssetPath(path) {
-        return this.path_project + "/assets/" + path;
+        return this.getVfsAppPath() + "/assets/" + path;
     }
 
     getDeviceState(type, dataType=false) {
@@ -207,13 +213,15 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     async preloadProjectAssets(path) {
         const urls = await this.readDirectoryRecursive(path);
         const contents = await Promise.all(urls.map(this.loadFile));
+        const vfsRoot = this.getVfsAppPath();
 
         for(let i = 0; i < urls.length; i++) {
-            this.readCache[urls[i]] = contents[i];
+            const vfsPath = urls[i].replace(this.path_project, vfsRoot);
+            this.vfs[vfsPath] = contents[i];
         }
 
-        this.readCache["player_overlay.png"] = await this.loadFile("/app/overlay.png");
-        this.readCache["render_fail.png"] = await this.loadFile("/app/render_fail.png");
+        this.vfs["player_overlay.png"] = await this.loadFile("/app/overlay.png");
+        this.vfs["render_fail.png"] = await this.loadFile("/app/render_fail.png");
     }
 
     setPage(modulePath) {

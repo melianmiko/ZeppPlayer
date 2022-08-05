@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 /*
     ZeppPlayer - ZeppOS, mostly Mi Band 7, simulator for PC
     Copyright (C) 2022  MelianMiko
@@ -16,15 +18,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { PersistentStorage } from "../PersistentStorage.js";
-import normalize from "path-normalize";
+import {PersistentStorage} from "../PersistentStorage.js";
 
 export default class HuamiFsMock {
     O_RDONLY = 0;
     O_WRONLY = 0;
     O_RDWR = 0;
     O_APPEND = 1; // auto-seek to end
-    O_CREAT = 0;
+    O_CREAT = 2;
     O_EXCL = 0;
     O_TRUNC = 0;
 
@@ -41,28 +42,32 @@ export default class HuamiFsMock {
 
         const id = runtime.appConfig.app.appId.toString(16).padStart(8, "0").toUpperCase();
         const type = runtime.appConfig.app.appType;
-        const realPrefix = runtime.path_project + "/";
-        const vfsPrefix = "/storage/js_" + type + "s/" + id + "/";
 
-        this.vfs = {};
-        this.vfsPrefix = vfsPrefix;
-        for(let i in runtime.readCache) {
-            const newPath = i.replace(realPrefix, vfsPrefix);
-            this.vfs[newPath] = runtime.readCache[i];
-        }
+        this.vfsPrefix = "/storage/js_" + type + "s/" + id + "/";
+        this.vfs = runtime.vfs;
     }
 
     getFile(path) {
-        const normalize = require('path-normalize')
+        return this.vfs[path];
+    }
 
+    parsePath(path) {
+        const normalize = require('path-normalize')
         if(path[0] !== "/")
             path = this.vfsPrefix + "assets/" + path;
 
-        const newPath = normalize(path);
-        return this.vfs[newPath]
+        return normalize(path);
+    }
+
+    newFile(path) {
+        const data = new ArrayBuffer(0);
+        this.vfs[path] = data;
+
+        return data;
     }
 
     stat(path) {
+        path = this.parsePath(path);
         let f = this.getFile(path);
 
         return [{
@@ -77,13 +82,17 @@ export default class HuamiFsMock {
     }
 
     open(path, flag) {
+        path = this.parsePath(path);
         let f = this.getFile(path);
+        if(!f && (flag & 2) !== 0) {
+            f = this.newFile(path);
+        }
+
         return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
     }
 
     open_asset(path, flag) {
-        let f = this.getFile(path);
-        return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
+        return this.open(path, flag);
     }
 
     seek(file, pos) {
@@ -109,22 +118,25 @@ export default class HuamiFsMock {
 
     write(file, buf, buffOffset, len) {
         const view = new Uint8Array(buf);
-        const {data, position, store, path} = file;
-        let newData = data.substring(0, position);
-
-        for(var i = 0; i < len; i++) {
-            newData += String.fromCharCode(view[buffOffset + i]);
+        const {data, position} = file;
+        if(position + len > data.byteLength) {
+            const newBuffer = new ArrayBuffer(position + len);
+            new Uint8Array(newBuffer).set(new Uint8Array(file.data));
+            file.data = newBuffer;
+            this.vfs[file.path] = newBuffer;
         }
-        newData += data.substring(position + len);
 
-        PersistentStorage.set(store, path, newData);
+        const fileView = new Uint8Array(file.data);
+        for(let i = 0; i < len; i++) {
+            fileView[position + i] = view[buffOffset + i]
+        }
+
         file.position += len;
-
         return 0;
     }
 
     remove(path) {
-        PersistentStorage.del("fs", path);
+        delete this.vfs[path];
         return 0;
     }
 
@@ -135,7 +147,7 @@ export default class HuamiFsMock {
         return 0;
     }
 
-    mkdir(path) {
+    mkdir() {
         // Nothing to do
         return 0;
     }
