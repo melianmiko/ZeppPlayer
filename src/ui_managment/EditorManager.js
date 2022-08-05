@@ -97,7 +97,9 @@ export class EditorManager {
             player.setDeviceState(name, edit.checked);
         };
         edit.oninput = () => {
-            player.setDeviceState(name, edit.value);
+            let value = edit.value;
+            if(data.type === "number") value = Number(value);
+            player.setDeviceState(name, value);
         }
     
         return row;

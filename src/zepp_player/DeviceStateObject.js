@@ -88,8 +88,8 @@ export function createDeviceState() {
             maxLength: 4,
             getString: (t) => t.value,
             shift: () => {
-                if(state.AM_PM == "hidden") return "am";
-                if(state.AM_PM == "am") return "pm";
+                if(state.AM_PM === "hidden") return "am";
+                if(state.AM_PM === "am") return "pm";
                 return "hidden";
             }
         },
@@ -276,7 +276,7 @@ export function createDeviceState() {
             displayName: "Current",
             maxLength: 3,
             getString: (t) => t.value.toString(),
-            getProgress: () => state.WEATHER_CURRENT_ICON.value / 29, //redir to icon
+            getProgress: () => state.WEATHER_CURRENT_ICON.value / 28,
             shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
         },
         WEATHER_HIGH: {

@@ -135,7 +135,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         return this.getVfsAppPath() + "/assets/" + path;
     }
 
-    getDeviceState(type, dataType=false) {
+    getDeviceState(type, dataType="null") {
         const v = this._deviceState[type];
         switch(dataType) {
             case "progress":
