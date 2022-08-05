@@ -37,6 +37,7 @@ export class ToolbarManager {
     static doReloadBtn = document.getElementById("do_reload");
     static doGifBtn = document.getElementById("do_gif");
     static doRotateBtn = document.getElementById("do_rotate");
+    static doRestartBtn = document.getElementById("do_restart");
 
     static doBackBtn = document.getElementById("app_back");
     static doUpBtn = document.getElementById("app_up");
@@ -81,6 +82,7 @@ export class ToolbarManager {
         ToolbarManager.doBackBtn.onclick = ToolbarManager.doBack;
         ToolbarManager.doUpBtn.onclick = () => ToolbarManager.doScroll(-1);
         ToolbarManager.doDownBtn.onclick = () => ToolbarManager.doScroll(1);
+        ToolbarManager.doRestartBtn.onclick = () => ToolbarManager.doRestart();
 
         document.addEventListener("keyup", ToolbarManager.handleKeypress);
 
@@ -133,12 +135,13 @@ export class ToolbarManager {
      * Update buttons active/inactive states
      */
     static _refresh() {
+        const runtime = ToolbarManager.player.currentRuntime
         const data = [
             [ToolbarManager.toggleEditor, localStorage.zepp_player_editor === "true"],
             [ToolbarManager.toggleConsole, localStorage.zepp_player_console === "true"],
             [ToolbarManager.toggleExplorer, localStorage.zepp_player_explorer === "true"],
             [ToolbarManager.toggleEventZones, ToolbarManager.player.showEventZones],
-            [ToolbarManager.togglePause, ToolbarManager.player.currentRuntime && ToolbarManager.player.currentRuntime.uiPause],
+            [ToolbarManager.togglePause, runtime && runtime.uiPause],
             [ToolbarManager.toggleShift, ToolbarManager.player.withShift],
             [ToolbarManager.toggleFrames, ToolbarManager.player.render_overlay],
             [ToolbarManager.toggleMode1, ToolbarManager.player.current_level === 1],
@@ -150,6 +153,10 @@ export class ToolbarManager {
             const [button, enabled] = data[i];
             enabled ? button.classList.add("active") : button.classList.remove("active");
         }
+    }
+
+    static doRestart() {
+        ToolbarManager.player.init();
     }
 
     static doScroll(d) {
