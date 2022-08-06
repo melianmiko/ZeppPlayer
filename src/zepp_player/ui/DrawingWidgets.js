@@ -24,6 +24,11 @@ import {ImageWidget} from "./ImagingWidgets.js";
  * hmUI.widget.TEXT
  */
 export class TextWidget extends BaseWidget {
+    constructor(config) {
+        super(config);
+        config.alpha = undefined;
+    }
+
     static drawText(config, player) {
         const textSize = config.text_size ? config.text_size : 18;
         const fontConf = textSize + "px allfont";
@@ -218,11 +223,11 @@ export class FillRectWidget extends BaseWidget {
 
         const ctx = img.getContext("2d");
         const round = config.radius ? config.radius : 0;
+        const color = config.color ? config.color : 0;
 
-        ctx.fillStyle = zeppColorToHex(config.color);
-        ctx.strokeStyle = zeppColorToHex(config.color);
+        ctx.fillStyle = zeppColorToHex(color);
+        ctx.strokeStyle = zeppColorToHex(color);
         ctx.lineWidth = config.line_width ? config.line_width : 1;
-
 
         // Ext. circle
         ctx.beginPath();
@@ -272,6 +277,7 @@ export class FillRectWidget extends BaseWidget {
 
     async render(canvas, player) {
         const config = this.config;
+        if(config.w === 0 || config.h === 0) return;
         const box = FillRectWidget.draw(canvas, config, this.mode, player)
         this.dropEvents(player, box);
     }

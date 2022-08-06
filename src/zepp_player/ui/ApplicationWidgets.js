@@ -94,3 +94,71 @@ export class GroupWidget extends BaseWidget {
         return i;
     }
 }
+
+/**
+ * hmUI.widget.STATE_BUTTON
+ */
+export class StateButtonWidget extends BaseWidget {
+    constructor(config) {
+        super(config);
+        this.addEventListener("onmouseup", () => {
+            this.config.__radioGroup.setProperty("checked", this);
+        })
+    }
+
+    async render(canvas, player) {
+        const groupConfig = this.config.__radioGroup.config;
+        const src = groupConfig.checked === this ? groupConfig.select_src : groupConfig.unselect_src;
+        const img = await player.getAssetImage(src);
+
+        const defaults = {x: 0, y: 0, w: img.width,  h: img.height};
+        const config = {...defaults, ...this.config};
+        canvas.getContext("2d").drawImage(img, config.x + groupConfig.x, config.y + groupConfig.y);
+
+        this.dropEvents(player, [
+            config.x,
+            config.y,
+            config.x + config.w,
+            config.y + config.h
+        ]);
+    }
+}
+
+/**
+ * hmUI.widget.RADIO_GROUP
+ */
+export class RadioGroupWidget extends GroupWidget {
+    constructor(config) {
+        super(config);
+        this.optIndex = 0;
+    }
+
+    setProperty(prop, val) {
+        if(prop === "checked") {
+            const {__radioGroup, __index} = val.config;
+            this.config.check_func(__radioGroup, __index, true);
+            this.runtime.refresh_required = "group_switch";
+        }
+
+        return super.setProperty(prop, val);
+    }
+
+    async render(canvas, player) {
+        for(let i in this.widgets) {
+            const widget = this.widgets[i];
+            widget.config.__eventOffsetX = this.config.x;
+            widget.config.__eventOffsetY = this.config.y;
+            await player.renderWidget(widget, canvas);
+        }
+    }
+
+    createWidget(type, config) {
+        if(type === "STATE_BUTTON") {
+            config.__radioGroup = this;
+            config.__index = this.optIndex;
+            this.optIndex++;
+        }
+
+        return super.createWidget(type, config);
+    }
+}

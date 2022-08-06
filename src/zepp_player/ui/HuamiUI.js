@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { GroupWidget, DelegateWidget } from "./ApplicationWidgets.js"
+import {GroupWidget, DelegateWidget, RadioGroupWidget, StateButtonWidget} from "./ApplicationWidgets.js"
 import { DatePointer, DateWidget, TimePointer, TimeWidget, WeekdayWidget } from "./DatetimeWidgets.js";
 import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget, TextWidget } from "./DrawingWidgets.js";
 import { EditableBackground, EditGroupWidget } from "./EditableWatchfaceWidgets.js";
@@ -56,7 +56,9 @@ export default class HuamiUIMock {
         CIRCLE: CircleWidget,
         BUTTON: ButtonWidget,
         HISTOGRAM: HistogramWidget,
-        SCROLL_LIST: ScrollList
+        SCROLL_LIST: ScrollList,
+        RADIO_GROUP: RadioGroupWidget,
+        STATE_BUTTON: StateButtonWidget
     }
 
     constructor(runtime) {
@@ -181,7 +183,10 @@ export default class HuamiUIMock {
         END_ANGLE: "end_angle",
         LINE_WIDTH: "line_width",
         WORD_WRAP: "word_wrap",
-        DATASET: "dataset"
+        DATASET: "dataset",
+        INIT: "checked",
+        CHECKED: "checked",
+        CURRENT_SELECT: "checked"
     }
 
     show_level = {
@@ -206,7 +211,8 @@ export default class HuamiUIMock {
         CLICK_UP: "onmouseup",
         MOVE: "move",
         MOVE_IN: "move_in",
-        MOVE_OUT: "move_out"
+        MOVE_OUT: "move_out",
+        SELECT: "onmouseup"
     }
 
     text_style = {
