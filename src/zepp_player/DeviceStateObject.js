@@ -61,7 +61,7 @@ export function createDeviceState() {
             groupIcon: "calendar_month",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 12,
-            shift: (tick) => tick % 2 == 0 ? state.MONTH.value % 12 + 1 : null
+            shift: (tick) => tick % 2 === 0 ? state.MONTH.value % 12 + 1 : null
         },
         YEAR: {
             value: 22,
@@ -110,7 +110,7 @@ export function createDeviceState() {
                 }
             },
             shift: (tick, t) => {
-                if(tick % 2 != 0) return null;
+                if(tick % 2 !== 0) return null;
                 const vals = ["", "06:00", "09:30", "11:00"];
                 let index = vals.indexOf(t.value);
                 if(index < 0) index = 0;
@@ -140,7 +140,7 @@ export function createDeviceState() {
             getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
-            shift: (tick, t) => tick % 3 == 1 ? !t.value : null
+            shift: (tick, t) => tick % 3 === 1 ? !t.value : null
         },
         DISTURB: {
             value: true,
@@ -150,7 +150,7 @@ export function createDeviceState() {
             getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
-            shift: (tick, t) => tick % 3 == 2 ? !t.value : null
+            shift: (tick, t) => tick % 3 === 2 ? !t.value : null
         },
         LOCK: {
             value: true,
@@ -160,7 +160,7 @@ export function createDeviceState() {
             getBoolean: (v) => v.value,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
-            shift: (tick, t) => tick % 3 == 0 ? !t.value : null
+            shift: (tick, t) => tick % 3 === 0 ? !t.value : null
         },
         STEP: {
             value: 4500,

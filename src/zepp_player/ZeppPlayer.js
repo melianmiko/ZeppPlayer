@@ -470,9 +470,10 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     performShift() {
+        const tick = this.render_counter / 15;
         for(let i in this._deviceState) {
             if(this._deviceState[i].shift) {
-                const v = this._deviceState[i].shift(this.render_counter, this._deviceState[i]);
+                const v = this._deviceState[i].shift(tick, this._deviceState[i]);
                 if(v !== null) this.setDeviceState(i, v);
             }
         }
