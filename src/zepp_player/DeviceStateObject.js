@@ -25,7 +25,7 @@ export function createDeviceState() {
             maxLength: 0, // not required
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 12,
-            shift: (tick) => tick % 2 == 0 ? (state.HOUR.value + 1) % 24 : null
+            shift: (tick) => tick % 2 === 0 ? (state.HOUR.value + 1) % 24 : null
         },
         MINUTE: {
             value: 30,

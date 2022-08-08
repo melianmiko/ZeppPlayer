@@ -62,10 +62,14 @@ export class DatePointer extends BaseWidget {
     async render(canvas, player) {
         const config = this.config;
 
+        const hourProgress = player.getDeviceState("HOUR", "progress");
+        const minuteProgress = player.getDeviceState("MINUTE", "progress");
+        const secondProgress = player.getDeviceState("SECOND", "progress")
+
         const data = [
-            ["hour_", player.getDeviceState("HOUR", "progress")],
-            ["minute_", player.getDeviceState("MINUTE", "progress")],
-            ["second_", player.getDeviceState("SECOND", "progress")],
+            ["hour_", hourProgress + (minuteProgress / 12)],
+            ["minute_", minuteProgress + (secondProgress / 60)],
+            ["second_", secondProgress],
         ];
 
         for(let i in data) {
