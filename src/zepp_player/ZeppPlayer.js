@@ -139,7 +139,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const v = this._deviceState[type];
         switch(dataType) {
             case "progress":
-                return v.getProgress(v);
+                return Math.min(1, v.getProgress(v));
             case "string":
                 return v.getString(v);
             case "maxLength":
