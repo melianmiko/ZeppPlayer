@@ -133,7 +133,7 @@ export function createDeviceState() {
             info: "Wear state: 0 - Not worn, 1 - Wearing, 2 - In motion, 3 - not sure"
         },
         DISCONNECT: {
-            value: false,
+            value: true,
             type: "boolean",
             groupIcon: "settings",
             maxLength: 1,
