@@ -336,19 +336,19 @@ class WeatherSensor {
             tideData: {
                 data: [
                     {
-                        sonrise: {hour: 9, minute: 30},
+                        sunrise: {hour: 9, minute: 30},
                         sunset: {hour: 21, minute: 30}
                     },
                     {
-                        sonrise: {hour: 9, minute: 30},
+                        sunrise: {hour: 9, minute: 30},
                         sunset: {hour: 21, minute: 30}
                     },
                     {
-                        sonrise: {hour: 9, minute: 30},
+                        sunrise: {hour: 9, minute: 30},
                         sunset: {hour: 21, minute: 30}
                     },
                     {
-                        sonrise: {hour: 9, minute: 30},
+                        sunrise: {hour: 9, minute: 30},
                         sunset: {hour: 21, minute: 30}
                     }
                 ],

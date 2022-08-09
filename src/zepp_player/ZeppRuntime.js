@@ -158,6 +158,26 @@ export default class ZeppRuntime {
         }
     }
 
+    getImageFormat(path) {
+        path = this.player.getAssetPath(path);
+        if(!this.vfs[path]) throw new Error("Undefined asset: " + path);
+
+        const data = this.vfs[path];
+        const uint = new Uint8Array(data);
+
+        if(uint[0] === 137 && uint[1] === 80) {
+            return "PNG";
+        } else if(uint[2] === 9) {
+            return "TGA-RLP";
+        } else if(uint[2] === 1) {
+            return "TGA-P"
+        } else if(uint[2] === 2) {
+            return "TGA-RGB";
+        }
+
+        return "N/A";
+    }
+
     onConsole(tag, data) {
         this.player.onConsole(tag, data, {
             runtimeID: `SL:${this.showLevel}`

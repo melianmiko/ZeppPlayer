@@ -62,6 +62,15 @@ export class ImageWidget extends BaseWidget {
 
         try {
             img = await player.getAssetImage(item.src);
+
+            if(player.getImageFormat(item.src) === "TGA-RLP" && item.angle) {
+                player.onConsole("SystemWarning", [
+                    "WARN: MB7 can't rotate images in TGA-RLP format.",
+                    "Re-convert file", item.src, "to TGA-P format."
+                ]);
+                item.angle = 0;
+            }
+
             evZone = ImageWidget.draw(img, canvas, player, item);
         } catch(e) {
             // Fallback evZone
