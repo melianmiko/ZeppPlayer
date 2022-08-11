@@ -213,9 +213,11 @@ export function createDeviceState() {
             type: "number",
             maxLength: 2,
             groupIcon: "fitness_center",
-            getString: (t) => t.value.toString(),
+            getString: (t) => {
+                return  t.value + "." + state.STAND_TARGET.value;
+            },
             getProgress: (t) => t.value / state.STAND_TARGET.value,
-            shift: (tick) => tick % 2 == 0 ? state.STAND.value % state.STAND_TARGET.value + 1 : null
+            shift: (tick) => tick % 2 === 0 ? state.STAND.value % state.STAND_TARGET.value + 1 : null
         },
         STAND_TARGET: {
             value: 13,
@@ -394,6 +396,16 @@ export function createDeviceState() {
         },
         MOON: { // ???
             getProgress: () => 0.3
+        },
+        SUN_SET: {
+            value: "21.30",
+            notEditable: true,
+            getString: (t) => t.value
+        },
+        SUN_RISE: {
+            value: "06.30",
+            notEditable: true,
+            getString: (t) => t.value
         }
     };
 

@@ -30,7 +30,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     LEVEL_EDIT = 4;
 
     _lastCanvas = null;
-    zeppEnv = null;
+    fullLanguage = 'en-US';
 
     withStagingDump = false;
     stages = [];

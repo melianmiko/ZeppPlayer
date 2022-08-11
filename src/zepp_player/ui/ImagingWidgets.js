@@ -183,6 +183,7 @@ export class TextImageWidget extends BaseWidget {
             if(text[i] === "-") {
                 img = await player.getAssetImage(config.negative_image);
             } else if(text[i] === "." || text[i] === ":") {
+                if(!config.dot_image) break;
                 img = await player.getAssetImage(config.dot_image);
             } else if(text[i] === "u") {
                 img = await player.getAssetImage(config["unit_" + player.language]);

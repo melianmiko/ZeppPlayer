@@ -25,6 +25,10 @@ export default class ZeppRuntime {
         this.withScriptConsole = this.player.withScriptConsole;
     }
 
+    get fullLanguage() {
+        return this.player.fullLanguage;
+    }
+
     async start() {
         if(this.initTime) this.destroy();
         this.onConsole("runtime", ["Begin runtime init", `SL:${this.showLevel}`]);

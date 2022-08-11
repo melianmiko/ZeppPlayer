@@ -35,7 +35,7 @@ class HmUtilsMock {
     }
 
     getLanguage() {
-        return 'en-US';
+        return this.runtime.fullLanguage;
     }
 
     getPx() {
