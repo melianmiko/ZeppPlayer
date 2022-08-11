@@ -26,7 +26,7 @@ export default class ZeppRuntime {
     }
 
     get fullLanguage() {
-        return this.player.fullLanguage;
+        return this.getDeviceState("OS_LANGUAGE", "string");
     }
 
     async start() {

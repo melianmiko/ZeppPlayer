@@ -33,7 +33,8 @@ export class EditorManager {
             const groupView = this.getGroupView(group);
 
             let row = this.makeField(a, player._deviceState[a], player);
-            groupView.appendChild(row);
+            if(row !== null)
+                groupView.appendChild(row);
         }
     }
 
@@ -53,6 +54,8 @@ export class EditorManager {
     }
 
     makeField(name, data, player) {
+        if(data.notEditable) return null;
+
         const row = document.createElement("div");
         row.className = "editor_item"
         const title = document.createElement("h3");

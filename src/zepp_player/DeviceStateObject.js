@@ -93,6 +93,13 @@ export function createDeviceState() {
                 return "hidden";
             }
         },
+        OS_LANGUAGE: {
+            value: "en-US",
+            type: "string",
+            groupIcon: "settings",
+            maxLength: 5,
+            getString: (t) => t.value
+        },
         ALARM_CLOCK: {
             value: "09:30",
             type: "string",
