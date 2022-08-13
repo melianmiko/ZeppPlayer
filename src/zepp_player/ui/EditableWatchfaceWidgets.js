@@ -27,7 +27,8 @@ export class EditableBackground extends BaseWidget {
         this.runtime = config.__runtime;
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
-        if(!config.current_type) config.current_type = config.default_id;
+        if(config.current_type === null || config.current_type === undefined)
+            config.current_type = config.default_id;
 
         this.addEventListener("onmouseup", () => {
             if(this.runtime.showLevel !== 4) return;
@@ -85,7 +86,8 @@ export class EditGroupWidget extends BaseWidget {
         this.player = config.__runtime;
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
-        if(!config.current_type) config.current_type = config.default_type;
+        if(config.current_type === null || config.current_type === undefined)
+            config.current_type = config.default_type;
 
         this.addEventListener("onmouseup", () => {
             if(!this._isActive()) return this._setActive();

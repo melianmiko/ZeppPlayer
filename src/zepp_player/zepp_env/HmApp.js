@@ -65,7 +65,9 @@ export class HmApp {
     registerGestureEvent() {}
     unregisterGestureEvent() {}
     
-    alarmNew() {}
+    alarmNew() {
+        return 123;
+    }
     alarmCancel() {}
 
     registerKeyEvent() {}

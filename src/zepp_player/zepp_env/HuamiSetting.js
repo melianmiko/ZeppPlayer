@@ -19,7 +19,7 @@
 export default class HuamiSettingMock {
     // Functions that will get/set prop
     // Will be generated in constructor
-    proped = [
+    mockedProperties = [
         // [get, set, default]
         ["getScreenAutoBright", "setScreenAutoBright", true],
         ["getBrightness", "setBrightness", 90],
@@ -43,12 +43,12 @@ export default class HuamiSettingMock {
         this.runtime = runtime;
         this.store = [];
 
-        for(let a in this.proped) {
-            this.makeProped(...this.proped[a]);
+        for(let a in this.mockedProperties) {
+            this._spawnMockedProperty(...this.mockedProperties[a]);
         }
     }
 
-    makeProped(getter, setter, def) {
+    _spawnMockedProperty(getter, setter, def) {
         this.store[getter] = def;
 
         this[getter] = () => this.store[getter];
@@ -77,12 +77,12 @@ export default class HuamiSettingMock {
 
     getDiskInfo() {
         return {
-            total: 128 * 1024 * 1024,
-            free: 47 * 1024 * 1024,
-            app: 1.1 * 1024 * 1024,
-            watchface: 12.5 * 1024 * 1024,
+            total: 103140000,
+            free: 30130000,
+            app: 1442000,
+            watchface: 4350000,
             music: 0,
-            system: 48 * 1024 * 1024
+            system: 66900000
         }
     }
 
