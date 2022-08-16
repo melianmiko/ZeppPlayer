@@ -96,14 +96,11 @@ export default class ZeppRuntime {
         this.onConsole("runtime", ["Runtime destroyed", `SL:${this.showLevel}`]);
     }
 
-    registerEvent(name, x1, y1, x2, y2, fn) {
-        if(!this.events[name]) {
-            this.events[name] = [];
-        }
-
-        this.events[name].push({
-            x1, y1, x2, y2, fn
-        });
+    dropEvents(events, x1, y1, x2, y2) {
+        this.events.push({
+            events: events,
+            x1, y1, x2, y2
+        })
     }
 
     callDelegates(delegateName) {

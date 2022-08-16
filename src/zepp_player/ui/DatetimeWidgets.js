@@ -182,9 +182,6 @@ export class DatePointer extends BaseWidget {
             }
 
             ctx.drawImage(img, x + px, y);
-            this.dropEvents(player, [
-                x, y, x + img.width, y + img.height
-            ])
         }
 
         // AM\PM
@@ -200,14 +197,12 @@ export class DatePointer extends BaseWidget {
             if(config[langPrefix + "path"] && ampmState === value) {
                 const img = await player.getAssetImage(config[langPrefix + "path"]);
                 ctx.drawImage(img, config[prefix + "x"], config[prefix + "y"]);
-                this.dropEvents(player, [
-                    config[prefix + "x"],
-                    config[prefix + "y"],
-                    config[prefix + "x"] + img.width,
-                    config[prefix + "y"] + img.height
-                ]);
             }
         }
+
+        this.dropEvents(player, [
+            0, 0, canvas.width, canvas.height
+        ])
     }
 }
 

@@ -96,7 +96,7 @@ export class EditGroupWidget extends BaseWidget {
     }
 
     get _renderStage() {
-        return this._isActive() ? "toplevel" : "post";
+        return this._isActive() ? "toplevel" : "postReverse";
     }
 
     getProperty(key, second) {
@@ -112,6 +112,7 @@ export class EditGroupWidget extends BaseWidget {
 
     _setActive() {
         PersistentStorage.set("wfEdit", "focus", this.config.edit_id);
+        this.runtime.refresh_required = "edit";
     }
 
     async render(canvas, player) {

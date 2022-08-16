@@ -210,8 +210,6 @@ export default class HuamiUIMock {
         CLICK_DOWN: "onmousedown",
         CLICK_UP: "onmouseup",
         MOVE: "onmousemove",
-        MOVE_IN: "move_in",
-        MOVE_OUT: "move_out",
         SELECT: "onmouseup"
     }
 

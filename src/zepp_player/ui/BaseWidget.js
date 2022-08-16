@@ -18,14 +18,18 @@
 
 export class BaseWidget {
     setPropertyBanlist = [];
-    getPropertyBanlist = [];
 
     constructor(config) {
         this.config = config;
-        this.events = [];
         this.runtime = config.__runtime;
 
         if(!this.config.visible) this.config.visible = true;
+
+        this.events = {
+            "onmousemove": null,
+            "onmouseup": null,
+            "onmousedown": null
+        };
     }
 
     playerWidgetIdentify() {
@@ -49,26 +53,13 @@ export class BaseWidget {
         if(!this.config.visible) return false;
 
         const show_level = this.config.show_level;
-        if((show_level & this.runtime.showLevel) === 0 && show_level) 
-            return false;
-        
-        return true;
-    }
-
-    _export() {
-        const obj = {
-            _renderClass: this.constructor.name,
-            _events: this.events
-        };
-
-        for(var a in this.config) obj[a] = this.config[a];
-        return obj;
+        return !((show_level & this.runtime.showLevel) === 0 && show_level);
     }
 
     _getPlainConfig() {
         const out = {};
 
-        for(var i in this.config) {
+        for(let i in this.config) {
             if(i[0] !== "_") out[i] = this.config[i];
         }
 
@@ -76,15 +67,15 @@ export class BaseWidget {
     }
 
     setProperty(prop, val) {
-        if(!this._isVisible() && prop != "visible") {
+        if(!this._isVisible() && prop !== "visible") {
             return;
         }
 
-        if(prop == undefined) {
+        if(prop === undefined) {
             console.warn("This prop was missing in simulator. Please, debug me...");
         }
 
-        if(prop == "more") {
+        if(prop === "more") {
             for(var a in val) {
                 if(this.setPropertyBanlist.indexOf(a) > -1) {
                     const info = `You can't set ${a} in ${this.constructor.name} via hmUI.prop.MORE. Player crashed.`;
@@ -108,7 +99,7 @@ export class BaseWidget {
             return undefined;
         }
 
-        if(key == "more") {
+        if(key === "more") {
             if(typeof second !== "object") 
                 this.player.onConsole("SystemWarning", [
                     "When using getProperty with MORE, you must give empty "+
@@ -120,12 +111,12 @@ export class BaseWidget {
     }
 
     addEventListener(event, fn) {
-        this.events.push([event, fn]);
+        this.events[event] = fn;
     }
 
     removeEventListener(event, fn) {
-        for(var a in this.events) {
-            if(this.events[a][0] == event && this.events[a][1] + "" == fn + "") {
+        for(let a in this.events) {
+            if(this.events[a][0] === event && this.events[a][1] + "" === fn + "") {
                 this.events.splice(a, 1);
                 return;
             }
@@ -146,9 +137,6 @@ export class BaseWidget {
             y2 += config.__eventOffsetY;
         }
 
-        for(var i in this.events) {
-            const [name, fn] = this.events[i];
-            player.registerEvent(name, x1, y1, x2, y2, fn);
-        }
+        player.dropEvents(this.events, x1, y1, x2, y2);
     }
 }

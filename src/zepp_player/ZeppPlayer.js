@@ -333,16 +333,12 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     handleEvent(name, x, y, info) {
-        let events = this.currentRuntime.events[name];
         y += this.renderScroll;
-
-        if(!events) return;
-        if(events.length === 0) return;
-
-        for(let i = events.length-1; i >= 0; i--) {
-            const zone = events[i];
-            if(zone.x1 < x && x < zone.x2 && zone.y1 < y && y < zone.y2) {
-                zone.fn(info);
+        for(let i = this.currentRuntime.events.length-1; i >= 0; i--) {
+            const data = this.currentRuntime.events[i];
+            if(data.x1 < x && x < data.x2 && data.y1 < y && y < data.y2) {
+                if(data.events[name])
+                    data.events[name](info);
                 return;
             }
         }
@@ -412,7 +408,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const stages = {
             normal: [],
             post: [],
-            toplevel: []
+            postReverse: [],
+            toplevel: [],
         }
 
         for(let i in runtime.widgets) {
@@ -421,6 +418,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             const stage = widget._renderStage ? widget._renderStage : "normal";
             stages[stage].push(widget);
         }
+
+        stages.postReverse.reverse();
 
         for(let stage in stages) {
             for(let i in stages[stage]) {
@@ -435,18 +434,26 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         if(this.showEventZones) {
             ctx.strokeStyle = "rgba(0, 153, 255, 0.5)";
             ctx.lineWidth = 2;
-            for(let name in runtime.events) {
-                for(let i in runtime.events[name]) {
-                    const {x1, y1, x2, y2} = runtime.events[name][i];
-                    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+            for(let data of runtime.events) {
+                let hasNoNull = false;
+                for(let i in data.events) {
+                    if(data.events[i] !== null) {
+                        hasNoNull = true;
+                        break;
+                    }
                 }
+
+                if(!hasNoNull) continue;
+
+                const {x1, y1, x2, y2} = data;
+                ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
             }
         }
 
         // Shifts
         if(this.withShift) {
             if(this.render_counter % 15 === 0) 
-                this.performShift();
+                this.performShift(this.render_counter / 15);
             runtime.refresh_required = "shift";
         }
 
@@ -469,8 +476,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         return canvas;
     }
 
-    performShift() {
-        const tick = this.render_counter / 15;
+    performShift(tick) {
         for(let i in this._deviceState) {
             if(this._deviceState[i].shift) {
                 const v = this._deviceState[i].shift(tick, this._deviceState[i]);

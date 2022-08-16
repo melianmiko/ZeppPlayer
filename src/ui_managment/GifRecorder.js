@@ -26,7 +26,7 @@ export default class GifRecorder {
     }
 
     async record() {
-        const FPS = 15;
+        const FPS = 5;
         const SECONDS = 4;
 
         // Lock screen
@@ -49,13 +49,14 @@ export default class GifRecorder {
         // Render
         this.player.wipeSettings();
         await this.player.init();
-        for(let i = 0; i < FPS*SECONDS*2; i++) {
+        for(let i = 0; i < FPS * SECONDS * 2; i++) {
             if(i === FPS*SECONDS) await this.player.setRenderLevel(2);
 
             const canvas = await this.player.render();
             gif.addFrame(canvas, {delay: Math.round(1000 / FPS)});
 
-            this.player.performShift();
+            this.player.performShift(i);
+            this.player.currentRuntime.callDelegates("resume_call");
         }
 
         // Render

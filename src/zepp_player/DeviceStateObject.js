@@ -52,7 +52,7 @@ export function createDeviceState() {
             groupIcon: "calendar_month",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 31,
-            shift: () => (state.DAY.value + 1) % 31
+            shift: () => (state.DAY.value % 30) + 1
         },
         MONTH: {
             value: 7,
@@ -105,7 +105,7 @@ export function createDeviceState() {
             type: "string",
             groupIcon: "settings",
             maxLength: 5,
-            getBoolean: (v) => v.value !== "",
+            getBoolean: (v) => v.value !== "0",
             getString: (t) => t.value,
             getProgress: (t) => {
                 try {
@@ -118,7 +118,7 @@ export function createDeviceState() {
             },
             shift: (tick, t) => {
                 if(tick % 2 !== 0) return null;
-                const vals = ["", "06:00", "09:30", "11:00"];
+                const vals = ["0", "06:00", "09:30", "11:00"];
                 let index = vals.indexOf(t.value);
                 if(index < 0) index = 0;
                 return vals[index + 1 % vals.length];
@@ -295,7 +295,7 @@ export function createDeviceState() {
             displayName: "High",
             maxLength: 3,
             getString: (t) => t.value.toString(),
-            shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
+            shift: (tick, t) => (Math.abs(t.value) + 2) % 30
         },
         WEATHER_LOW: {
             value: 14,
@@ -304,7 +304,7 @@ export function createDeviceState() {
             displayName: "Low",
             maxLength: 3,
             getString: (t) => t.value.toString(),
-            shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
+            shift: (tick, t) => (Math.abs(t.value) + 2) % 15 * (tick % 4 < 2 ? -1 : 1)
         },
         WEATHER_CURRENT_ICON: {
             value: 0,

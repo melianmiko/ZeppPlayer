@@ -49,7 +49,7 @@ const argv = yargs(hideBin(process.argv))
     .parse();
 
 async function createGif(player) {
-    const FPS = 15;
+    const FPS = 5;
     const SECONDS = 4;
 
     player.render_counter = 0;
@@ -64,7 +64,8 @@ async function createGif(player) {
         const canvas = await player.render();
         gif.addFrame(canvas.getContext("2d"));
 
-        player.performShift();
+        player.performShift(i);
+        player.currentRuntime.callDelegates("resume_call");
     }
 
     gif.finish();
