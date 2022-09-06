@@ -48,6 +48,13 @@ export default class HuamiFsMock {
     }
 
     getFile(path) {
+        if(!this.vfs[path]) {
+            // Folder search
+            for(let key in this.vfs) {
+                if(key.startsWith(path + "/"))
+                    return new ArrayBuffer(0);
+            }
+        }
         return this.vfs[path];
     }
 
@@ -68,7 +75,10 @@ export default class HuamiFsMock {
 
     stat(path) {
         path = this.parsePath(path);
+        console.log(path);
         let f = this.getFile(path);
+
+        if(!f) return [null, -1];
 
         return [{
             mode: (f ? 32768 : 16384) + 511,

@@ -149,7 +149,7 @@ export default class HuamiUIMock {
             text,
             text_size: options.text_size,
             w: options.text_width,
-            text_style: options.wrapped ? 2 : 0,
+            text_style: 2,
             _metricsOnly: true
         }, this.runtime);
 

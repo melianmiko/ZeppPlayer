@@ -1,11 +1,15 @@
+*~
+
 /app/index.browser.js
 /app/index.cli.js
+/ZeppPlayer.exe
 
 /_*
 /projects/*
 /win32_server/build
 /win32_server/dist
 /dist
+/venv
 
 node_modules
 __pycache__

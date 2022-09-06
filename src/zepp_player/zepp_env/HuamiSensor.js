@@ -264,7 +264,7 @@ class PaiSensor {
  */
  class DistanceSensor {
     get current() {
-        return this.player.getDeviceState("DISTANCE");
+        return this.player.getDeviceState("DISTANCE") * 1000;
     }
 
     constructor(player) {

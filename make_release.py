@@ -1,6 +1,7 @@
 import json
 import shutil
 import os
+import sys
 import subprocess
 
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -18,7 +19,8 @@ def main():
 	if os.path.isdir("dist"):
 		shutil.rmtree("dist")
 
-	subprocess.check_output(["npm", "run", "build"])
+	is_win32 = sys.platform == "win32"
+	subprocess.check_output(["npm.cmd" if is_win32 else "npm", "run", "build"])
 
 	os.mkdir("dist")
 	with ZipFile(f"dist/ZeppPlayer_v{get_version()}.zip", "w", ZIP_DEFLATED) as zip:

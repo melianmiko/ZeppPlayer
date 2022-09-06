@@ -111,7 +111,7 @@ export default class ExplorerManager {
             data[prop] = JSON.parse(input);
 
             widget.setProperty("more", data);
-            ExplorerManager.refresh();
+            ExplorerManager.doReloadWidgets();
         }
     }
 }

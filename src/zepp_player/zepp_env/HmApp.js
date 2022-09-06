@@ -32,7 +32,10 @@ export class HmApp {
         this.runtime.requestPageSwitch(conf);
     }
 
-    reloadPage() {}
+    reloadPage(conf) {
+        return this.gotoPage(conf);
+    }
+
     setLayerX() {}
     setLayerY() {}
     exit() {}
@@ -62,7 +65,17 @@ export class HmApp {
         }
     }
 
-    registerGestureEvent() {}
+    gesture = {
+        TOP: "TOP",
+        LEFT: "LEFT",
+        RIGHT: "RIGHT",
+        BOTTOM: "BOTTOM"
+    }
+
+    registerGestureEvent(callback) {
+        this.runtime.gestureCallback = callback;
+    }
+
     unregisterGestureEvent() {}
     
     alarmNew() {

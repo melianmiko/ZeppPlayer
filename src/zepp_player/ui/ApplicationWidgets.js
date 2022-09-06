@@ -58,12 +58,6 @@ export class GroupWidget extends BaseWidget {
         }
 
         canvas.getContext("2d").drawImage(tempCanvas, this.config.x, this.config.y);
-        super.dropEvents(player, [
-            this.config.x, 
-            this.config.y,
-            this.config.x + this.config.w,
-            this.config.y + this.config.h
-        ]);
     }
 
     createWidget(type, config) {

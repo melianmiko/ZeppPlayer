@@ -78,12 +78,14 @@ export class ScrollList extends BaseWidget {
         }
 
         for(let i = 0; i < ic.image_view_count; i++) {
-            const iv = ic.image_view[i];
-            const img = await player.getAssetImage(item[iv.key]);
-            ImageWidget.draw(img, canvas, player, {
-                x: iv.x,
-                y: iv.y + posY
-            })
+            try {
+                const iv = ic.image_view[i];
+                const img = await player.getAssetImage(item[iv.key]);
+                ImageWidget.draw(img, canvas, player, {
+                    x: iv.x,
+                    y: iv.y + posY
+                })
+            } catch(e) {}
         }
 
         return ic.item_height + config.item_space;
