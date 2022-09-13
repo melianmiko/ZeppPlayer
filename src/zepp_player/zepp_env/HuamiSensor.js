@@ -65,6 +65,11 @@
  * hmSensor.id.TIME
  */
  class TimeSensor {
+    event = {
+        MINUTEEND: "MINUTEEND",
+        DAYCHANGE: "DAYCHANGE"
+    }
+
     constructor(player) {
         this.player = player;
 
@@ -74,6 +79,28 @@
         this.lunar_month = this.month;
         this.lunar_solar_term = "ZeppPlayer";
         this.solar_festival = "New year";
+    }
+
+    addEventListener(name, callback) {
+        if(name === "MINUTEEND") {
+            this.player.addDeviceStateChangeEvent("HOUR", () => {
+                callback();
+            });
+            this.player.addDeviceStateChangeEvent("MINUTE", () => {
+                callback();
+            });
+        } else if(name === "DAYCHANGE") {
+            this.player.addDeviceStateChangeEvent("DAY", () => {
+                callback();
+            });
+            this.player.addDeviceStateChangeEvent("MONTH", () => {
+                callback();
+            });
+        }
+    }
+
+    removeEventListener(_) {
+        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
     }
 
     get week() {
