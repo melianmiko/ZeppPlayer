@@ -1,6 +1,6 @@
 {
   "name": "zeppplayer",
-  "version": "1.0a",
+  "version": "1.1",
   "description": "Mi Band 7 preview tool",
   "main": "app/zepp_player/cli.js",
   "scripts": {
