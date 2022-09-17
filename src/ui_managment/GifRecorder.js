@@ -17,6 +17,7 @@
 */
 
 import { ToolbarManager } from "./ToolbarManager.js";
+import { saveAs } from "file-saver";
 
 export default class GifRecorder {
     loading = document.getElementById("loading");
@@ -82,17 +83,8 @@ export default class GifRecorder {
     }
 
     export() {
-        const url = URL.createObjectURL(this.blob);
-        const img = new Image();
-        img.src = url;
-
-        const view = document.getElementById("files_view");
-        const caption = document.createElement("aside");
-        caption.className = "caption";
-        caption.innerText = 'Right-click on GIF and select "Save image as..."';
-
-        view.innerHTML = "";
-        view.appendChild(caption);
-        view.appendChild(img);
+        const projectSelect = document.getElementById("project_select");
+        const project = projectSelect.value;
+        saveAs(this.blob, project + ".gif");
     }
 }
