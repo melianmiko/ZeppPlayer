@@ -309,12 +309,16 @@ export class AnimationWidget extends BaseWidget {
     
     async render(canvas, player) {
         const config = this.config;
-        const currentFrame = Math.floor(player.render_counter / 60 * config.anim_fps);
         player.refresh_required = "img_anim";
 
         if(config.anim_status === 0) return;
 
         let x = config.x, y = config.y;
+
+        let currentFrame = Math.floor(player.render_counter / 60 * config.anim_fps);
+        if(player.animMaxFPS) {
+            currentFrame = player.render_counter;
+        }
 
         let frame = currentFrame % config.anim_size;
         if(config.repeat_count === 1 && currentFrame > config.anim_size)

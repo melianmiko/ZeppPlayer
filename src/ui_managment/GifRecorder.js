@@ -35,8 +35,11 @@ export default class GifRecorder {
         // Force set uiPause to prevent auto-render
         this.player.withShift = false;
         this.player.showEventZones = false;
+        this.player.wipeSettings();
         await this.player.setRenderLevel(1);
-        await this.player.init()
+        await this.player.init();
+
+        this.player.currentRuntime.animMaxFPS = true;
         this.player.currentRuntime.uiPause = true;
 
         // Create
@@ -47,8 +50,6 @@ export default class GifRecorder {
         });
 
         // Render
-        this.player.wipeSettings();
-        await this.player.init();
         for(let i = 0; i < FPS * SECONDS * 2; i++) {
             if(i === FPS*SECONDS) await this.player.setRenderLevel(2);
 
@@ -66,7 +67,8 @@ export default class GifRecorder {
         this.blob = blob;
 
         await this.player.setRenderLevel(1);
-        this.player.uiPause = false;
+        this.player.currentRuntime.animMaxFPS = false;
+        this.player.currentRuntime.uiPause = false;
         ToolbarManager._refresh();
     }
 

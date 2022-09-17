@@ -91,6 +91,7 @@ async function main() {
             await player.setProject(project);
             await player.init();
 
+            player.currentRuntime.animMaxFPS = true;
             player.withStagingDump = argv.stage;
     
             let output = argv.o.replace("{}", project);

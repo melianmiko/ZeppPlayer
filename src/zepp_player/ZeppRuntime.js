@@ -7,9 +7,11 @@ export default class ZeppRuntime {
     env = null;
     module = null;
     initTime = null;
-    pause = null;
-    refresh_required = false;
     onInitParam = null;
+
+    uiPause = false;
+    refresh_required = false;
+    animMaxFPS = false;
     
     constructor(player, scriptPath, showLevel) {
         this.player = player;
