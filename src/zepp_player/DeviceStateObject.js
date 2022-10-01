@@ -121,7 +121,7 @@ export function createDeviceState() {
                 const vals = ["0", "06:00", "09:30", "11:00"];
                 let index = vals.indexOf(t.value);
                 if(index < 0) index = 0;
-                return vals[index + 1 % vals.length];
+                return vals[(index + 1) % vals.length];
             }
         },
         BATTERY: {
@@ -241,6 +241,30 @@ export function createDeviceState() {
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 180,
             shift: () => (state.HEART.value + 15) % 180
+        },
+        SLEEP: {
+            value: "9:0",
+            type: "string",
+            groupIcon: "monitor_heart",
+            maxLength: 5,
+            getBoolean: (v) => v.value !== "0",
+            getString: (t) => t.value,
+            getProgress: (t) => {
+                try {
+                    const v = t.value.split(":");
+                    const float = (parseInt(v[0]) + (parseInt(v[1]) / 100));
+                    return Math.min(1 , float / 24);
+                } catch(e) {
+                    return 0;
+                }
+            },
+            shift: (tick, t) => {
+                if(tick % 2 !== 0) return null;
+                const vals = ["0", "06:00", "09:30", "11:00"];
+                let index = vals.indexOf(t.value);
+                if(index < 0) index = 0;
+                return vals[index + 1 % vals.length];
+            }
         },
         SPO2: {
             value: 30,

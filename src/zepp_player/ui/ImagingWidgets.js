@@ -159,7 +159,7 @@ export class TextImageWidget extends BaseWidget {
         text = String(text);
 
         // Prepare
-        let imgs = [];
+        let images = [];
 
         // Icon
         let iconImg = null,
@@ -171,47 +171,52 @@ export class TextImageWidget extends BaseWidget {
 
         if(config.icon) {
             iconImg = await player.getAssetImage(config.icon);
-            imgs.push([iconImg, iconOffset]);
+            images.push([iconImg, iconOffset]);
         }
 
         // Pre-calculate width of text + load imgs
         if((text === "" || text === null || text === undefined) && config.invalid_image) {
             const invalid = await player.getAssetImage(config.invalid_image);
-            imgs.push([invalid, offset]);
-        } else for(let i in text) {
-            let img = null;
-            if(text[i] === "-") {
-                img = await player.getAssetImage(config.negative_image);
-            } else if(text[i] === "." || text[i] === ":") {
-                if(!config.dot_image) break;
-                img = await player.getAssetImage(config.dot_image);
-            } else if(text[i] === "u") {
-                img = await player.getAssetImage(config["unit_" + player.language]);
-            } else {
-                i = parseInt(text[i]);
-                img = await player.getAssetImage(config.font_array[i]);
+            images.push([invalid, offset]);
+        } else {
+            if(text === "" && config.type === "ALARM_CLOCK") {
+                text = "0";
             }
 
-            imgs.push([img, offset]);
+            for(let i in text) {
+                let img = null;
+                if(text[i] === "-") {
+                    img = await player.getAssetImage(config.negative_image);
+                } else if(text[i] === "." || text[i] === ":") {
+                    if(!config.dot_image) break;
+                    img = await player.getAssetImage(config.dot_image);
+                } else if(text[i] === "u") {
+                    img = await player.getAssetImage(config["unit_" + player.language]);
+                } else {
+                    i = parseInt(text[i]);
+                    img = await player.getAssetImage(config.font_array[i]);
+                }
+                images.push([img, offset]);
+            }
         }
 
         // Unit
         if(unitPath) {
             try {
                 unitImg = await player.getAssetImage(unitPath);
-                imgs.push([unitImg, offset]);
+                images.push([unitImg, offset]);
             } catch(e) {}
         }
 
-        if(imgs.length < 1) return player.newCanvas();
+        if(images.length < 1) return player.newCanvas();
 
         // Remove offset after last img
-        imgs[imgs.length - 1][1] = 0;
+        images[images.length - 1][1] = 0;
 
         // Calculate full width/height
         let fullWidth = 0, fullHeight = 0;
-        for(let i in imgs) {
-            const [img, offset] = imgs[i];
+        for(let i in images) {
+            const [img, offset] = images[i];
             fullWidth += img.width + offset;
             fullHeight = Math.max(img.height, fullHeight);
         }
@@ -249,8 +254,8 @@ export class TextImageWidget extends BaseWidget {
         
         // Draw
         const ctx = tmp.getContext("2d");
-        for(var i in imgs) {
-            const [img, offset] = imgs[i];
+        for(var i in images) {
+            const [img, offset] = images[i];
             ctx.drawImage(img, px, 0);
             px += img.width + offset;
         }
