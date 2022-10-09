@@ -222,8 +222,11 @@ export class FillRectWidget extends BaseWidget {
         img.height = config.h;
 
         const ctx = img.getContext("2d");
-        const round = config.radius ? config.radius : 0;
         const color = config.color ? config.color : 0;
+
+        const round = Math.floor(Math.min(config.radius ? config.radius : 0,
+            config.h / 2,
+            config.w / 2));
 
         ctx.fillStyle = zeppColorToHex(color);
         ctx.strokeStyle = zeppColorToHex(color);
