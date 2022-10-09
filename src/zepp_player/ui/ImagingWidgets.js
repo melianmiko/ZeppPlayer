@@ -332,10 +332,14 @@ export class AnimationWidget extends BaseWidget {
         const path = config.anim_path + "/" + config.anim_prefix + "_" + frame 
             + "." + config.anim_ext;
 
-        const img = await player.getAssetImage(path);
-        canvas.getContext("2d").drawImage(img, x, y);
-
-        super.dropEvents(player, [x, y, x + img.widget, y + img.height]);
+        try {
+            const img = await player.getAssetImage(path);
+            canvas.getContext("2d").drawImage(img, x, y);
+            super.dropEvents(player, [x, y, x + img.widget, y + img.height]);
+        } catch(e) {
+            player.uiPause = true;
+            throw e;
+        }
     }
 }
 
