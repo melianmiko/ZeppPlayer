@@ -232,8 +232,8 @@ export class TextImageWidget extends BaseWidget {
 
         if(!boxWidth) {
             boxWidth = (basementImg.width + offset) * maxLength;
-            if(unitImg) boxWidth += unitImg.width + iconOffset;
-            if(iconImg) boxWidth += iconImg.width;
+            // if(unitImg) boxWidth += unitImg.width;
+            if(iconImg) boxWidth += iconImg.width + iconOffset;
         }
 
         if(!boxHeight) boxHeight = basementImg.height;

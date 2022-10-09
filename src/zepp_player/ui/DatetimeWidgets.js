@@ -328,13 +328,17 @@ export class DateWidget extends BaseWidget {
         let font = config["week_" + player.language];
         if(!font || val >= font.length) return;
 
-        const img = await player.getAssetImage(font[val]);
-        canvas.getContext('2d').drawImage(img, config.x, config.y);
-        this.dropEvents(player, [
-            config.x, 
-            config.y, 
-            config.x + img.width, 
-            config.y + img.height
-        ]);
+        try {
+            const img = await player.getAssetImage(font[val]);
+            canvas.getContext('2d').drawImage(img, config.x, config.y);
+            this.dropEvents(player, [
+                config.x,
+                config.y,
+                config.x + img.width,
+                config.y + img.height
+            ]);
+        } catch(e) {
+            // Ignore
+        }
     }
 }
