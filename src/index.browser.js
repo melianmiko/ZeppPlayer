@@ -24,6 +24,7 @@ import { ToolbarManager } from "./ui_managment/ToolbarManager.js";
 import { initVersionUI } from "./ui_managment/Updater.js";
 import { ChromeZeppPlayer } from "./zepp_player/ChromeZeppPlayer.js";
 import { PersistentStorage } from "./zepp_player/PersistentStorage.js";
+import {initCssSettings} from "./ui_managment/CssSettingsManager";
 
 // const DISPLAY_FPS = 25;
 
@@ -60,6 +61,7 @@ const start = async () => {
     EditorManager.init(player);
     ConsoleManager.init(player);
     ExplorerManager.init(player);
+    initCssSettings();
 
     await player.init();
 

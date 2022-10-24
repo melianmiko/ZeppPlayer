@@ -1,3 +1,15 @@
+html {
+    --background: #111;
+    --foreground: #999;
+    --panel: #333;
+    --panel-text: #fff;
+    --editor: #222;
+    --editor-text: #fff;
+    --input: #444;
+    --input-text: #fff;
+    --accent: rgb(135, 207, 255);
+}
+
 @font-face {
     font-family: 'Material Symbols Outlined';
     font-style: normal;
@@ -20,7 +32,7 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #111;
+    background: var(--background);
     margin: 0;
 }
 
@@ -72,8 +84,8 @@ aside.caption {
 }
 
 #toolbar_top, #toolbar_side {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--panel);
+    color: var(--panel-text);
     user-select: none;
 }
 
@@ -96,8 +108,8 @@ aside.caption {
 hr {
     margin: 4px;
     border: none;
-    border-bottom: thin #555 solid;
-    border-left: thin #555 solid;
+    border-bottom: thin rgba(255,255,255,.1) solid;
+    border-left: thin rgba(255,255,255,.1) solid;
 }
 
 #toolbar_side {
@@ -127,19 +139,19 @@ hr {
 
 #toolbar_top > span:hover,
 #toolbar_side > span:hover {
-    background-color: #444;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 #toolbar_top > span.active,
 #toolbar_side > span.active {
-    color: rgb(135, 207, 255);
-    background-color: #282828;
+    color: var(--accent);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 select, input, button {
-    background-color: #444;
+    background-color: var(--input);
     border: none;
-    color: #fff;
+    color: var(--input-text);
     padding: 6px 12px;
     box-sizing: border-box;
     margin: 4px;
@@ -151,8 +163,8 @@ select {
 }
 
 .base_panel {
-    color: #fff;
-    background-color: #222;
+    color: var(--editor-text);
+    background-color: var(--editor);
     overflow: auto;
     max-height: 360px;
     min-width: 300px;
@@ -174,41 +186,50 @@ select {
 }
 
 #view_edit {
-    font-size: .9em;
     height: 450px;
 }
 
-#view_edit > div {
+#view_settings {
+    height: 200px;
+}
+
+.cfg_panel {
+    font-size: .9em;
+}
+
+.cfg_panel > div {
     display: flex;
     margin-bottom: 12px;
 }
 
-#view_edit .group_icon {
+.cfg_panel .group_icon {
     margin: 8px 16px 8px 8px;
-    color: #999;
+    color: var(--editor-text);
+    opacity: .5;
 }
 
-#view_edit > div > .contents {
+.cfg_panel > div > .contents {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
 }
 
-#view_edit .editor_item {
+.cfg_panel .editor_item {
     margin-right: 12px;
 }
 
-#view_edit .editor_item > h3 {
+.cfg_panel .editor_item > h3 {
     font-weight: normal;
-    color: #aaa;
+    color: var(--editor-text);
+    opacity: .6;
     padding: 0;
     margin: 8px 0;
     font-size: 0.85em;
     cursor: pointer;
 }
 
-#view_edit .editor_item select,
-#view_edit .editor_item input {
+.cfg_panel .editor_item select,
+.cfg_panel .editor_item input {
     margin: 0;
     padding: 4px 6px;
     border-radius: 4px;
@@ -217,31 +238,12 @@ select {
     height: 24px;
 }
 
-#view_edit .editor_item input[type=checkbox] {
+.cfg_panel .editor_item input[type=checkbox] {
     margin: 4px;
     height: 16px;
     width: 16px;
     min-width: 16px; /* override chrome default style */
 }
-
-/* #view_edit .material-symbols-outlined {
-    margin: 0 8px;
-    opacity: .5;
-} */
-
-/* #view_edit h3 {
-    margin: 0;
-    font-size: 1em;
-    flex: 1;
-    font-weight: normal;
-}
-
-#view_edit > div {
-    display: flex;
-    align-items: center;
-    margin-right: 8px;
-    line-height: 34px;
-} */
 
 /* Version info box */
 
@@ -250,7 +252,7 @@ select {
     bottom: 8px;
     right: 8px;
     font-size: .8em;
-    color: #fff;
+    color: var(--foreground);
     text-align: right;
 }
 
@@ -259,13 +261,13 @@ select {
 }
 
 #version_box span {
-    color: #888;
+    color: var(--foreground);
 }
 
 a:link, a:visited {
-    color: #ccc;
+    color: var(--foreground);
     text-decoration: none;
-    border-bottom: thin #555 dotted;
+    border-bottom: thin var(--foreground) dotted;
 }
 
 #version_box .update:link, .update:visited {
@@ -285,18 +287,18 @@ a:link, a:visited {
 
 #view_explorer summary {
     padding: 4px 8px;
-    border-bottom: thin #1f1f1f solid;
+    border-bottom: thin var(--input) solid;
     font-size: 0.9rem;
     cursor: pointer;
 }
 
 #view_explorer summary aside {
-    color: #999;
+    opacity: .5;
     display: inline;
 }
 
 #view_explorer summary aside.userDefined {
-    color:rgb(135, 207, 255);
+    color: var(--accent);
 }
 
 #view_explorer .prop_row {
@@ -309,7 +311,7 @@ a:link, a:visited {
 }
 
 #view_explorer .prop_row span {
-    color:rgb(135, 207, 255);
+    color: var(--accent);
 }
 
 #view_explorer .prop_row > * {
@@ -333,12 +335,12 @@ a:link, a:visited {
 
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-corner {
-    background: #222; 
+    background: var(--editor);
     /* border-radius: 0 5px 5px 0; */
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #333; 
+    background-color: var(--input);
     border-radius: 5px;
 }
 
