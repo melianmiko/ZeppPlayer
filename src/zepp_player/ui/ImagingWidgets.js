@@ -310,6 +310,7 @@ export class TextImageWidget extends BaseWidget {
 export class AnimationWidget extends BaseWidget {
     constructor(config) {
         super(config);
+        this.renderCounter = 0;
     }
     
     async render(canvas, player) {
@@ -320,16 +321,18 @@ export class AnimationWidget extends BaseWidget {
 
         let x = config.x, y = config.y;
 
-        let currentFrame = Math.floor(player.render_counter / 60 * config.anim_fps);
+        let currentFrame = Math.floor(this.renderCounter / 60 * config.anim_fps);
         if(player.animMaxFPS) {
-            currentFrame = player.render_counter;
+            currentFrame = this.renderCounter;
         }
 
-        let frame = currentFrame % config.anim_size;
-        if(config.repeat_count === 1 && currentFrame > config.anim_size)
-            frame = config.anim_size - 1;
+        if(config.repeat_count === 1) {
+            currentFrame = Math.min(currentFrame, config.anim_size - 1);
+        } else {
+            currentFrame %= config.anim_size;
+        }
 
-        const path = config.anim_path + "/" + config.anim_prefix + "_" + frame 
+        const path = config.anim_path + "/" + config.anim_prefix + "_" + currentFrame
             + "." + config.anim_ext;
 
         try {
@@ -340,6 +343,8 @@ export class AnimationWidget extends BaseWidget {
             player.uiPause = true;
             throw e;
         }
+
+        this.renderCounter++;
     }
 }
 
