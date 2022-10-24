@@ -1,4 +1,5 @@
 import {Buffer} from "buffer";
+import {createCanvas} from "canvas";
 
 /*
 
@@ -49,6 +50,7 @@ export class TGAImage {
         this._colorMapLength = 0
         this._colorMapDepth = 0
         this._imageWidth = 0
+        this._imageCropWidth = 0
         this._imageHeight = 0
         this._imageDepth = 0
         this._leftToRight = true
@@ -196,9 +198,15 @@ export class TGAImage {
     }
 
     _readImageID() {
+        const sign = new Uint8Array([0x53, 0x4F, 0x4D, 0x48]);
+
         if (this._idLength > 0) {
             this._imageID = this._buffer.subarray(_headerLength, this._idLength)
+            if(this._imageID.subarray(0, 5).compare(sign) === 1) {
+                this._imageCropWidth = this._imageID.readUIntLE(4, 2)
+            }
         }
+
     }
 
     _initImage() {
@@ -219,6 +227,12 @@ export class TGAImage {
 
     _setImage() {
         this._context.putImageData(this._imageData, 0, 0)
+
+        if(this._imageCropWidth !== 0 && this._imageWidth !== this._imageCropWidth) {
+            const outCanvas = createCanvas(this._imageCropWidth, this._imageHeight);
+            outCanvas.getContext("2d").drawImage(this._canvas, 0, 0);
+            this._canvas = outCanvas;
+        }
     }
 
     _deleteBuffer() {
