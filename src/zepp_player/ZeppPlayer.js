@@ -23,6 +23,7 @@ import Overlay from "./ui/Overlay.js";
 import ZeppRuntime from "./ZeppRuntime.js";
 import {TGAImage} from "./TgaImage";
 import {createAppEnv} from "./SyystemEnvironment";
+import {DeviceProfiles} from "./DeviceProfiles";
 
 export default class ZeppPlayer extends ZeppPlayerConfig {
     LEVEL_NORMAL = 1;
@@ -31,6 +32,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
     _lastCanvas = null;
     fullLanguage = 'en-US';
+    profileName = "sb7";
 
     withStagingDump = false;
     stages = [];
@@ -66,6 +68,10 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.onRestart = () => null;
     }
 
+    get profileData() {
+        return DeviceProfiles[this.profileName];
+    }
+
     async getAssetImage(path, noPrefix=false) {
         if(!noPrefix) path = this.getAssetPath(path);
         if(this.imgCache[path]) return this.imgCache[path];
@@ -93,7 +99,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             this.__tga_first_use = true;
         }
 
-        const tga = TGAImage.imageWithData(data);
+        const tga = new TGAImage(data, this.profileData);
         await tga.didLoad;
 
         const id = (new TextDecoder()).decode(tga._imageID.slice(0, 4));
@@ -175,6 +181,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.appConfig = appConfig;
         this.path_project = path;
 
+        // Load profile data
+        this.screen = [this.profileData.screenWidth, this.profileData.screenHeight];
+
         // Try to execute app.js
         const appJsFile = await this.loadFile(path + '/app.js');
         const appJsText = new TextDecoder().decode(appJsFile);
@@ -237,7 +246,10 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             this.vfs[vfsPath] = contents[i];
         }
 
-        this.vfs["player_overlay.png"] = await this.loadFile("/app/overlay.png");
+        if(this.profileData.hasOverlay) {
+            this.vfs["player_overlay.png"] = await this.loadFile(`/app/overlay/${this.profileName}.png`);
+        }
+
         this.vfs["render_fail.png"] = await this.loadFile("/app/render_fail.png");
     }
 
@@ -466,7 +478,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         // Overlay
-        if(this.render_overlay) {
+        if(this.render_overlay && this.profileData.hasOverlay) {
             await Overlay.draw(this, canvas);
         }
 

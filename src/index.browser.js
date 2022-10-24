@@ -55,6 +55,8 @@ const start = async () => {
 
     // Load main script
     const proj = picker.getProject();
+    player.profileName = ToolbarManager.initProfileSelect();
+
     await player.setProject(proj);
 
     ToolbarManager.init(player);

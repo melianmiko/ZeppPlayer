@@ -18,6 +18,7 @@
 
 import { PersistentStorage } from "../zepp_player/PersistentStorage.js";
 import GifRecorder from "./GifRecorder.js";
+import {DeviceProfiles} from "../zepp_player/DeviceProfiles";
 
 export class ToolbarManager {
     static player = null;
@@ -94,6 +95,27 @@ export class ToolbarManager {
 
         // Add type class
         document.getElementById("toolbar_side").classList.add(player.appType);
+    }
+
+    static initProfileSelect() {
+        let current = "sb7";
+        if(localStorage.zp_profile_name && DeviceProfiles[localStorage.zp_profile_name]) {
+            current = localStorage.zp_profile_name;
+        }
+
+        const picker = document.getElementById("player_profile_select");
+        for(const name in DeviceProfiles) {
+            const opt = document.createElement("option");
+            opt.value = name;
+            opt.innerText = name;
+            picker.appendChild(opt);
+        }
+        picker.value = current;
+        picker.onchange = () => {
+            localStorage.zp_profile_name = picker.value;
+        };
+
+        return current;
     }
 
     static handleKeypress(e) {

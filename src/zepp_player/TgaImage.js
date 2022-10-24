@@ -28,7 +28,7 @@ export class TGAImage {
      * @param {Buffer|ArrayBuffer} data -
      * @constructor
      */
-    constructor(data) {
+    constructor(data, config) {
         if (data instanceof Buffer) {
             this._buffer = data
         } else if (typeof data === 'string') {
@@ -38,6 +38,8 @@ export class TGAImage {
         } else {
             this._buffer = null
         }
+
+        this.config = config;
 
         // Header
         this._idLength = 0
@@ -279,10 +281,15 @@ export class TGAImage {
                 if (mapNo >= 0) {
                     color = colorMap[mapNo]
                 }
-                data[index] = color[0]
                 data[index + 1] = color[1]
-                data[index + 2] = color[2]
                 data[index + 3] = color[3]
+                if(this.config.swapRedAndBlueTGA) {
+                    data[index] = color[2]
+                    data[index + 2] = color[0]
+                } else {
+                    data[index] = color[0]
+                    data[index + 2] = color[2]
+                }
 
                 x += xStep
                 pos += imageDataSize
