@@ -25,6 +25,8 @@ export class ChromeZeppPlayer extends ZeppPlayer {
     constructor() {
         super();
         this.rotation = 0;
+        this.uiOverlayVisible = false;
+        this.uiOverlayPosition = [0, 0];
     }
 
     async loadFile(path) {
@@ -61,6 +63,20 @@ export class ChromeZeppPlayer extends ZeppPlayer {
     setupHTMLEvents(block) {
         let isMouseDown = false;
 
+        document.documentElement.onkeydown = (e) => {
+            if(e.key === "Shift") {
+                this.uiOverlayVisible = true;
+                this.currentRuntime.refresh_required = "uiOverlay";
+            }
+        }
+
+        document.documentElement.onkeyup = (e) => {
+            if(e.key === "Shift") {
+                this.uiOverlayVisible = false;
+                this.currentRuntime.refresh_required = "uiOverlay";
+            }
+        }
+
         block.onmousedown = (e) => {
             e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
@@ -84,12 +100,104 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             const [x, y] = this._fetchCoordinates(e);
             if(isMouseDown)
                 this.handleEvent("onmousemove", x, y, {x, y});
+
+            if(this.uiOverlayVisible) {
+                const rect = e.target.getBoundingClientRect();
+                const uiX = e.clientX - rect.left;
+                const uiY = e.clientY - rect.top;
+
+                this.uiOverlayPosition = [uiX, uiY];
+                this.currentRuntime.refresh_required = "uiOverlay";
+            }
         };
 
         block.oncontextmenu = (e) => {
             const [x, y] = this._fetchCoordinates(e);
             console.log("click coords", x, y);
+        };
+    }
+
+    async render() {
+        const canvas = await super.render(...arguments);
+
+        if(this.uiOverlayVisible) {
+            const [x, y] = this.uiOverlayPosition;
+            const context = canvas.getContext("2d");
+            const baseColor = this.getDeviceState("OVERLAY_COLOR");
+
+            context.save();
+            context.lineWidth = 1;
+
+            // Baselines
+            context.strokeStyle = baseColor;
+            context.globalAlpha = 0.4;
+            context.beginPath();
+            context.setLineDash([]);
+            context.moveTo(Math.floor(canvas.width / 2), 0);
+            context.lineTo(Math.floor(canvas.width / 2), canvas.height);
+            context.moveTo(0, Math.floor(canvas.height / 2));
+            context.lineTo(canvas.width, Math.floor(canvas.height / 2));
+            context.stroke();
+
+            // Current widget
+            context.strokeStyle = baseColor;
+            context.globalAlpha = 1;
+            for(const widget of this.currentRuntime.widgets) {
+                if(!widget.positionInfo) continue;
+                const [x1, y1, x2, y2] = widget.positionInfo;
+                if(x > x1 && x < x2 && y > y1 && y < y2) {
+                    context.beginPath();
+                    context.rect(x1, y1, x2 - x1, y2 - y1);
+                    context.stroke();
+                }
+            }
+
+            // Current event trigger
+            context.strokeStyle = "#0099FF";
+            for(let data of this.currentRuntime.events) {
+                let hasNoNull = false;
+                for(let i in data.events) {
+                    if(data.events[i] !== null) {
+                        hasNoNull = true;
+                        break;
+                    }
+                }
+
+                if(!hasNoNull) continue;
+
+                const {x1, y1, x2, y2} = data;
+                if(x > x1 && x < x2 && y > y1 && y < y2) {
+                    context.beginPath();
+                    context.rect(x1, y1, x2 - x1, y2 - y1);
+                    context.stroke();
+                    break;
+                }
+            }
+
+            // Cursor alignment lines
+            context.strokeStyle = baseColor;
+            context.globalAlpha = 1;
+            context.beginPath();
+            context.setLineDash([10, 2]);
+            context.moveTo(0, y);
+            context.lineTo(canvas.width, y);
+            context.moveTo(x, 0);
+            context.lineTo(x, canvas.height);
+            context.stroke();
+
+            // Cursor coordinates
+            context.font = "12px monospace";
+            context.fillStyle = baseColor;
+            const text = `${x}, ${y}`
+            const metrics = context.measureText(text);
+            const tx = x > canvas.width / 2 ? x - metrics.width - 2 : x + 2;
+            const ty = y > canvas.height / 2 ? y - 4 : y + 14;
+            context.fillText(text,tx, ty);
+
+            context.restore();
         }
+
+        return canvas;
     }
 
     newCanvas() {

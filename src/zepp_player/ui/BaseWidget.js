@@ -22,6 +22,7 @@ export class BaseWidget {
     constructor(config) {
         this.config = config;
         this.runtime = config.__runtime;
+        this.positionInfo = false;
 
         if(!this.config.visible) this.config.visible = true;
 
@@ -138,5 +139,6 @@ export class BaseWidget {
         }
 
         player.dropEvents(this.events, x1, y1, x2, y2);
+        this.positionInfo = [x1, y1, x2, y2];
     }
 }

@@ -100,6 +100,13 @@ export function createDeviceState() {
             maxLength: 5,
             getString: (t) => t.value
         },
+        OVERLAY_COLOR: {
+            value: "#FFFFFF",
+            type: "string",
+            groupIcon: "settings",
+            maxLength: 7,
+            getString: (t) => t.value
+        },
         ALARM_CLOCK: {
             value: "09:30",
             type: "string",
