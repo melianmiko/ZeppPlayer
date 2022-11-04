@@ -63,9 +63,9 @@ def main():
     applet = pystray.Icon('Zepp-Player', icon=icon, menu=pystray.Menu(
         pystray.MenuItem('Open Chrome', do_open_chrome),
         pystray.Menu.SEPARATOR,
-        pystray.MenuItem('Website', lambda: webbrowser.open(LINK_WEB),
-        pystray.MenuItem('Documentation', lambda: webbrowser.open(LINK_DOCS),
-        pystray.MenuItem('Source code', lambda: webbrowser.open(LINK_SRC),
+        pystray.MenuItem('Website', lambda: webbrowser.open(LINK_WEB)),
+        pystray.MenuItem('Documentation', lambda: webbrowser.open(LINK_DOCS)),
+        pystray.MenuItem('Source code', lambda: webbrowser.open(LINK_SRC)),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit", do_exit)
     ))
