@@ -4,6 +4,11 @@ export const DeviceProfiles = {
         screenWidth: 192,
         screenHeight: 490
     },
+    ab7: {
+        hasOverlay: true,
+        screenWidth: 194,
+        screenHeight: 368
+    },
     gtr3: {
         hasOverlay: true,
         screenWidth: 454,
