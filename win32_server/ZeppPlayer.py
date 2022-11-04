@@ -23,7 +23,10 @@ from twisted.web.server import Site
 from twisted.web.static import File
 from twisted.internet import reactor
 
-PORT = 3023
+PORT = 3195
+LINK_WEB = "https://melianmiko.ru/en/zepp_player"
+LINK_DOCS = "https://melianmiko.ru/en/zepp_player/install"
+LINK_SRC = "https://notabug.org/melianmiko/ZeppPlayer"
 
 if getattr(sys, 'frozen', False):
     DIRECTORY = os.path.dirname(sys.executable)
@@ -59,6 +62,10 @@ def main():
 
     applet = pystray.Icon('Zepp-Player', icon=icon, menu=pystray.Menu(
         pystray.MenuItem('Open Chrome', do_open_chrome),
+        pystray.Menu.SEPARATOR,
+        pystray.MenuItem('Website', lambda: webbrowser.open(LINK_WEB),
+        pystray.MenuItem('Documentation', lambda: webbrowser.open(LINK_DOCS),
+        pystray.MenuItem('Source code', lambda: webbrowser.open(LINK_SRC),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit", do_exit)
     ))
