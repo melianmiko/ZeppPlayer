@@ -17,7 +17,6 @@
 */
 
 import ZeppPlayer from "./ZeppPlayer.js";
-import {TGAImage} from "./TgaImage";
 
 export class ChromeZeppPlayer extends ZeppPlayer {
     imgCache = {};
@@ -128,9 +127,14 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             context.save();
             context.lineWidth = 1;
 
+            // Dim BG
+            context.globalAlpha = 1;
+            context.fillStyle = "rgba(0, 0, 0, 0.5)";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
             // Baselines
+            context.globalAlpha = 0.6;
             context.strokeStyle = baseColor;
-            context.globalAlpha = 0.4;
             context.beginPath();
             context.setLineDash([]);
             context.moveTo(Math.floor(canvas.width / 2), 0);
@@ -140,8 +144,8 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             context.stroke();
 
             // Current widget
-            context.strokeStyle = baseColor;
             context.globalAlpha = 1;
+            context.strokeStyle = baseColor;
             for(const widget of this.currentRuntime.widgets) {
                 if(!widget.positionInfo) continue;
                 const [x1, y1, x2, y2] = widget.positionInfo;
@@ -176,7 +180,6 @@ export class ChromeZeppPlayer extends ZeppPlayer {
 
             // Cursor alignment lines
             context.strokeStyle = baseColor;
-            context.globalAlpha = 1;
             context.beginPath();
             context.setLineDash([10, 2]);
             context.moveTo(0, y);

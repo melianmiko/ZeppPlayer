@@ -87,7 +87,8 @@ export class EditorManager {
 
         // Prevent player hotkey trigger.
         edit.addEventListener("keyup", (e) => {
-            e.stopPropagation();
+            if(e.key !== "Shift")
+                e.stopPropagation();
         });
 
         const maxLength = 14 * (data.maxLength ? data.maxLength : 1) + 14;
@@ -99,6 +100,7 @@ export class EditorManager {
             if(data.type !== "boolean") return;
             player.setDeviceState(name, edit.checked);
         };
+
         edit.oninput = () => {
             let value = edit.value;
             if(data.type === "number") value = Number(value);

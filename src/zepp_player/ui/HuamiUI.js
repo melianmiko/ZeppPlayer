@@ -166,6 +166,7 @@ export default class HuamiUIMock {
         SRC: "src",
         CURRENT_TYPE: "current_type",
         MORE: "more",
+        ANIM: "more",
         UPDATE_DATA: "more",
         X: "x",
         Y: "y",

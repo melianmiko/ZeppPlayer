@@ -19,7 +19,27 @@
 export class HmApp {
     constructor(runtime) {
         this.runtime = runtime;
+        this.timers = [];
+
+        runtime.onDestroy.push(() => {
+            for(const a of this.timers) try {
+                clearTimeout(a);
+            } catch(e) {}
+        })
     }
+
+
+    alarmNew(options) {
+        let delta = options.delay ? options.delay : options.date - (Date.now() / 1000);
+        delta = Math.floor(delta);
+        if(delta <= 0) return -1;
+
+        this.timers.push(setTimeout(() => {
+            this.runtime.requestPageSwitch(options);
+        }, delta * 1000))
+    }
+
+    alarmCancel() {}
 
     startApp(options) {
         console.log("startApp", options);
@@ -77,11 +97,6 @@ export class HmApp {
     }
 
     unregisterGestureEvent() {}
-    
-    alarmNew() {
-        return 123;
-    }
-    alarmCancel() {}
 
     registerKeyEvent() {}
     unregisterKeyEvent() {}
