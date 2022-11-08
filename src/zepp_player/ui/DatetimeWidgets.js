@@ -260,7 +260,7 @@ export class DateWidget extends BaseWidget {
             }
 
             if(!img) continue;
-            if(config[prefix + "follow"] > 0) {
+            if(config[prefix + "follow"] > 0 && images.length > 0) {
                 let [lastImg, lastPrefix, expectedWidth] = images.pop();
 
                 let offset = config[lastPrefix + "space"];

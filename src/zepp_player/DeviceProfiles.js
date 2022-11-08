@@ -15,6 +15,12 @@ export const DeviceProfiles = {
         screenHeight: 454,
         swapRedAndBlueTGA: true
     },
+    gtr3pro: {
+        hasOverlay: true,
+        screenWidth: 480,
+        screenHeight: 480,
+        swapRedAndBlueTGA: true
+    },
     gtr4: {
         hasOverlay: true,
         screenWidth: 466,
