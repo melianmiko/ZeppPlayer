@@ -12,7 +12,8 @@
 
 <body>
     <div id="toolbar_top">
-        <select id="project_select"></select>
+        <select id="project_select" id="Project"></select>
+        <select id="player_profile_select" title="Device model"></select>
         <span title="WF console (c)" class="material-symbols-outlined bigscreen" id="toggle_console">
             terminal
         </span>
@@ -25,10 +26,6 @@
         <span title="Player settings" class="material-symbols-outlined bigscreen" id="toggle_settings">
             settings
         </span>
-        <hr class="bigscreen" />
-        <span title="Create GIF" class="material-symbols-outlined" id="do_gif">
-            gif_box
-        </span>
     </div>
 
     <div class="player_root">
@@ -38,6 +35,9 @@
             </span>
             <span title="Restart watchface/app" class="material-symbols-outlined" id="do_restart">
                 refresh
+            </span>
+            <span title="Create GIF" class="material-symbols-outlined" id="do_gif">
+                gif_box
             </span>
             <hr />
             <span title="Layer scroll up" class="material-symbols-outlined btn_app" id="app_up">
@@ -82,17 +82,11 @@
             <canvas id="display"></canvas>
             <div class="bigscreen">
                 <div id="view_settings" class="base_panel cfg_panel" style="display: none">
-                    <div>
-                        <span class="group_icon material-symbols-outlined">
-                            smartphone
-                        </span>
-                        <div class="contents">
-                            <div class="editor_item">
-                                <h3>Device (EXPERIMENTAL)</h3>
-                                <select id="player_profile_select"></select>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div>-->
+<!--                        <span class="group_icon material-symbols-outlined">-->
+<!--                            smartphone-->
+<!--                        </span>-->
+<!--                    </div>-->
                     <div>
                         <span class="group_icon material-symbols-outlined">
                             palette

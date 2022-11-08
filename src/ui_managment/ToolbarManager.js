@@ -113,6 +113,7 @@ export class ToolbarManager {
         picker.value = current;
         picker.onchange = () => {
             localStorage.zp_profile_name = picker.value;
+            location.reload();
         };
 
         return current;
