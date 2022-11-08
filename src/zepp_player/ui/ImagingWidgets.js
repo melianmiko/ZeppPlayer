@@ -154,7 +154,7 @@ export class MissingWidget extends ImageWidget {
 export class TextImageWidget extends BaseWidget {
     setPropertyBanlist = ["text"];
     
-    static async draw(player, text, maxLength, config) {
+    static async draw(runtime, text, maxLength, config) {
         if(!config.font_array) return null;
         text = String(text);
 
@@ -164,19 +164,19 @@ export class TextImageWidget extends BaseWidget {
         // Icon
         let iconImg = null,
             unitImg = null,
-            unitPath = config["unit_" + player.language];
+            unitPath = config["unit_" + runtime.language];
         
         let offset = config.h_space ? config.h_space : 0;
         let iconOffset = config.icon_space ? config.icon_space : 0;
 
         if(config.icon) {
-            iconImg = await player.getAssetImage(config.icon);
+            iconImg = await runtime.getAssetImage(config.icon);
             images.push([iconImg, iconOffset]);
         }
 
         // Pre-calculate width of text + load imgs
         if((text === "" || text === null || text === undefined) && config.invalid_image) {
-            const invalid = await player.getAssetImage(config.invalid_image);
+            const invalid = await runtime.getAssetImage(config.invalid_image);
             images.push([invalid, offset]);
         } else {
             if(text === "" && config.type === "ALARM_CLOCK") {
@@ -186,15 +186,15 @@ export class TextImageWidget extends BaseWidget {
             for(let i in text) {
                 let img = null;
                 if(text[i] === "-") {
-                    img = await player.getAssetImage(config.negative_image);
+                    img = await runtime.getAssetImage(config.negative_image);
                 } else if(text[i] === "." || text[i] === ":") {
                     if(!config.dot_image) break;
-                    img = await player.getAssetImage(config.dot_image);
+                    img = await runtime.getAssetImage(config.dot_image);
                 } else if(text[i] === "u") {
-                    img = await player.getAssetImage(config["unit_" + player.language]);
+                    img = await runtime.getAssetImage(config["unit_" + runtime.language]);
                 } else {
                     i = parseInt(text[i]);
-                    img = await player.getAssetImage(config.font_array[i]);
+                    img = await runtime.getAssetImage(config.font_array[i]);
                 }
                 images.push([img, offset]);
             }
@@ -203,12 +203,12 @@ export class TextImageWidget extends BaseWidget {
         // Unit
         if(unitPath) {
             try {
-                unitImg = await player.getAssetImage(unitPath);
+                unitImg = await runtime.getAssetImage(unitPath);
                 images.push([unitImg, offset]);
             } catch(e) {}
         }
 
-        if(images.length < 1) return player.newCanvas();
+        if(images.length < 1) return runtime.newCanvas();
 
         // Remove offset after last img
         images[images.length - 1][1] = 0;
@@ -222,11 +222,11 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Prepare temp canvas
-        const tmp = player.newCanvas();
+        const tmp = runtime.newCanvas();
         tmp.width = fullWidth;
         tmp.height = fullHeight;
 
-        const basementImg = await player.getAssetImage(config.font_array[0]);
+        const basementImg = await runtime.getAssetImage(config.font_array[0]);
         let boxWidth = config.w, 
             boxHeight = config.h;
 

@@ -64,16 +64,6 @@ export default class ZeppPlayerConfig {
         if(this.currentRuntime) this.currentRuntime.refresh_required = true;
     }
 
-    get language() {
-        return this._renderLanguage;
-    }
-
-    set language(val) {
-        if(["en", "sc", "tc"].indexOf(val) < 0) throw new Error("Undefined language");
-        this._renderLanguage = val;
-        this.refresh_required = true; 
-    }
-
     get withoutTransparency() {
         return this._renderWithoutTransparency;
     }

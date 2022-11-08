@@ -16,6 +16,43 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const LANG_VALUE_TABLE = [
+    "zh-CN",
+    "zh-TW",
+    "en-US",
+    "es-ES",
+    "ru-RU",
+    "ko-KR",
+    "fr-FR",
+    "de-DE",
+    "id-ID",
+    "pl-PL",
+    "it-IT",
+    "ja-JP",
+    "th-TH",
+    "ar-EG",
+    "vi-VN",
+    "pt-PT",
+    "nl-NL",
+    "tr-TR",
+    "uk-UA",
+    "iw-IL",
+    "pt-BR",
+    "ro-RO",
+    "cs-CZ",
+    "el-GR",
+    "sr-RS",
+    "ca-ES",
+    "fi-FI",
+    "nb-NO",
+    "da-DK",
+    "sv-SE",
+    "hu-HU",
+    "ms-MY",
+    "sk-SK",
+    "hi-IN"
+];
+
 export default class HuamiSettingMock {
     // Functions that will get/set prop
     // Will be generated in constructor
@@ -61,7 +98,10 @@ export default class HuamiSettingMock {
     }
 
     getLanguage() {
-        return this.runtime.language;
+        if(LANG_VALUE_TABLE.indexOf(this.runtime.fullLanguage) < 0)
+            return 2;
+
+        return LANG_VALUE_TABLE.indexOf(this.runtime.fullLanguage);
     }
 
     getUserData() {

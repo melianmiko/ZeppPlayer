@@ -105,7 +105,7 @@ export class DatePointer extends BaseWidget {
  * Fully implemented
  */
  export class TimeWidget extends BaseWidget {
-    async render(canvas, player) {
+    async render(canvas, runtime) {
         const config = this.config;
 
         const ctx = canvas.getContext("2d");
@@ -120,11 +120,11 @@ export class DatePointer extends BaseWidget {
             let [prefix, value] = timeParts[i];
             if(!config[prefix + "array"]) continue;
 
-            value = player.getDeviceState(value, "string");
+            value = runtime.getDeviceState(value, "string");
             if(config[prefix + "zero"] > 0) value = value.padStart(2, "0");
             
-            const basementImg = await player.getAssetImage(config[prefix + "array"][0]);
-            const img = await TextImageWidget.draw(player, value, 1, {
+            const basementImg = await runtime.getAssetImage(config[prefix + "array"][0]);
+            const img = await TextImageWidget.draw(runtime, value, 1, {
                 font_array: config[prefix + "array"],
                 h_space: config[prefix + "space"],
                 unit_sc: config[prefix + "unit_sc"],
@@ -139,7 +139,7 @@ export class DatePointer extends BaseWidget {
 
                 let offset = config[lastPrefix + "space"];
                 if(!offset) offset = 0;
-                const combinedImg = player.newCanvas();
+                const combinedImg = runtime.newCanvas();
                 combinedImg.width = lastImg.width + img.width;
                 combinedImg.height = Math.max(lastImg.height, img.height);
                 const cctx = combinedImg.getContext("2d");
@@ -148,7 +148,7 @@ export class DatePointer extends BaseWidget {
                 
                 expectedWidth += 2 * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
-                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                    let unit = await runtime.getAssetImage(config[prefix + "unit_en"]);
                     expectedWidth += unit.width;
                 }
                 
@@ -159,7 +159,7 @@ export class DatePointer extends BaseWidget {
                 let expectedWidth = 2 * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
                     try {
-                        let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                        let unit = await runtime.getAssetImage(config[prefix + "unit_en"]);
                         expectedWidth += unit.width;
                     } catch(e) {}
                 }
@@ -185,8 +185,8 @@ export class DatePointer extends BaseWidget {
         }
 
         // AM\PM
-        const ampmState = player.getDeviceState("AM_PM");
-        const lang = player.language;
+        const ampmState = runtime.getDeviceState("AM_PM");
+        const lang = runtime.language;
         const ampmData = ["am", "pm"];
 
         for(let i in ampmData) {
@@ -195,12 +195,12 @@ export class DatePointer extends BaseWidget {
                 langPrefix = prefix + lang + "_";
 
             if(config[langPrefix + "path"] && ampmState === value) {
-                const img = await player.getAssetImage(config[langPrefix + "path"]);
+                const img = await runtime.getAssetImage(config[langPrefix + "path"]);
                 ctx.drawImage(img, config[prefix + "x"], config[prefix + "y"]);
             }
         }
 
-        this.dropEvents(player, [
+        this.dropEvents(runtime, [
             0, 0, canvas.width, canvas.height
         ])
     }
@@ -212,15 +212,15 @@ export class DatePointer extends BaseWidget {
  * Fully implemented
  */
 export class DateWidget extends BaseWidget {
-    async render(canvas, player) {
+    async render(canvas, runtime) {
         const ctx = canvas.getContext("2d");
 
-        const lang = player.language;
+        const lang = runtime.language;
         const config = this.config;
         const data = [
-            ["year_", player.getDeviceState("YEAR", "string"), 2],
-            ["month_", player.getDeviceState("MONTH", "string"), 2],
-            ["day_", player.getDeviceState("DAY", "string"), 2]
+            ["year_", runtime.getDeviceState("YEAR", "string"), 2],
+            ["month_", runtime.getDeviceState("MONTH", "string"), 2],
+            ["day_", runtime.getDeviceState("DAY", "string"), 2]
         ];
 
         if(config.year_zero) {
@@ -235,11 +235,11 @@ export class DateWidget extends BaseWidget {
             if(!config[prefix + lang + "_array"]) continue;
             const imgs = config[prefix + lang + "_array"];
 
-            const basementImg = await player.getAssetImage(imgs[0]);
+            const basementImg = await runtime.getAssetImage(imgs[0]);
             let img = null;
             if(config[prefix + "is_character"]) {
                 try {
-                    img = await player.getAssetImage(imgs[value - 1]);
+                    img = await runtime.getAssetImage(imgs[value - 1]);
                 } catch (e) {
                     continue;
                 }
@@ -249,7 +249,7 @@ export class DateWidget extends BaseWidget {
                     value = value.padStart(fullLength, "0");
                 }
 
-                img = await TextImageWidget.draw(player, value, 1, {
+                img = await TextImageWidget.draw(runtime, value, 1, {
                     font_array: config[prefix + lang + "_array"],
                     h_space: config[prefix + "space"],
                     unit_sc: config[prefix + "unit_sc"],
@@ -265,7 +265,7 @@ export class DateWidget extends BaseWidget {
 
                 let offset = config[lastPrefix + "space"];
                 if(!offset) offset = 0;
-                const combinedImg = player.newCanvas();
+                const combinedImg = runtime.newCanvas();
                 combinedImg.width = lastImg.width + img.width + offset;
                 combinedImg.height = Math.max(lastImg.height, img.height);
                 const cctx = combinedImg.getContext("2d");
@@ -274,7 +274,7 @@ export class DateWidget extends BaseWidget {
                 
                 expectedWidth += fullLength * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
-                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                    let unit = await runtime.getAssetImage(config[prefix + "unit_en"]);
                     expectedWidth += unit.width;
                 }
                 
@@ -284,7 +284,7 @@ export class DateWidget extends BaseWidget {
                 if(!offset) offset = 0;
                 let expectedWidth = fullLength * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
-                    let unit = await player.getAssetImage(config[prefix + "unit_en"]);
+                    let unit = await runtime.getAssetImage(config[prefix + "unit_en"]);
                     expectedWidth += unit.width;
                 }
 
@@ -306,7 +306,7 @@ export class DateWidget extends BaseWidget {
             }
 
             ctx.drawImage(img, x + px, y);
-            this.dropEvents(player, [
+            this.dropEvents(runtime, [
                 x, y, x + img.width, y + img.height
             ])
         }
@@ -319,19 +319,19 @@ export class DateWidget extends BaseWidget {
  * Fully implemented
  */
  export class WeekdayWidget extends BaseWidget {
-    async render(canvas, player) {
+    async render(canvas, runtime) {
         const config = this.config;
 
-        let val = player.getDeviceState("WEEKDAY");
+        let val = runtime.getDeviceState("WEEKDAY");
         if(!val || val < 0) val = 0;
         
-        let font = config["week_" + player.language];
+        let font = config["week_" + runtime.language];
         if(!font || val >= font.length) return;
 
         try {
-            const img = await player.getAssetImage(font[val]);
+            const img = await runtime.getAssetImage(font[val]);
             canvas.getContext('2d').drawImage(img, config.x, config.y);
-            this.dropEvents(player, [
+            this.dropEvents(runtime, [
                 config.x,
                 config.y,
                 config.x + img.width,

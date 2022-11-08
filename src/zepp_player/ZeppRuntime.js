@@ -21,10 +21,20 @@ export default class ZeppRuntime {
 
         this.vfs = this.player.vfs;
         this.path_project = this.player.path_project;
-        this.language = this.player.language;
         this.screen = this.player.screen;
         this.appConfig = this.player.appConfig;
         this.withScriptConsole = this.player.withScriptConsole;
+    }
+
+    get language() {
+        switch(this.fullLanguage) {
+            case "zh-CN":
+                return "sc";
+            case "zh-TW":
+                return "tc";
+            default:
+                return "en";
+        }
     }
 
     get fullLanguage() {
