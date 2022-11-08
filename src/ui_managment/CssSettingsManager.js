@@ -1,3 +1,5 @@
+import AppSettingsManager from "./AppSettingsManager";
+
 export function initCssSettings() {
     const htmlStyles = document.documentElement.style;
     const props = [
@@ -16,16 +18,17 @@ export function initCssSettings() {
         const input = document.getElementById(`css_${keyName}`);
 
         // Load current
-        if(localStorage[`zp_css_${keyName}`]) {
-            htmlStyles.setProperty(`--${keyName}`,
-                localStorage[`zp_css_${keyName}`]);
-            input.value = localStorage[`zp_css_${keyName}`];
+        const userValue = AppSettingsManager.getString(`css_${keyName}`, false);
+
+        if(userValue !== false) {
+            htmlStyles.setProperty(`--${keyName}`, userValue);
+            input.value = userValue;
         }
 
         // Change event
         input.onchange = () => {
             console.log("Change color", keyName, input.value);
-            localStorage[`zp_css_${keyName}`] = input.value;
+            AppSettingsManager.setString(`css_${keyName}`, input.value);
         }
     }
 }

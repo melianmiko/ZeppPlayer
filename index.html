@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel -->
 <html lang="en">
 
 <head>
@@ -12,8 +13,9 @@
 
 <body>
     <div id="toolbar_top">
-        <select id="project_select" id="Project"></select>
+        <select id="project_select" title="Project"></select>
         <select id="player_profile_select" class="bigscreen" title="Device model"></select>
+
         <span title="WF console (c)" class="material-symbols-outlined bigscreen" id="toggle_console">
             terminal
         </span>
@@ -74,19 +76,22 @@
             <span title="Factory reset (W)" class="material-symbols-outlined" id="do_reload">
                 mop
             </span>
-            <span title="Export widgets (console) (D)" class="material-symbols-outlined" id="do_export">
-                developer_mode
-            </span>
         </div>
         <div class="root">
             <canvas id="display"></canvas>
             <div class="bigscreen">
                 <div id="view_settings" class="base_panel cfg_panel" style="display: none">
-<!--                    <div>-->
-<!--                        <span class="group_icon material-symbols-outlined">-->
-<!--                            smartphone-->
-<!--                        </span>-->
-<!--                    </div>-->
+                    <div>
+                        <span class="group_icon material-symbols-outlined">
+                            smartphone
+                        </span>
+                        <div class="contents">
+                            <div class="editor_item">
+                                <h3>Keep state</h3>
+                                <input type="checkbox" id="cfg_keep_state" />
+                            </div>
+                        </div>
+                    </div>
                     <div>
                         <span class="group_icon material-symbols-outlined">
                             palette

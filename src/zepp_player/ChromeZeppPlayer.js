@@ -55,6 +55,15 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         return content;
     }
 
+    saveDeviceStates() {
+        const out = {};
+        for(const type in this._deviceState) {
+            out[type] = this._deviceState[type].value;
+        }
+
+        localStorage.zp_deviceState = JSON.stringify(out);
+    }
+
     getEvalAdditionalData() {
         return `//# sourceURL=${location.href.substring(0, location.href.length-1)}${this.path_script};`
     }

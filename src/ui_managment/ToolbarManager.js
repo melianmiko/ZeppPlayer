@@ -19,6 +19,7 @@
 import { PersistentStorage } from "../zepp_player/PersistentStorage.js";
 import GifRecorder from "./GifRecorder.js";
 import {DeviceProfiles} from "../zepp_player/DeviceProfiles";
+import AppSettingsManager from "./AppSettingsManager";
 
 export class ToolbarManager {
     static player = null;
@@ -30,11 +31,6 @@ export class ToolbarManager {
     static toggleEventZones = document.getElementById("toggle_events");
     static togglePause = document.getElementById("toggle_pause");
     static toggleShift = document.getElementById("toggle_shift");
-    static toggleConsole = document.getElementById("toggle_console");
-    static toggleEditor = document.getElementById("toggle_edit");
-    static toggleExplorer = document.getElementById("toggle_explorer");
-    static toggleFrames = document.getElementById("toggle_overlay");
-    static toggleSettings = document.getElementById("toggle_settings");
 
     static doReloadBtn = document.getElementById("do_reload");
     static doGifBtn = document.getElementById("do_gif");
@@ -45,27 +41,88 @@ export class ToolbarManager {
     static doUpBtn = document.getElementById("app_up");
     static doDownBtn = document.getElementById("app_down");
 
-    static viewConsole = document.getElementById("view_console");
-    static viewEditor = document.getElementById("view_edit");
-    static viewExplorer = document.getElementById("view_explorer");
-    static viewSettings = document.getElementById("view_settings");
+    static bindSwitchBtn(config) {
+        const {blockId, configId, fallback, handler} = config;
+
+        const block = document.getElementById(blockId);
+        const handleValue = (val) => {
+            if(block.tagName === "INPUT") {
+                block.checked = val;
+            }
+
+            val ? block.classList.add("active") : block.classList.remove("active");
+            handler(val);
+        };
+
+        const performChange = () => {
+            const val = !AppSettingsManager.getObject(configId, fallback);
+            AppSettingsManager.setObject(configId, val);
+            handleValue(val);
+        };
+
+        handleValue(AppSettingsManager.getObject(configId, fallback));
+        block.onclick = performChange;
+        return performChange;
+    }
 
     static init(player) {
         ToolbarManager.player = player;
 
+        ToolbarManager.bindSwitchBtn({
+            blockId: "cfg_keep_state",
+            configId: "cfgKeepState",
+            fallback: true,
+            handler: () => {}
+        });
+
+        ToolbarManager.actionToggleEditor = ToolbarManager.bindSwitchBtn({
+            blockId: "toggle_edit",
+            configId: "panelEditorVisible",
+            fallback: false,
+            handler: (v) => {
+                document.getElementById("view_edit").style.display = v ? "" : "none";
+            }
+        });
+
+        ToolbarManager.actionToggleConsole = ToolbarManager.bindSwitchBtn({
+            blockId: "toggle_console",
+            configId: "panelConsoleVisible",
+            fallback: true,
+            handler: (v) => {
+                document.getElementById("view_console").style.display = v ? "" : "none";
+            }
+        });
+
+        ToolbarManager.actionToggleExplorer = ToolbarManager.bindSwitchBtn({
+            blockId: "toggle_explorer",
+            configId: "panelExplorerVisible",
+            fallback: true,
+            handler: (v) => {
+                document.getElementById("view_explorer").style.display = v ? "" : "none";
+            }
+        });
+
+        ToolbarManager.actionToggleSettings = ToolbarManager.bindSwitchBtn({
+            blockId: "toggle_settings",
+            configId: "panelSettingsVisible",
+            fallback: true,
+            handler: (v) => {
+                document.getElementById("view_settings").style.display = v ? "" : "none";
+            }
+        });
+
+        ToolbarManager.actionToggleOverlay = ToolbarManager.bindSwitchBtn({
+            blockId: "toggle_overlay",
+            configId: "overlayVisible",
+            fallback: true,
+            handler: (v) => {
+                ToolbarManager.player.render_overlay = v;
+                if(ToolbarManager.player.currentRuntime)
+                    ToolbarManager.player.currentRuntime.refresh_required = "ui";
+            }
+        })
+
         // Load saved settings
-        if(localStorage.zepp_player_editor === "true") {
-            ToolbarManager.viewEditor.style.display = "";
-        }
-        if(localStorage.zepp_player_console === "true") {
-            ToolbarManager.viewConsole.style.display = "";
-        }
-        if(localStorage.zepp_player_explorer === "true") {
-            ToolbarManager.viewExplorer.style.display = "";
-        }
-        if(localStorage.zepp_player_settings_panel === "true") {
-            ToolbarManager.viewSettings.style.display = "";
-        }
         if(localStorage.zepp_player_rotation !== undefined) {
             ToolbarManager.player.rotation = parseInt(localStorage.zepp_player_rotation);
         }
@@ -79,17 +136,12 @@ export class ToolbarManager {
         ToolbarManager.togglePause.onclick = ToolbarManager.doTogglePause;
         ToolbarManager.toggleShift.onclick = ToolbarManager.doToggleShift;
         ToolbarManager.doReloadBtn.onclick = ToolbarManager.doReload;
-        ToolbarManager.toggleConsole.onclick = ToolbarManager.doToggleConsole;
-        ToolbarManager.toggleEditor.onclick = ToolbarManager.doToggleEdit;
-        ToolbarManager.toggleExplorer.onclick = ToolbarManager.DoToggleExplorer;
         ToolbarManager.doGifBtn.onclick = ToolbarManager.doGif;
         ToolbarManager.doRotateBtn.onclick = ToolbarManager.doRotate;
-        ToolbarManager.toggleFrames.onclick = ToolbarManager.doToggleFrames;
         ToolbarManager.doBackBtn.onclick = ToolbarManager.doBack;
         ToolbarManager.doUpBtn.onclick = () => ToolbarManager.doScroll(-1);
         ToolbarManager.doDownBtn.onclick = () => ToolbarManager.doScroll(1);
         ToolbarManager.doRestartBtn.onclick = () => ToolbarManager.doRestart();
-        ToolbarManager.toggleSettings.onclick = () => ToolbarManager.doToggleSettings();
 
         document.addEventListener("keyup", ToolbarManager.handleKeypress);
 
@@ -143,10 +195,10 @@ export class ToolbarManager {
                 ToolbarManager.doReload();
                 return;
             case "c":
-                ToolbarManager.doToggleConsole();
+                ToolbarManager.actionToggleConsole();
                 return;
             case "e":
-                ToolbarManager.doToggleEdit();
+                ToolbarManager.actionToggleEditor();
                 return;
             case "+":
                 ToolbarManager.switchProject(1);
@@ -166,14 +218,10 @@ export class ToolbarManager {
     static _refresh() {
         const runtime = ToolbarManager.player.currentRuntime
         const data = [
-            [ToolbarManager.toggleEditor, localStorage.zepp_player_editor === "true"],
-            [ToolbarManager.toggleConsole, localStorage.zepp_player_console === "true"],
-            [ToolbarManager.toggleExplorer, localStorage.zepp_player_explorer === "true"],
-            [ToolbarManager.toggleSettings, localStorage.zepp_player_settings_panel === "true"],
             [ToolbarManager.toggleEventZones, ToolbarManager.player.showEventZones],
             [ToolbarManager.togglePause, runtime && runtime.uiPause],
             [ToolbarManager.toggleShift, ToolbarManager.player.withShift],
-            [ToolbarManager.toggleFrames, ToolbarManager.player.render_overlay],
+            // [ToolbarManager.toggleFrames, ToolbarManager.player.render_overlay],
             [ToolbarManager.toggleMode1, ToolbarManager.player.current_level === 1],
             [ToolbarManager.toggleMode2, ToolbarManager.player.current_level === 2],
             [ToolbarManager.toggleMode4, ToolbarManager.player.current_level === 4]
@@ -214,6 +262,8 @@ export class ToolbarManager {
 
         console.log("switch to", picker.options[index].value);
         picker.value = picker.options[index].value;
+
+        // noinspection JSCheckFunctionSignatures
         picker.onchange();
     }
 
@@ -223,16 +273,9 @@ export class ToolbarManager {
         ToolbarManager.player.currentRuntime.refresh_required = "ui";
     }
 
-    static async doToggleMode(val) {
+    static doToggleMode(val) {
         const player = ToolbarManager.player;
-        await player.setRenderLevel(val);
-        ToolbarManager._refresh();
-    }
-
-    static doToggleFrames() {
-        ToolbarManager.player.render_overlay = !ToolbarManager.player.render_overlay;
-        ToolbarManager._refresh();
-        ToolbarManager.player.currentRuntime.refresh_required = "ui";
+        player.setRenderLevel(val).then(() => ToolbarManager._refresh());
     }
 
     static doTogglePause() {
@@ -247,13 +290,6 @@ export class ToolbarManager {
         ToolbarManager._refresh();
     }
 
-    static doToggleSettings() {
-        const newState = localStorage.zepp_player_settings_panel !== "true";
-        ToolbarManager.viewSettings.style.display = newState ? "" : "none";
-        localStorage.zepp_player_settings_panel = newState;
-        ToolbarManager._refresh();
-    }
-
     static doToggleShift() {
         const player = ToolbarManager.player;
         player.withShift = !player.withShift;
@@ -265,27 +301,6 @@ export class ToolbarManager {
 
         const player = ToolbarManager.player;
         player.init();
-    }
-
-    static doToggleConsole() {
-        const newState = localStorage.zepp_player_console !== "true";
-        ToolbarManager.viewConsole.style.display = newState ? "" : "none";
-        localStorage.zepp_player_console = newState;
-        ToolbarManager._refresh();
-    }
-
-    static doToggleEdit() {
-        const newState = localStorage.zepp_player_editor !== "true";
-        ToolbarManager.viewEditor.style.display = newState ? "" : "none";
-        localStorage.zepp_player_editor = newState;
-        ToolbarManager._refresh();
-    }
-
-    static DoToggleExplorer() {
-        const newState = localStorage.zepp_player_explorer !== "true";
-        ToolbarManager.viewExplorer.style.display = newState ? "" : "none";
-        localStorage.zepp_player_explorer = newState;
-        ToolbarManager._refresh();
     }
 
     static async doGif() {

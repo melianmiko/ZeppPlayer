@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import AppSettingsManager from "./AppSettingsManager";
+
 export class EditorManager {
     view = document.getElementById("view_edit");
     groupViews = {};
@@ -27,7 +29,18 @@ export class EditorManager {
     constructor(player) {
         this.player = player;
 
-        for(var a in player._deviceState) {
+        if(AppSettingsManager.getObject("cfgKeepState", true)) {
+            try {
+                const data = AppSettingsManager.getObject("deviceState", {});
+                for(const type in data) {
+                    player.setDeviceState(type, data[type]);
+                }
+            } catch(e) {
+                console.warn(e);
+            }
+        }
+
+        for(let a in player._deviceState) {
             const data = player._deviceState[a];
             const group = data.groupIcon ? data.groupIcon : "inventory_2";
             const groupView = this.getGroupView(group);
@@ -99,12 +112,14 @@ export class EditorManager {
         edit.onchange = () => {
             if(data.type !== "boolean") return;
             player.setDeviceState(name, edit.checked);
+            player.saveDeviceStates();
         };
 
         edit.oninput = () => {
             let value = edit.value;
             if(data.type === "number") value = Number(value);
             player.setDeviceState(name, value);
+            player.saveDeviceStates();
         }
     
         return row;
