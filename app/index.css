@@ -103,6 +103,7 @@ aside.caption {
     bottom: 100%;
     display: flex;
     padding: 6px;
+    overflow-x: auto;
 }
 
 hr {
@@ -126,6 +127,7 @@ hr {
 #toolbar_side > span,
 #toolbar_top > span {
     max-width: 24px;
+    min-width: 24px;
     max-height: 24px;
     padding: 6px;
     margin: 2px;
@@ -330,7 +332,8 @@ a:link, a:visited {
 /* Trash */
 
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 4px;
+    height: 4px;
 }
 
 ::-webkit-scrollbar-track,

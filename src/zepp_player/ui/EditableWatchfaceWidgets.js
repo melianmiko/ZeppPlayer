@@ -60,6 +60,7 @@ export class EditableBackground extends BaseWidget {
 
     async render(canvas, player) {
         const config = this.config;
+        const ctx = canvas.getContext("2d");
         const data = this.config.bg_config[this._findCurrent()];
 
         if(this.runtime.showLevel === 4) {
@@ -72,6 +73,21 @@ export class EditableBackground extends BaseWidget {
                 x: config.tips_x,
                 y: config.tips_y
             });
+
+            const textImg = await TextWidget.drawText({
+                color: 0,
+                text: `Background ${data.id}/${config.count}`,
+                text_size: 18,
+                w: tips.width,
+                h: tips.height,
+                align_h: "center_h",
+                align_v: "center_v"
+            }, player);
+
+            ctx.drawImage(textImg,
+                config.x + config.tips_x,
+                config.y + config.tips_y);
+
             this.dropEvents(player, eventsZone);
         } else {
             const img = await player.getAssetImage(data.path);
