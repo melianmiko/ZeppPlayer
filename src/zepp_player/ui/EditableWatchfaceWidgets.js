@@ -21,10 +21,43 @@ import { BaseWidget } from "./BaseWidget.js";
 import { ImageWidget } from "./ImagingWidgets.js";
 import {TextWidget} from "./DrawingWidgets";
 
-export class EditableBackground extends BaseWidget {
+/**
+ * BaseWidget with some extra fixes for editor widgets.
+ */
+class BaseEditableWidget extends BaseWidget {
+    /**
+     * Check, is widget focused
+     * @returns {boolean} ture, if focused
+     */
+    zp_isActive() {
+        return PersistentStorage.get("wfEdit", "focus") === this.config.edit_id;
+    }
+
+    /**
+     * Change active state
+     */
+    zp_setActive() {
+        PersistentStorage.set("wfEdit", "focus", this.config.edit_id);
+        this.runtime.refresh_required = "edit";
+    }
+
+    /**
+     * Don't return current_type if hidden (ZeppOS bug emulation)
+     * @param key prop key
+     * @param second ??
+     * @returns {*|number} value
+     */
+    getProperty(key, second) {
+        if(key === "current_type" && this.runtime.showLevel === 4)
+            return -1;
+
+        return super.getProperty(key, second);
+    }
+}
+
+export class EditableBackground extends BaseEditableWidget {
     constructor(config) {
         super(config);
-        this.runtime = config.__runtime;
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
         if(config.current_type === null || config.current_type === undefined)
@@ -32,6 +65,7 @@ export class EditableBackground extends BaseWidget {
 
         this.addEventListener("onmouseup", () => {
             if(this.runtime.showLevel !== 4) return;
+            if(!this.zp_isActive()) return this.zp_setActive();
             this._switch();
         })
     }
@@ -55,7 +89,6 @@ export class EditableBackground extends BaseWidget {
         PersistentStorage.set("wfEdit", this.config.edit_id, val);
         this.config.current_type = val;
         this.runtime.refresh_required = "edit";
-        console.log(1);
     }
 
     async render(canvas, player) {
@@ -66,9 +99,120 @@ export class EditableBackground extends BaseWidget {
         if(this.runtime.showLevel === 4) {
             const img = await player.getAssetImage(data.preview);
             const fg = await player.getAssetImage(config.fg);
-            const tips = await player.getAssetImage(config.tips_bg);
             const eventsZone = ImageWidget.draw(img, canvas, player, config);
             ImageWidget.draw(fg, canvas, player, config);
+
+            if(this.zp_isActive()) player.addPostRenderTask(async () => {
+                const tips = await player.getAssetImage(config.tips_bg);
+
+                ImageWidget.draw(tips, canvas, player, {
+                    x: config.tips_x,
+                    y: config.tips_y
+                });
+
+                const textImg = await TextWidget.drawText({
+                    color: 0,
+                    text: `Background ${data.id}/${config.count}`,
+                    text_size: 18,
+                    w: tips.width,
+                    h: tips.height,
+                    align_h: "center_h",
+                    align_v: "center_v"
+                }, player);
+
+                ctx.drawImage(textImg,
+                    config.x + config.tips_x,
+                    config.y + config.tips_y);
+            });
+
+            this.dropEvents(player, eventsZone);
+        } else {
+            const img = await player.getAssetImage(data.path);
+            ImageWidget.draw(img, canvas, player, config);
+        }
+    }
+}
+
+export class EditPointerWidget extends BaseEditableWidget {
+    constructor(config) {
+        super(config);
+
+        config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
+        if(config.current_type === null || config.current_type === undefined)
+            config.current_type = config.default_id;
+
+        this.addEventListener("onmouseup", () => {
+            if(!this.zp_isActive()) return this.zp_setActive();
+            this._switch();
+        })
+    }
+
+    _switch() {
+        const currentType = this.config.current_type;
+        for(let i = 0; i < this.config.count; i++) {
+            if(this.config.config[i].id === currentType) {
+                // Get next
+                const nextIndex = (i + 1) % this.config.count;
+                const val = this.config.config[nextIndex];
+                PersistentStorage.set("wfEdit", this.config.edit_id, val.id);
+                this.config.current_type = val.id;
+                this.runtime.refresh_required = "edit";
+                return;
+            }
+        }
+    }
+
+    _findCurrent() {
+        const id = this.config.current_type;
+        for(let i = 0; i < this.config.count; i++) {
+            if(this.config.config[i].id === id) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    getProperty(key, second) {
+        if(key === "current_config") {
+            // Generate config for pointer
+            if(this.runtime.showLevel === 4) return {};
+
+            const i = this._findCurrent();
+            const data = this.config.config[i];
+
+            const config = {};
+            for(const key of ["hour", "minute", "second"]) {
+                if(!data[key]) continue;
+                for(const prop in data[key]) {
+                    config[`${key}_${prop}`] = data[key][prop];
+                }
+            }
+
+            return config;
+        }
+
+        return super.getProperty(key, second);
+    }
+
+    async render(canvas, runtime) {
+        if(runtime.showLevel !== 4) return;
+
+        const config = this.config;
+        const ctx = canvas.getContext("2d");
+
+        const i = this._findCurrent();
+        const preview = await runtime.getAssetImage(config.config[i].preview);
+        ctx.drawImage(preview, config.x, config.y);
+
+        try {
+            const fg = await runtime.getAssetImage(config.fg);
+            ctx.drawImage(fg, config.x, config.y);
+        } catch(e) {}
+
+        if(this.zp_isActive()) runtime.addPostRenderTask(async () => {
+            const tips = await player.getAssetImage(config.tips_bg);
+
             ImageWidget.draw(tips, canvas, player, {
                 x: config.tips_x,
                 y: config.tips_y
@@ -76,7 +220,7 @@ export class EditableBackground extends BaseWidget {
 
             const textImg = await TextWidget.drawText({
                 color: 0,
-                text: `Background ${data.id}/${config.count}`,
+                text: `Pointers ${i + 1}/${config.count}`,
                 text_size: 18,
                 w: tips.width,
                 h: tips.height,
@@ -87,48 +231,39 @@ export class EditableBackground extends BaseWidget {
             ctx.drawImage(textImg,
                 config.x + config.tips_x,
                 config.y + config.tips_y);
+        })
 
-            this.dropEvents(player, eventsZone);
-        } else {
-            const img = await player.getAssetImage(data.path);
-            ImageWidget.draw(img, canvas, player, config);
-        }
+        const boxWidth = Math.min(preview.width, 100);
+        const boxHeight = Math.min(preview.height, 100);
+        this.dropEvents(runtime, [
+            config.x + (preview.width - boxWidth) / 2,
+            config.y + (preview.height - boxHeight) / 2,
+            config.x + (preview.width - boxWidth) / 2 + boxWidth,
+            config.y + (preview.height - boxHeight) / 2 + boxHeight,
+        ]);
     }
 }
 
-export class EditGroupWidget extends BaseWidget {
+/**
+ * WATCHFACE_EDIT_GROUP
+ */
+export class EditGroupWidget extends BaseEditableWidget {
+    get _renderStage() {
+        if(this.runtime.showLevel !== 4) return "";
+        return this.zp_isActive() ? "toplevel" : "postReverse";
+    }
+
     constructor(config) {
         super(config);
-        this.player = config.__runtime;
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
         if(config.current_type === null || config.current_type === undefined)
             config.current_type = config.default_type;
 
         this.addEventListener("onmouseup", () => {
-            if(!this._isActive()) return this._setActive();
+            if(!this.zp_isActive()) return this.zp_setActive();
             this._switch();
         })
-    }
-
-    get _renderStage() {
-        return this._isActive() ? "toplevel" : "postReverse";
-    }
-
-    getProperty(key, second) {
-        if(key === "current_type" && this.runtime.showLevel === 4)
-            return -1;
-
-        return super.getProperty(key, second);
-    }
-
-    _isActive() {
-        return PersistentStorage.get("wfEdit", "focus") === this.config.edit_id;
-    }
-
-    _setActive() {
-        PersistentStorage.set("wfEdit", "focus", this.config.edit_id);
-        this.runtime.refresh_required = "edit";
     }
 
     async render(canvas, player) {
@@ -137,7 +272,7 @@ export class EditGroupWidget extends BaseWidget {
         const config = this.config;
         const ctx = canvas.getContext("2d");
 
-        const isActive = this._isActive();
+        const isActive = this.zp_isActive();
         const currentType = config.current_type;
 
         let width = config.w ? config.w : 0;
@@ -177,7 +312,7 @@ export class EditGroupWidget extends BaseWidget {
             // No overlay
         }
 
-        if(isActive) try {
+        if(isActive) player.addPostRenderTask(async () => {
             const tipsBg = await player.getAssetImage(config.tips_BG);
             ctx.drawImage(tipsBg, dx + config.tips_x, dy + config.tips_y);
 
@@ -195,9 +330,7 @@ export class EditGroupWidget extends BaseWidget {
             croppedTextImg.getContext("2d").drawImage(textImg, config.tips_margin, 0);
 
             ctx.drawImage(croppedTextImg, dx + config.tips_x, dy + config.tips_y);
-        } catch(e) {
-            // No tips BG
-        }
+        });
 
         this.dropEvents(player, [
             config.x,
@@ -218,6 +351,7 @@ export class EditGroupWidget extends BaseWidget {
                 PersistentStorage.set("wfEdit", this.config.edit_id, val.type);
                 this.config.current_type = val.type;
                 this.player.refresh_required = "edit";
+                return;
             }
         }
     }

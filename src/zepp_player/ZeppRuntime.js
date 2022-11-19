@@ -3,6 +3,7 @@ import { createPageEnv } from "./SyystemEnvironment";
 export default class ZeppRuntime {
     widgets = [];
     events = [];
+    postRenderTasks = [];
     onDestroy = [];
     env = null;
     module = null;
@@ -126,8 +127,23 @@ export default class ZeppRuntime {
 
     onRenderBegin() {
         this.events = [];
+        this.postRenderTasks = [];
         this.refresh_required = false;
         this.render_counter = (this.render_counter + 1) % 3000;
+    }
+
+    addPostRenderTask(fnc) {
+        this.postRenderTasks.push(fnc);
+    }
+
+    async onRenderFinish() {
+        for(const fnc of this.postRenderTasks) {
+            try {
+                await fnc();
+            } catch(e) {
+                console.warn("Post-render task failed", fnc, e);
+            }
+        }
     }
 
     async renderWidget(widget, canvas) {

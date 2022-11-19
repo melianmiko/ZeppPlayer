@@ -415,7 +415,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         // Prepare props
         this.stages = [];
-        runtime.onRenderBegin();
+        await runtime.onRenderBegin();
 
         // Render all widgets
         const stages = {
@@ -442,6 +442,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
                 await runtime.renderWidget(widget, canvas);
             }
         }
+
+        await runtime.onRenderFinish();
 
         // Frames
         if(this.showEventZones) {

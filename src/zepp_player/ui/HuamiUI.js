@@ -21,7 +21,7 @@
 import {GroupWidget, DelegateWidget, RadioGroupWidget, StateButtonWidget} from "./ApplicationWidgets.js"
 import { DatePointer, DateWidget, TimePointer, TimeWidget, WeekdayWidget } from "./DatetimeWidgets.js";
 import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget, TextWidget } from "./DrawingWidgets.js";
-import { EditableBackground, EditGroupWidget } from "./EditableWatchfaceWidgets.js";
+import {EditableBackground, EditGroupWidget, EditPointerWidget} from "./EditableWatchfaceWidgets.js";
 import { ButtonWidget } from "./FormWidgets.js";
 import { HistogramWidget } from "./HistogramWidget.js";
 import { AnimationWidget, ClickableImageWidget, ImageProgressWidget, ImageStatusWidget, ImageWidget, LevelWidget, MissingWidget, PointerWidget, TextImageWidget } from "./ImagingWidgets.js";
@@ -48,6 +48,7 @@ export default class HuamiUIMock {
         WATCHFACE_EDIT_FG_MASK: ImageWidget,
         WATCHFACE_EDIT_BG: EditableBackground,
         WATCHFACE_EDIT_GROUP: EditGroupWidget,
+        WATCHFACE_EDIT_POINTER: EditPointerWidget,
         TIME_POINTER: TimePointer,
         DATE_POINTER: DatePointer,
         IMG_CLICK: ClickableImageWidget,
@@ -165,6 +166,7 @@ export default class HuamiUIMock {
         ANGLE: "angle",
         SRC: "src",
         CURRENT_TYPE: "current_type",
+        CURRENT_CONFIG: "current_config",
         MORE: "more",
         ANIM: "more",
         UPDATE_DATA: "more",
@@ -205,6 +207,13 @@ export default class HuamiUIMock {
         CENTER_V: "center_v",
         TOP: "top",
         BOTTOM: "bottom"
+    }
+
+    date = {
+        MONTH: "MONTH",
+        DAY: "DAY",
+        YEAR: "YEAR",
+        WEEK: "WEEKDAY"
     }
 
     event = {
