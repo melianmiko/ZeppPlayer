@@ -27,7 +27,6 @@ import { ImageWidget, TextImageWidget } from "./ImagingWidgets.js";
 export class DatePointer extends BaseWidget {
     constructor(config) {
         super(config);
-        console.info("WIDGET DatePointer NOT TESTED, TEST ME PLS");
     }
 
     async render(canvas, player) {

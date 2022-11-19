@@ -76,7 +76,7 @@ export function createDeviceState() {
             groupIcon: "calendar_month",
             maxLength: 1,
             getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 6,
+            getProgress: (t) => (t.value+1) / 7,
             shift: (tick) => tick % 2 === 0 ? (state.WEEKDAY.value + 1) % 7 : null
         },
         AM_PM: {
