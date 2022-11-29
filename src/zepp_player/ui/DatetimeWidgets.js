@@ -21,8 +21,6 @@ import { ImageWidget, TextImageWidget } from "./ImagingWidgets.js";
 
 /**
  * hmUI.widget.DATE_POINTER
- *
- * NOT TESTED
  */
 export class DatePointer extends BaseWidget {
     constructor(config) {

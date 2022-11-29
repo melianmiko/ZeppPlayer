@@ -166,18 +166,18 @@ export class TextImageWidget extends BaseWidget {
             unitImg = null,
             unitPath = config["unit_" + runtime.language];
         
-        let offset = config.h_space ? config.h_space : 0;
-        let iconOffset = config.icon_space ? config.icon_space : 0;
+        const hSpace = config.h_space ? config.h_space : 0;
+        const iconSpace = config.icon_space ? config.icon_space : 0;
 
         if(config.icon) {
             iconImg = await runtime.getAssetImage(config.icon);
-            images.push([iconImg, iconOffset]);
+            images.push([iconImg, iconSpace]);
         }
 
         // Pre-calculate width of text + load imgs
         if((text === "" || text === null || text === undefined) && config.invalid_image) {
             const invalid = await runtime.getAssetImage(config.invalid_image);
-            images.push([invalid, offset]);
+            images.push([invalid, hSpace]);
         } else {
             if(text === "" && config.type === "ALARM_CLOCK") {
                 text = "0";
@@ -196,7 +196,7 @@ export class TextImageWidget extends BaseWidget {
                     i = parseInt(text[i]);
                     img = await runtime.getAssetImage(config.font_array[i]);
                 }
-                images.push([img, offset]);
+                images.push([img, hSpace]);
             }
         }
 
@@ -204,7 +204,7 @@ export class TextImageWidget extends BaseWidget {
         if(unitPath) {
             try {
                 unitImg = await runtime.getAssetImage(unitPath);
-                images.push([unitImg, offset]);
+                images.push([unitImg, hSpace]);
             } catch(e) {}
         }
 
@@ -231,13 +231,12 @@ export class TextImageWidget extends BaseWidget {
             boxHeight = config.h;
 
         if(!boxWidth) {
-            boxWidth = (basementImg.width + offset) * maxLength;
-            // if(unitImg) boxWidth += unitImg.width;
-            if(iconImg) boxWidth += iconImg.width + iconOffset;
+            boxWidth = basementImg.width * maxLength + hSpace * (maxLength - 1);
+            if(iconImg) boxWidth += iconImg.width + iconSpace;
+            if(unitImg) boxWidth += unitImg.width;
         }
 
         if(!boxHeight) boxHeight = basementImg.height;
-        
         if(boxWidth > tmp.width) tmp.width = boxWidth;
         if(boxHeight > tmp.height) tmp.height = boxHeight;
         if(tmp.width === 0 || tmp.height === 0) return null;
@@ -251,10 +250,12 @@ export class TextImageWidget extends BaseWidget {
             case "right":
                 px = Math.max(0, tmp.width - fullWidth);
         }
-        
+
         // Draw
         const ctx = tmp.getContext("2d");
-        for(var i in images) {
+        console.log(tmp.width, fullWidth, boxWidth, px, config.type)
+
+        for(let i in images) {
             const [img, offset] = images[i];
             ctx.drawImage(img, px, 0);
             px += img.width + offset;
