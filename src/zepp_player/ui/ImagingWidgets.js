@@ -155,70 +155,59 @@ export class TextImageWidget extends BaseWidget {
     setPropertyBanlist = ["text"];
     
     static async draw(runtime, text, maxLength, config) {
-        if(!config.font_array) return null;
+        if(!config.font_array || config.font_array.length < 1)
+            return null;
+
         text = String(text);
+        if(text === "" && config.type === "ALARM_CLOCK") {
+            text = "0";
+        }
 
-        // Prepare
-        let images = [];
+        const countNums = text.replace(/\D/g,'').length;
 
-        // Icon
-        let iconImg = null,
-            unitImg = null,
-            unitPath = config["unit_" + runtime.language];
-        
         const hSpace = config.h_space ? config.h_space : 0;
         const iconSpace = config.icon_space ? config.icon_space : 0;
+        const basementImage = await runtime.getAssetImage(config.font_array[0]);
+
+        let fullWidth = countNums * basementImage.width + Math.max(0, countNums - 1) * hSpace,
+            fullHeight = basementImage.height;
+
+        let iconImg = null,
+            unitImg = null,
+            dotImage = null,
+            negativeImage = null,
+            invalidImage = null;
+
+        if(config.invalid_image && (text === "" || text === null || text === undefined)) {
+            invalidImage = await runtime.getAssetImage(config.invalid_image);
+            fullWidth = invalidImage;
+        }
+
+        if(config.negative_image) {
+            negativeImage = await runtime.getAssetImage(config.negative_image);
+            if(text != null && text.indexOf("-") > -1)
+                fullWidth += negativeImage.width + hSpace;
+        }
+
+        if(config.dot_image) {
+            dotImage = await runtime.getAssetImage(config.dot_image);
+            if(text != null && text.indexOf(".") > -1)
+                fullWidth += dotImage.width + hSpace;
+        } else if(text != null && text.indexOf(".") > -1) {
+            fullWidth += hSpace; // real device bug emulation
+        }
 
         if(config.icon) {
             iconImg = await runtime.getAssetImage(config.icon);
-            images.push([iconImg, iconSpace]);
+            fullWidth += iconImg.width + iconSpace;
         }
 
-        // Pre-calculate width of text + load imgs
-        if((text === "" || text === null || text === undefined) && config.invalid_image) {
-            const invalid = await runtime.getAssetImage(config.invalid_image);
-            images.push([invalid, hSpace]);
-        } else {
-            if(text === "" && config.type === "ALARM_CLOCK") {
-                text = "0";
-            }
-
-            for(let i in text) {
-                let img = null;
-                if(text[i] === "-") {
-                    img = await runtime.getAssetImage(config.negative_image);
-                } else if(text[i] === "." || text[i] === ":") {
-                    if(!config.dot_image) break;
-                    img = await runtime.getAssetImage(config.dot_image);
-                } else if(text[i] === "u") {
-                    img = await runtime.getAssetImage(config["unit_" + runtime.language]);
-                } else {
-                    i = parseInt(text[i]);
-                    img = await runtime.getAssetImage(config.font_array[i]);
-                }
-                images.push([img, hSpace]);
-            }
-        }
-
-        // Unit
-        if(unitPath) {
+        if(config["unit_" + runtime.language]) {
             try {
-                unitImg = await runtime.getAssetImage(unitPath);
-                images.push([unitImg, hSpace]);
+                unitImg = await runtime.getAssetImage(config["unit_" + runtime.language]);
+                fullWidth += hSpace + unitImg.width;
+                if(text != null && text.indexOf("u") < 0) text += "u";
             } catch(e) {}
-        }
-
-        if(images.length < 1) return runtime.newCanvas();
-
-        // Remove offset after last img
-        images[images.length - 1][1] = 0;
-
-        // Calculate full width/height
-        let fullWidth = 0, fullHeight = 0;
-        for(let i in images) {
-            const [img, offset] = images[i];
-            fullWidth += img.width + offset;
-            fullHeight = Math.max(img.height, fullHeight);
         }
 
         // Prepare temp canvas
@@ -226,17 +215,16 @@ export class TextImageWidget extends BaseWidget {
         tmp.width = fullWidth;
         tmp.height = fullHeight;
 
-        const basementImg = await runtime.getAssetImage(config.font_array[0]);
-        let boxWidth = config.w, 
+        let boxWidth = config.w,
             boxHeight = config.h;
 
         if(!boxWidth) {
-            boxWidth = basementImg.width * maxLength + hSpace * (maxLength - 1);
+            boxWidth = basementImage.width * maxLength + hSpace * (maxLength - 1);
             if(iconImg) boxWidth += iconImg.width + iconSpace;
             if(unitImg) boxWidth += unitImg.width;
         }
 
-        if(!boxHeight) boxHeight = basementImg.height;
+        if(!boxHeight) boxHeight = basementImage.height;
         if(boxWidth > tmp.width) tmp.width = boxWidth;
         if(boxHeight > tmp.height) tmp.height = boxHeight;
         if(tmp.width === 0 || tmp.height === 0) return null;
@@ -253,12 +241,35 @@ export class TextImageWidget extends BaseWidget {
 
         // Draw
         const ctx = tmp.getContext("2d");
-        console.log(tmp.width, fullWidth, boxWidth, px, config.type)
+        if(iconImg !== null) {
+            ctx.drawImage(iconImg, px, 0);
+            px += iconImg + iconSpace;
+        }
 
-        for(let i in images) {
-            const [img, offset] = images[i];
-            ctx.drawImage(img, px, 0);
-            px += img.width + offset;
+        if(text === "" || text === null || text === undefined) {
+            if(invalidImage) {
+                ctx.drawImage(invalidImage, px, 0);
+                return tmp;
+            } else {
+                text = "";
+            }
+        }
+
+        for(const liter of text) {
+            if(liter === "-" && negativeImage !== null) {
+                ctx.drawImage(negativeImage, px, 0);
+                px += negativeImage.width + hSpace;
+            } else if((liter === "." || liter === ":") && dotImage !== null) {
+                ctx.drawImage(dotImage, px, 0);
+                px += dotImage.width + hSpace;
+            } else if(liter === "u" && unitImg !== null) {
+                ctx.drawImage(unitImg, px, 0);
+                px += unitImg.width + hSpace;
+            } else if(!isNaN(liter)) {
+                const img = await runtime.getAssetImage(config.font_array[parseInt(liter)]);
+                ctx.drawImage(img, px, 0);
+                px += basementImage.width + hSpace;
+            }
         }
 
         return tmp;
