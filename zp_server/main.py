@@ -3,6 +3,12 @@ import os
 import sys
 import webbrowser
 
+if sys.stdout is None:
+    # Fix bottle crash when windowed
+    from io import StringIO
+    sys.stdout = StringIO()
+    sys.stderr = StringIO()
+
 import requests
 from PIL import Image
 
