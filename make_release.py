@@ -21,6 +21,10 @@ def main():
 		make_win32()
 	elif sys.platform == "linux":
 		make_linux()
+	elif sys.platform == "darwin":
+		make_darwin()
+	else:
+		print("OS not supported")
 
 
 def make_linux():
@@ -39,6 +43,17 @@ def make_linux():
 		tar.add("start.sh")
 		for dirname in ["app", "projects/demo", "zp_server"]:
 			tar.add(dirname, recursive=True)
+
+
+def make_darwin():
+	if os.path.isdir("dist"):
+		shutil.rmtree("dist")
+
+	subprocess.Popen(["npm", "run", "build"]).wait()
+	subprocess.Popen(["pyinstaller", 'ZeppPlayer.osx.spec']).wait()
+
+	with TarFile.open(f"dist/ZeppPlayer_macos_v{get_version()}.tar.gz", "x:gz") as tar:
+		tar.add("dist/ZeppPlayer.app", recursive=True)
 
 
 def make_win32():

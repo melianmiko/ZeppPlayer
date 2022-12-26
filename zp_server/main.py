@@ -52,8 +52,10 @@ def main():
 
     # Run server
     run_webserver()
-    updater.run()
     webbrowser.open(f"http://127.0.0.1:{PORT}")
+
+    if sys.platform != "darwin":
+        updater.run()
 
     applet.run()
 
