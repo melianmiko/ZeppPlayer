@@ -5,14 +5,8 @@ import sys
 import subprocess
 
 from zipfile import ZipFile, ZIP_DEFLATED
+from tarfile import TarFile
 from pathlib import Path
-
-if sys.platform == "win32":
-	spec_file = "ZeppPlayer.win32.spec"
-	dist_file = "ZeppPlayer.exe"
-else:
-	spec_file = "ZeppPlayer.linux.spec"
-	dist_file = "ZeppPlayer"
 
 
 def get_version():
@@ -23,15 +17,40 @@ def get_version():
 
 
 def main():
+	if sys.platform == "win32":
+		make_win32()
+	elif sys.platform == "linux":
+		make_linux()
+
+
+def make_linux():
 	if os.path.isdir("dist"):
 		shutil.rmtree("dist")
 
-	is_win32 = sys.platform == "win32"
+	subprocess.Popen(["npm", "run", "build"]).wait()
 
-	subprocess.Popen(["npm.cmd" if is_win32 else "npm", "run", "build"]).wait()
-	subprocess.Popen(["pyinstaller.exe" if is_win32 else "pyinstaller", spec_file]).wait()
+	for cache in Path("zp_server").rglob("__pycache__"):
+		shutil.rmtree(cache)
 
-	with ZipFile(f"dist/ZeppPlayer_v{get_version()}.zip", "w", ZIP_DEFLATED) as zip:
+	os.mkdir("dist")
+	with TarFile.open(f"dist/ZeppPlayer_linux_v{get_version()}.tar.gz", "x:gz") as tar:
+		tar.add("package.json")
+		tar.add("package-lock.json")
+		tar.add("start.sh")
+		for dirname in ["app", "projects/demo", "zp_server"]:
+			tar.add(dirname, recursive=True)
+
+
+def make_win32():
+	if os.path.isdir("dist"):
+		shutil.rmtree("dist")
+
+	spec_file = "ZeppPlayer.win32.spec"
+	dist_file = "ZeppPlayer.exe"
+	subprocess.Popen(["npm.cmd", "run", "build"]).wait()
+	subprocess.Popen(["pyinstaller.exe", spec_file]).wait()
+
+	with ZipFile(f"dist/ZeppPlayer_win32_v{get_version()}.zip", "w", ZIP_DEFLATED) as zip:
 		zip.write("package.json")
 		zip.write("package-lock.json")
 		zip.write(f"dist/{dist_file}", dist_file)
