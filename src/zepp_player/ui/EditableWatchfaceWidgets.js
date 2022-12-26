@@ -278,7 +278,8 @@ export class EditGroupWidget extends BaseEditableWidget {
         let width = config.w ? config.w : 0;
         let height = config.h ? config.h : 0;
 
-        let preview = null, text = null;
+        let preview = null,
+            text = "";
 
         for(let i in config.optional_types) {
             const option = config.optional_types[i];
@@ -313,11 +314,20 @@ export class EditGroupWidget extends BaseEditableWidget {
         }
 
         if(isActive) player.addPostRenderTask(async () => {
-            const tipsBg = await player.getAssetImage(config.tips_BG);
+            let tipsBg;
+            try {
+                tipsBg = await player.getAssetImage(config.tips_BG);
+            } catch(e) {
+                return;
+            }
+
             ctx.drawImage(tipsBg, dx + config.tips_x, dy + config.tips_y);
 
+            if(!text) return;
             const textImg = await TextWidget.drawText({
-                color: 0, text, text_size: 18,
+                color: 0,
+                text,
+                text_size: 18,
                 w: config.tips_width - (config.tips_margin*2),
                 h: tipsBg.height,
                 align_h: "center_h",

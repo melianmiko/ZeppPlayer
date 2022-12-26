@@ -116,10 +116,12 @@ export default class HuamiUIMock {
 
     showToast(options) {
         if(!this.toastWidget) {
+            const screenWidth = this.runtime.screen[0];
+            const toastWidth = Math.max(170, Math.round(screenWidth / 2))
             this.toastWidget = this.createWidget(this.widget.BUTTON, {
-                x: 10,
+                x: Math.round((screenWidth - toastWidth) / 2),
                 y: 70,
-                w: 172,
+                w: toastWidth,
                 h: 50,
                 text: "",
                 visible: false,
