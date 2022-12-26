@@ -3,8 +3,7 @@ from pathlib import Path
 
 ROOT_DIR = Path(os.getcwd())
 LINK_WEB = "https://melianmiko.ru/en/zepp_player"
-LINK_DOCS = "https://melianmiko.ru/en/zepp_player/install"
-LINK_SRC = "https://notabug.org/melianmiko/ZeppPlayer"
+LINK_SRC = "https://github.com/melianmiko/ZeppPlayer"
 PORT = 3195
 
 HTML_TEMPLATE = """<!DOCTYPE html>

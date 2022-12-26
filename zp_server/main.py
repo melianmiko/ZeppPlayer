@@ -14,7 +14,7 @@ from PIL import Image
 
 import tk_tools
 import updater
-from server_data import HTML_TEMPLATE, LINK_SRC, LINK_DOCS, LINK_WEB, PORT, ROOT_DIR
+from server_data import HTML_TEMPLATE, LINK_SRC, LINK_WEB, PORT, ROOT_DIR
 from bottle import response
 
 import bottle
@@ -40,7 +40,6 @@ def main():
                          default=True),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem('Website', lambda: webbrowser.open(LINK_WEB)),
-        pystray.MenuItem('Documentation', lambda: webbrowser.open(LINK_DOCS)),
         pystray.MenuItem('Source code', lambda: webbrowser.open(LINK_SRC)),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem(f"ver. {updater.get_self_version()}", None, enabled=False),

@@ -71,7 +71,7 @@ class TkinterUiMod(DummyUiModule):
             d = self.updater.get_download_data()
             fn = d[0].split("/")[-1]
             label = t("downloading").format(fn)
-            if platform.system() == "Windows":
+            if platform.system() == "Windows" and fn.endswith(".exe"):
                 label += "\n" + t("downloading_run_after")
 
             frame = ttk.Frame(root)
