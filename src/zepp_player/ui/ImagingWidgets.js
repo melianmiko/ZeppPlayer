@@ -243,7 +243,7 @@ export class TextImageWidget extends BaseWidget {
         const ctx = tmp.getContext("2d");
         if(iconImg !== null) {
             ctx.drawImage(iconImg, px, 0);
-            px += iconImg + iconSpace;
+            px += iconImg.width + iconSpace;
         }
 
         if(text === "" || text === null || text === undefined) {
@@ -299,8 +299,14 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Render text
-        const tmp = await TextImageWidget.draw(player, text, maxLength, config);
-        if(tmp === null) return;
+        let tmp;
+        try {
+            tmp = await TextImageWidget.draw(player, text, maxLength, config);
+            if(tmp === null) return;
+        } catch(e) {
+            console.warn(e);
+            return;
+        }
 
         // Draw result
         canvas.getContext("2d").drawImage(tmp, config.x, config.y);

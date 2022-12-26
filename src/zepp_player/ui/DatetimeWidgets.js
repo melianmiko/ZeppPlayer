@@ -119,16 +119,28 @@ export class DatePointer extends BaseWidget {
 
             value = runtime.getDeviceState(value, "string");
             if(config[prefix + "zero"] > 0) value = value.padStart(2, "0");
-            
-            const basementImg = await runtime.getAssetImage(config[prefix + "array"][0]);
-            const img = await TextImageWidget.draw(runtime, value, 1, {
-                font_array: config[prefix + "array"],
-                h_space: config[prefix + "space"],
-                unit_sc: config[prefix + "unit_sc"],
-                unit_tc: config[prefix + "unit_tc"],
-                unit_en: config[prefix + "unit_en"],
-                align: config[prefix + "align"]
-            });
+
+            let basementImg;
+            try {
+                basementImg = await runtime.getAssetImage(config[prefix + "array"][0]);
+            } catch(e) {
+                continue;
+            }
+
+            let img;
+            try {
+                img = await TextImageWidget.draw(runtime, value, 1, {
+                    font_array: config[prefix + "array"],
+                    h_space: config[prefix + "space"],
+                    unit_sc: config[prefix + "unit_sc"],
+                    unit_tc: config[prefix + "unit_tc"],
+                    unit_en: config[prefix + "unit_en"],
+                    align: config[prefix + "align"]
+                });
+            } catch(e) {
+                console.warn(e);
+                continue;
+            }
 
             if(img === null) continue;
             if(config[prefix + "follow"] > 0) {
@@ -229,10 +241,17 @@ export class DateWidget extends BaseWidget {
         let images = [];
         for(let i in data) {
             let [prefix, value, fullLength] = data[i];
+
             if(!config[prefix + lang + "_array"]) continue;
             const imgs = config[prefix + lang + "_array"];
 
-            const basementImg = await runtime.getAssetImage(imgs[0]);
+            let basementImg;
+            try {
+                basementImg = await runtime.getAssetImage(imgs[0]);
+            } catch(e) {
+                continue;
+            }
+
             let img = null;
             if(config[prefix + "is_character"]) {
                 try {
@@ -246,14 +265,19 @@ export class DateWidget extends BaseWidget {
                     value = value.padStart(fullLength, "0");
                 }
 
-                img = await TextImageWidget.draw(runtime, value, 1, {
-                    font_array: config[prefix + lang + "_array"],
-                    h_space: config[prefix + "space"],
-                    unit_sc: config[prefix + "unit_sc"],
-                    unit_tc: config[prefix + "unit_tc"],
-                    unit_en: config[prefix + "unit_en"],
-                    align: config[prefix + "align"]
-                });
+                try {
+                    img = await TextImageWidget.draw(runtime, value, 1, {
+                        font_array: config[prefix + lang + "_array"],
+                        h_space: config[prefix + "space"],
+                        unit_sc: config[prefix + "unit_sc"],
+                        unit_tc: config[prefix + "unit_tc"],
+                        unit_en: config[prefix + "unit_en"],
+                        align: config[prefix + "align"]
+                    });
+                } catch(e) {
+                    console.warn(e);
+                    continue;
+                }
             }
 
             if(!img) continue;

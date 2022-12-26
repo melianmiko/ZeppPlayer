@@ -350,7 +350,7 @@ export class EditGroupWidget extends BaseEditableWidget {
                 const val = this.config.optional_types[nextIndex];
                 PersistentStorage.set("wfEdit", this.config.edit_id, val.type);
                 this.config.current_type = val.type;
-                this.player.refresh_required = "edit";
+                this.runtime.refresh_required = "edit";
                 return;
             }
         }
