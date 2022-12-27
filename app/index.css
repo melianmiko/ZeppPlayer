@@ -7,8 +7,22 @@ html {
     --editor-text: #fff;
     --input: #444;
     --input-text: #fff;
-    --accent: rgb(135, 207, 255);
+    --accent: #ff7043;
 }
+
+input[type=checkbox] {
+    background: var(--foreground);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 16px;
+    width: 16px;
+}
+
+input[type=checkbox]:checked {
+    background: var(--accent);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='16px' viewBox='0 0 24 24' width='16px' fill='%23FFFFFF'%3E%3Cpath d='M0 0h24v24H0V0z' fill='none'/%3E%3Cpath d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z'/%3E%3C/svg%3E");
+}
+
 
 @font-face {
     font-family: 'Material Symbols Outlined';

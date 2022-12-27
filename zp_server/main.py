@@ -1,5 +1,7 @@
+import json
 import logging
 import os
+import subprocess
 import sys
 import webbrowser
 
@@ -75,6 +77,12 @@ def run_webserver():
     bottle.run(host='127.0.0.1', port=PORT)
 
 
+@bottle.route("/api/open_projects")
+def open_projects():
+    subprocess.Popen(["open", str(ROOT_DIR / "projects")])
+    return "true"
+
+
 @bottle.route("/projects")
 def list_projects_legacy():
     root = ROOT_DIR / "projects"
@@ -112,7 +120,15 @@ def hello():
 
 
 @bottle.route("/package.json")
-def hello():
+def package_json():
+    if sys.platform == "darwin":
+        # Unlock old update checker for OSX
+        with open(ROOT_DIR / "package.json", "r") as f:
+            data = json.loads(f.read())
+        data["_legacyUpdateChecker"] = True
+        response.content_type = "application/json"
+        return json.dumps(data)
+
     return bottle.static_file('package.json', ROOT_DIR)
 
 

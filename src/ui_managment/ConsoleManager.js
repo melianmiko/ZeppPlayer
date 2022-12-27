@@ -20,7 +20,7 @@ export class ConsoleManager {
     view = document.getElementById("view_console");
 
     colors = {
-        ZeppPlayer: "#0099ff",
+        ZeppPlayer: "#ff7043",
         SystemWarning: "#ff9900",
         runtime: "#4cf",
         error: "#f22",

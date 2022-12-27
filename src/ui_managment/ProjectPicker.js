@@ -44,12 +44,27 @@ export class ProjectPicker {
             opt.innerText = name;
             this.view.appendChild(opt);
         }
-    
+
+        // Add "open folder" option
+        const opt = document.createElement("option");
+        opt.value = "<open_folder>";
+        opt.innerText = "<file manager...>";
+        this.view.appendChild(opt);
+
+        // Load current option
         if(localStorage.zepp_player_last_project) {
             this.view.value = localStorage.zepp_player_last_project;
         }
-    
+
+        // Event handler
+        const lastValue = this.view.value;
         this.view.onchange = () => {
+            if(this.view.value === "<open_folder>") {
+                fetch("/api/open_projects");
+                this.view.value = lastValue;
+                return
+            }
+
             localStorage.zepp_player_last_project = this.view.value;
             location.reload();
         };

@@ -12,4 +12,10 @@ init_venv()
 }
 
 [ ! -f venv/.ready ] && init_venv
-venv/bin/python zp_server/main.py > /dev/null 2>&1 &
+
+if [[ "$1" == "dev" ]]
+then
+	venv/bin/python zp_server/main.py
+else
+	venv/bin/python zp_server/main.py > /dev/null 2>&1 &
+fi

@@ -28,4 +28,25 @@ export async function initVersionUI() {
 
     view.innerHTML = "";
     view.appendChild(versionDiv);
+
+    if(!pkgJson._legacyUpdateChecker) return;
+
+    // Fetch release info
+    let data = {};
+    try {
+        const resp = await fetch("https://st.melianmiko.ru/zepp_player/release.json");
+        data = await resp.json();
+    } catch(e) {
+        console.warn("Update check failed. You can check manually here https://melianmiko.ru");
+        return;
+    }
+
+    if(data.version === APP_VERSION) return;
+
+    const updateLink = document.createElement("a");
+    updateLink.className = "update";
+    updateLink.href = data.website;
+    updateLink.target = "_blank";
+    updateLink.innerText = "New version is available (v" + data.version + "). Download it now.";
+    view.appendChild(updateLink);
 }
