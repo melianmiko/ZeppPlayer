@@ -8,6 +8,7 @@ import webbrowser
 if sys.stdout is None:
     # Fix bottle crash when windowed
     from io import StringIO
+
     sys.stdout = StringIO()
     sys.stderr = StringIO()
 
@@ -15,17 +16,20 @@ import requests
 from PIL import Image
 
 import tk_tools
+import user_config
 import updater
 from server_data import HTML_TEMPLATE, LINK_SRC, LINK_WEB, PORT, ROOT_DIR
 from bottle import response
 
 import bottle
 
-
 logging.basicConfig(level=logging.DEBUG)
 
 
-# noinspection PyUnresolvedReferences,PyProtectedMember
+class State:
+    applet = None
+
+
 def main():
     if is_running():
         return webbrowser.open(f"http://127.0.0.1:{PORT}")
@@ -36,6 +40,24 @@ def main():
 
     # Tray menu
     import pystray
+    State.applet = pystray.Icon("ZeppPLayer",
+                                icon=Image.open(ROOT_DIR / "app" / "icon.png"),
+                                menu=build_menu())
+
+    # Run server
+    run_webserver()
+
+    # Extras
+    if user_config.get_prop("auto_browser", True):
+        webbrowser.open(f"http://127.0.0.1:{PORT}")
+    if sys.platform != "darwin" and user_config.get_prop("check_updates", True):
+        updater.run()
+
+    State.applet.run()
+
+
+def build_menu():
+    import pystray
     main_menu = pystray.Menu(
         pystray.MenuItem('Open Chrome',
                          lambda: webbrowser.open(f"http://127.0.0.1:{PORT}"),
@@ -44,22 +66,28 @@ def main():
         pystray.MenuItem('Website', lambda: webbrowser.open(LINK_WEB)),
         pystray.MenuItem('Source code', lambda: webbrowser.open(LINK_SRC)),
         pystray.Menu.SEPARATOR,
+        pystray.MenuItem("Check for updates", toggle_updater,
+                         checked=lambda _: user_config.get_prop("check_updates", True)),
+        pystray.MenuItem("Open browser on start", toggle_auto_browser,
+                         checked=lambda _: user_config.get_prop("auto_browser", True)),
+        pystray.Menu.SEPARATOR,
         pystray.MenuItem(f"ver. {updater.get_self_version()}", None, enabled=False),
-        pystray.MenuItem("Exit", lambda: os._exit(0))
+        pystray.MenuItem("Exit", do_exit)
     )
+    return main_menu
 
-    applet = pystray.Icon("Zepp PLayer",
-                          icon=Image.open(ROOT_DIR / "app" / "icon.png"),
-                          menu=main_menu)
 
-    # Run server
-    run_webserver()
-    webbrowser.open(f"http://127.0.0.1:{PORT}")
+def do_exit():
+    # noinspection PyUnresolvedReferences,PyProtectedMember
+    os._exit(0)
 
-    if sys.platform != "darwin":
-        updater.run()
 
-    applet.run()
+def toggle_updater():
+    user_config.set_prop("check_updates", not user_config.get_prop("check_updates", True))
+
+
+def toggle_auto_browser():
+    user_config.set_prop("auto_browser", not user_config.get_prop("auto_browser", True))
 
 
 def is_running():
@@ -121,7 +149,7 @@ def hello():
 
 @bottle.route("/package.json")
 def package_json():
-    if sys.platform == "darwin":
+    if sys.platform == "darwin" and user_config.get_prop("check_updates", True):
         # Unlock old update checker for OSX
         with open(ROOT_DIR / "package.json", "r") as f:
             data = json.loads(f.read())
