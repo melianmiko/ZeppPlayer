@@ -161,8 +161,11 @@ class UpdaterTool:
         # Prepare url, filename and filepath
         asset, tag = self.get_asset()
         fn = asset["url"].split("/")[-1]
-        self.file_path = str(Path.home() / fn)
+        self.file_path = Path.home() / fn
         self.selected_asset = asset
+
+        if self.file_path.exists():
+            self.file_path.unlink()
 
         # Download file
         self.ui_mod.show_download_progress()
@@ -225,12 +228,12 @@ class UpdaterTool:
             batch_path.unlink()
 
         with open(batch_path, "w") as batch:
-            batch.write("@echo off\r\n")
-            batch.write(f"echo Updating {self.release_data['app']}\r\n")
-            batch.write(f"taskkill /f /im:{current_exe.name}\r\n")
-            batch.write(f"move /Y {update_dir}\\* {target_dir}\r\n")
-            batch.write(f"{current_exe}\r\n")
-            batch.write("exit\r\n")
+            batch.write("@echo off")
+            batch.write(f"echo Updating {self.release_data['app']}")
+            batch.write(f"taskkill /f /im:{current_exe.name}")
+            batch.write(f"robocopy \"{update_dir}\\*\" \"{target_dir}\" /S /E /MOV")
+            batch.write(f"start \"{current_exe}\"")
+            batch.write("exit")
 
         subprocess.Popen(["start", str(batch_path)])
 
