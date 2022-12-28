@@ -211,9 +211,10 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Prepare temp canvas
-        let autoBoxWidth = basementImage.width * maxLength + hSpace * (maxLength - 1);
+        let autoBoxWidth = basementImage.width * countNums + hSpace * (countNums - 1);
         if(iconImg) autoBoxWidth += iconImg.width + iconSpace;
         if(unitImg) autoBoxWidth += unitImg.width;
+        if(dotImage) autoBoxWidth += dotImage.width;
 
         const boxHeight = config.h !== undefined ? config.h : fullHeight;
         const boxWidth = config.w !== undefined ? config.w : autoBoxWidth;

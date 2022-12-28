@@ -281,7 +281,7 @@ export class EditGroupWidget extends BaseEditableWidget {
         let preview = null,
             text = "";
 
-        for(let i in config.optional_types) {
+        for(let i = 0; i < config.count; i++) {
             const option = config.optional_types[i];
             if(option.type === currentType) {
                 preview = option.preview;
@@ -352,14 +352,14 @@ export class EditGroupWidget extends BaseEditableWidget {
 
     _switch() {
         const currentType = this.config.current_type;
-        for(let i in this.config.optional_types) {
-            i = parseInt(i);
+        for(let i = 0; i < this.config.count; i++) {
             if(this.config.optional_types[i].type === currentType) {
                 // Get next
-                const nextIndex = (i + 1) % this.config.optional_types.length;
+                const nextIndex = (i + 1) % this.config.count;
                 const val = this.config.optional_types[nextIndex];
                 PersistentStorage.set("wfEdit", this.config.edit_id, val.type);
                 this.config.current_type = val.type;
+                this.runtime.render_counter = 0;
                 this.runtime.refresh_required = "edit";
                 return;
             }
