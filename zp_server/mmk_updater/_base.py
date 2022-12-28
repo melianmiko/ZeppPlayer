@@ -228,14 +228,14 @@ class UpdaterTool:
             batch_path.unlink()
 
         with open(batch_path, "w") as batch:
-            batch.write("@echo off")
-            batch.write(f"echo Updating {self.release_data['app']}")
-            batch.write(f"taskkill /f /im:{current_exe.name}")
-            batch.write(f"robocopy \"{update_dir}\\*\" \"{target_dir}\" /S /E /MOV")
-            batch.write(f"start \"{current_exe}\"")
-            batch.write("exit")
+            batch.write("@echo off\n")
+            batch.write(f"echo Updating {self.release_data['app']}\n")
+            batch.write(f"taskkill /f /im:{current_exe.name}\n")
+            batch.write(f"robocopy \"{update_dir} \" \"{target_dir} \" /S /E /MOV\n")
+            batch.write(f"start \"\" \"{current_exe}\"\n")
+            batch.write("exit\n")
 
-        subprocess.Popen(["start", str(batch_path)])
+        subprocess.Popen([str(batch_path)])
 
     @staticmethod
     def can_install(asset):
