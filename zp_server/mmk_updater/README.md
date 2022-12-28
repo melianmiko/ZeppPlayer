@@ -1,3 +1,3 @@
-`mmk_updater` version `v0.11.2`.
+`mmk_updater` version `v0.12`.
 
 This package contains my update downloader.
