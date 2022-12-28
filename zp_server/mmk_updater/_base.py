@@ -4,12 +4,15 @@ import json
 import logging
 import os
 import platform
+import shutil
 import subprocess
+import sys
 import threading
 import time
 import urllib.request
 import urllib.error
 from pathlib import Path
+from zipfile import ZipFile
 
 log = logging.getLogger("mmk-update")
 
@@ -17,7 +20,7 @@ log = logging.getLogger("mmk-update")
 class DummyUiModule:
     def __init__(self):
         # noinspection PyTypeChecker
-        self.updater = None     # type: UpdaterTool
+        self.updater = None  # type: UpdaterTool
 
     def on_bind(self, updater):
         self.updater = updater
@@ -50,6 +53,7 @@ class UpdaterTool:
         self.current_version = current_version
         self.release_data = {}
         self.file_path = ""
+        self.selected_asset = None
         self.ppa_glob = "/etc/apt/sources.list.d/melianmiko-ubuntu-software-*"
 
         self.ui_mod = ui_mod
@@ -95,6 +99,13 @@ class UpdaterTool:
         self.ui_mod.close_auto_update_message()
 
     def get_download_data(self):
+        asset, tag = self.get_asset()
+        if asset is None:
+            return "", 0, ""
+
+        return asset["url"], asset["size"], tag
+
+    def get_asset(self):
         tag = "linux"
         if platform.system() == "Windows":
             tag = "windows"
@@ -102,9 +113,9 @@ class UpdaterTool:
             tag = "debian"
 
         if tag not in self.release_data:
-            return "", 0, ""
+            return None
 
-        return self.release_data[tag][0]["url"], self.release_data[tag][0]["size"], tag
+        return self.release_data[tag][0], tag
 
     # noinspection PyBroadException
     def _process(self):
@@ -148,15 +159,16 @@ class UpdaterTool:
         log.debug("Preparing to download...")
 
         # Prepare url, filename and filepath
-        url, size, tag = self.get_download_data()
-        fn = url.split("/")[-1]
+        asset, tag = self.get_asset()
+        fn = asset["url"].split("/")[-1]
         self.file_path = str(Path.home() / fn)
+        self.selected_asset = asset
 
         # Download file
         self.ui_mod.show_download_progress()
-        log.debug("downloading {}".format(url))
+        log.debug("downloading {}".format(asset["url"]))
         try:
-            buff = self._download_with_progress(url)
+            buff = self._download_with_progress(asset["url"])
             self.ui_mod.percent = 100
         except urllib.error.URLError:
             self.ui_mod.percent = -1
@@ -178,15 +190,61 @@ class UpdaterTool:
             f.write(buff.getvalue())
 
         # If not windows, show message about user install
-        if platform.system() != "Windows" or not fn.endswith(".exe"):
+        if not self.can_install(asset):
             self.ui_mod.show_manual_install_message()
             return
 
-        # If windows, run executable installer
-        log.debug("Running windows installer...")
-        no_console = subprocess.STARTUPINFO()
-        no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        subprocess.Popen(self.file_path, startupinfo=no_console, shell=True)
+        # If windows, install
+        self.do_install()
+
+    def do_install(self):
+        if self.selected_asset is None:
+            return
+
+        if self.file_path.endswith(".exe"):
+            log.debug("Running windows installer...")
+            no_console = subprocess.STARTUPINFO()
+            no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            subprocess.Popen(self.file_path, startupinfo=no_console, shell=True)
+
+        # Do auto-unpack, prep dir
+        target_dir = Path(sys.executable).parent
+        current_exe = Path(sys.executable)
+        update_dir = target_dir / "_update"
+        if update_dir.exists():
+            shutil.rmtree(update_dir)
+        update_dir.mkdir()
+
+        # Unpack archive
+        with ZipFile(self.file_path, "r") as update_zip:
+            update_zip.extractall(update_dir)
+
+        # Create installer batch
+        batch_path = target_dir / "_auto_update.cmd"
+        if batch_path.exists():
+            batch_path.unlink()
+
+        with open(batch_path, "w") as batch:
+            batch.write("@echo off\r\n")
+            batch.write(f"echo Updating {self.release_data['app']}\r\n")
+            batch.write(f"taskkill /f /im:{current_exe.name}\r\n")
+            batch.write(f"move /Y {update_dir}\\* {target_dir}\r\n")
+            batch.write(f"{current_exe}\r\n")
+            batch.write("exit\r\n")
+
+        subprocess.Popen(["start", str(batch_path)])
+
+    @staticmethod
+    def can_install(asset):
+        if platform.system() != "Windows":
+            return False
+
+        if asset["url"].endswith(".exe"):
+            return True
+
+        is_zip = asset["url"].endswith("zip")
+        is_frozen = getattr(sys, "frozen", False)
+        return is_frozen and is_zip and "auto_unpack" in asset
 
     def _download_with_progress(self, url):
         with urllib.request.urlopen(url) as Response:
