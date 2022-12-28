@@ -7,7 +7,7 @@ import bottle
 import waitress
 
 import tk_tools, user_config
-from server_data import ROOT_DIR, PORT, HTML_TEMPLATE
+from server_data import ROOT_DIR, PORT, HTML_TEMPLATE, PROJECTS_DIR
 
 log = logging.getLogger("ZPServer")
 
@@ -19,16 +19,15 @@ def start():
 
 @bottle.route("/api/open_projects")
 def open_projects():
-    subprocess.Popen(["open", str(ROOT_DIR / "projects")])
+    subprocess.Popen(["open", str(PROJECTS_DIR)])
     return "true"
 
 
 @bottle.route("/projects")
 def list_projects_legacy():
-    root = ROOT_DIR / "projects"
     out = ""
 
-    for file in root.iterdir():
+    for file in PROJECTS_DIR.iterdir():
         if not file.is_dir():
             continue
         if not (file / "app.json").is_file():
@@ -40,7 +39,7 @@ def list_projects_legacy():
 
 @bottle.route("/projects/<filename:path>")
 def project_file(filename):
-    path = ROOT_DIR / "projects" / filename
+    path = PROJECTS_DIR / filename
     if path.is_dir():
         """deprecated"""
         out = ""
@@ -51,7 +50,7 @@ def project_file(filename):
                 out += f"<a href=\"{file.name}\">{file.name}</a>\n"
         return HTML_TEMPLATE.replace("{}", out)
 
-    return with_headers(bottle.static_file(filename, ROOT_DIR / "projects"))
+    return with_headers(bottle.static_file(filename, PROJECTS_DIR))
 
 
 @bottle.route("/")

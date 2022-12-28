@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import shutil
 import subprocess
 import sys
 import webbrowser
@@ -19,7 +20,7 @@ from PIL import Image
 import web_server
 import user_config
 import updater
-from server_data import LINK_SRC, LINK_WEB, PORT, ROOT_DIR
+from server_data import LINK_SRC, LINK_WEB, PORT, ROOT_DIR, CONFIG_DIR, PROJECTS_DIR
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -31,6 +32,8 @@ class State:
 def main():
     if is_running():
         return webbrowser.open(f"http://127.0.0.1:{PORT}")
+
+    prepare_dirs()
 
     # Linux pystray backend force
     if sys.platform == "linux":
@@ -52,6 +55,14 @@ def main():
         updater.run()
 
     State.applet.run()
+
+
+def prepare_dirs():
+    if not CONFIG_DIR.exists():
+        CONFIG_DIR.mkdir(parents=True)
+
+    if sys.platform == "darwin" and not PROJECTS_DIR.exists():
+        shutil.copytree(ROOT_DIR / "projects", PROJECTS_DIR)
 
 
 def build_menu():

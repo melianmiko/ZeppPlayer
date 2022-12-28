@@ -8,11 +8,15 @@ if hasattr(sys, "frozen"):
     ROOT_DIR = Path(os.path.dirname(sys.executable))
 
 if sys.platform == "win32":
-    CONFIG_DIR = Path.home() / "AppData/Roaming"
+    CONFIG_DIR = Path.home() / "AppData/Roaming/ZeppPLayer"
 elif sys.platform == "darwin":
-    CONFIG_DIR = ROOT_DIR
-elif sys.platform == "linux":
-    CONFIG_DIR = Path.home() / ".config"
+    CONFIG_DIR = Path.home() / "Library/Application Support/ZeppPLayer"
+else:
+    CONFIG_DIR = Path.home() / ".config/ZeppPLayer"
+
+PROJECTS_DIR = ROOT_DIR / "projects"
+if sys.platform == "darwin":
+    PROJECTS_DIR = CONFIG_DIR / "projects"
 
 LINK_WEB = "https://melianmiko.ru/en/zepp_player"
 LINK_SRC = "https://github.com/melianmiko/ZeppPlayer"
