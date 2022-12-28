@@ -51,12 +51,12 @@ def project_file(filename):
                 out += f"<a href=\"{file.name}\">{file.name}</a>\n"
         return HTML_TEMPLATE.replace("{}", out)
 
-    return bottle.static_file(filename, ROOT_DIR / "projects")
+    return with_headers(bottle.static_file(filename, ROOT_DIR / "projects"))
 
 
 @bottle.route("/")
 def hello():
-    return bottle.static_file('index.html', ROOT_DIR / "app")
+    return with_headers(bottle.static_file('index.html', ROOT_DIR / "app"))
 
 
 @bottle.route("/package.json")
@@ -69,12 +69,17 @@ def package_json():
         bottle.response.content_type = "application/json"
         return json.dumps(data)
 
-    return bottle.static_file('package.json', ROOT_DIR)
+    return with_headers(bottle.static_file('package.json', ROOT_DIR))
+
+
+def with_headers(resp):
+    resp.set_header("Cache-Control", "no-cache, no-store, must-revalidate")
+    return resp
 
 
 @bottle.route("/app/<filename:path>")
 def app_file(filename):
-    return bottle.static_file(filename, ROOT_DIR / "app")
+    return with_headers(bottle.static_file(filename, ROOT_DIR / "app"))
 
 
 @bottle.hook("after_request")
