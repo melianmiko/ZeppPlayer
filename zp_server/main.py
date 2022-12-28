@@ -5,6 +5,7 @@ import subprocess
 import sys
 import webbrowser
 
+
 if sys.stdout is None:
     # Fix bottle crash when windowed
     from io import StringIO
@@ -15,13 +16,10 @@ if sys.stdout is None:
 import requests
 from PIL import Image
 
-import tk_tools
+import web_server
 import user_config
 import updater
-from server_data import HTML_TEMPLATE, LINK_SRC, LINK_WEB, PORT, ROOT_DIR
-from bottle import response
-
-import bottle
+from server_data import LINK_SRC, LINK_WEB, PORT, ROOT_DIR
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -45,7 +43,7 @@ def main():
                                 menu=build_menu())
 
     # Run server
-    run_webserver()
+    web_server.start()
 
     # Extras
     if user_config.get_prop("auto_browser", True):
@@ -97,77 +95,6 @@ def is_running():
         return True
     except Exception:
         return False
-
-
-@tk_tools.async_with_ui("WebServer")
-def run_webserver():
-    print("Run server...")
-    bottle.run(host='127.0.0.1', port=PORT)
-
-
-@bottle.route("/api/open_projects")
-def open_projects():
-    subprocess.Popen(["open", str(ROOT_DIR / "projects")])
-    return "true"
-
-
-@bottle.route("/projects")
-def list_projects_legacy():
-    root = ROOT_DIR / "projects"
-    out = ""
-
-    for file in root.iterdir():
-        if not file.is_dir():
-            continue
-        if not (file / "app.json").is_file():
-            continue
-        out += f"<a href=\"{file.name}/\">{file.name}/</a>\n"
-
-    return HTML_TEMPLATE.replace("{}", out)
-
-
-@bottle.route("/projects/<filename:path>")
-def project_file(filename):
-    path = ROOT_DIR / "projects" / filename
-    if path.is_dir():
-        """deprecated"""
-        out = ""
-        for file in path.iterdir():
-            if file.is_dir():
-                out += f"<a href=\"{file.name}/\">{file.name}/</a>\n"
-            else:
-                out += f"<a href=\"{file.name}\">{file.name}</a>\n"
-        return HTML_TEMPLATE.replace("{}", out)
-
-    return bottle.static_file(filename, ROOT_DIR / "projects")
-
-
-@bottle.route("/")
-def hello():
-    return bottle.static_file('index.html', ROOT_DIR / "app")
-
-
-@bottle.route("/package.json")
-def package_json():
-    if sys.platform == "darwin" and user_config.get_prop("check_updates", True):
-        # Unlock old update checker for OSX
-        with open(ROOT_DIR / "package.json", "r") as f:
-            data = json.loads(f.read())
-        data["_legacyUpdateChecker"] = True
-        response.content_type = "application/json"
-        return json.dumps(data)
-
-    return bottle.static_file('package.json', ROOT_DIR)
-
-
-@bottle.route("/app/<filename:path>")
-def app_file(filename):
-    return bottle.static_file(filename, ROOT_DIR / "app")
-
-
-@bottle.hook("after_request")
-def after():
-    response.set_header("Cache-Control", "no-cache, no-store, must-revalidate")
 
 
 if __name__ == "__main__":
