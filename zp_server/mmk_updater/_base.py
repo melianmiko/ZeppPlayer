@@ -52,7 +52,7 @@ class UpdaterTool:
         self.release_url = release_url
         self.current_version = current_version
         self.release_data = {}
-        self.file_path = ""
+        self.file_path = Path.home()
         self.selected_asset = None
         self.ppa_glob = "/etc/apt/sources.list.d/melianmiko-ubuntu-software-*"
 
@@ -204,7 +204,7 @@ class UpdaterTool:
         if self.selected_asset is None:
             return
 
-        if self.file_path.endswith(".exe"):
+        if self.file_path.name.endswith(".exe"):
             log.debug("Running windows installer...")
             no_console = subprocess.STARTUPINFO()
             no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW
