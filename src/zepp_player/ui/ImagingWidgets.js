@@ -211,23 +211,18 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Prepare temp canvas
+        let autoBoxWidth = basementImage.width * maxLength + hSpace * (maxLength - 1);
+        if(iconImg) autoBoxWidth += iconImg.width + iconSpace;
+        if(unitImg) autoBoxWidth += unitImg.width;
+
+        const boxHeight = config.h !== undefined ? config.h : fullHeight;
+        const boxWidth = config.w !== undefined ? config.w : autoBoxWidth;
+
+        if(boxWidth === 0 || boxHeight === 0) return null;
+
         const tmp = runtime.newCanvas();
-        tmp.width = fullWidth;
-        tmp.height = fullHeight;
-
-        let boxWidth = config.w,
-            boxHeight = config.h;
-
-        if(!boxWidth) {
-            boxWidth = basementImage.width * maxLength + hSpace * (maxLength - 1);
-            if(iconImg) boxWidth += iconImg.width + iconSpace;
-            if(unitImg) boxWidth += unitImg.width;
-        }
-
-        if(!boxHeight) boxHeight = basementImage.height;
-        if(boxWidth > tmp.width) tmp.width = boxWidth;
-        if(boxHeight > tmp.height) tmp.height = boxHeight;
-        if(tmp.width === 0 || tmp.height === 0) return null;
+        tmp.width = boxWidth;
+        tmp.height = boxHeight;
 
         // Align
         let px = 0;
