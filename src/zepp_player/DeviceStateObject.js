@@ -344,6 +344,14 @@ export function createDeviceState() {
             displayName: "Icon",
             shift: () => (state.WEATHER_CURRENT_ICON.value + 1) % 29
         },
+        WEATHER_CITY: {
+            value: "Barnaul",
+            type: "string",
+            maxLength: 15,
+            groupIcon: "sunny",
+            displayName: "City name",
+            getString: (t) => t.value
+        },
         WIND: {
             value: 2,
             type: "number",

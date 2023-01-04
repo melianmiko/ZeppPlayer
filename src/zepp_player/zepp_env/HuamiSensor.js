@@ -350,7 +350,7 @@ class WeatherSensor {
 
     getForecastWeather() {
         return {
-            cityName: "Barnaul",
+            cityName: this.player.getDeviceState("WEATHER_CITY", "string"),
             forecastData: {
                 data: [
                     {high: 15, low: 12, index: 0},
