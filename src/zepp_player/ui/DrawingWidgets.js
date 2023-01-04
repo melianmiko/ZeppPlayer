@@ -61,7 +61,6 @@ export class TextWidget extends BaseWidget {
                     newLine = lines[currentLine] += data[0];
                     width = context.measureText(newLine).width + (offsetX * (newLine.length-1));
                     if(width < config.w - 20) {
-                        lines[currentLine] += data[0];
                         data = data.substring(1);
                     } else {
                         lines[currentLine] += "..";
