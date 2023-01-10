@@ -1,4 +1,15 @@
-# ZeppPlayer
+![Logo](docs/logo.png) ZeppPlayer
+----------------------------------
 
-Mi Band 7 simulator for Google Chrome.
-To be written later.
+This application can run ZeppOS apps & watchfaces in your 
+browser. Useful for homebrew development, faster and more 
+flexible than the official ZeppOS Simulator, but a bit 
+less compatible.
+
+- [💿 Binary download](https://melianmiko.ru/en/zepp_player/)
+
+## Build from source code
+1. Create python virtualenv
+2. Enable that environment
+3. Install dependencies via `pip install -r requirements.txt`
+4. Run `python make_release.py`
