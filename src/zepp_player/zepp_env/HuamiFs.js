@@ -20,6 +20,8 @@
 
 import {PersistentStorage} from "../PersistentStorage.js";
 
+const CONSTANT_FOLDER = 1;
+
 export default class HuamiFsMock {
     O_RDONLY = 0;
     O_WRONLY = 0;
@@ -52,7 +54,7 @@ export default class HuamiFsMock {
             // Folder search
             for(let key in this.vfs) {
                 if(key.startsWith(path + "/"))
-                    return new ArrayBuffer(0);
+                    return CONSTANT_FOLDER;
             }
         }
         return this.vfs[path];
@@ -76,13 +78,15 @@ export default class HuamiFsMock {
     stat(path) {
         path = this.parsePath(path);
         console.log(path);
-        let f = this.getFile(path);
 
-        if(!f) return [null, -1];
+        const file = this.getFile(path);
+        if(!file) return [null, -1];
+
+        console.log(path, file, file === CONSTANT_FOLDER);
 
         return [{
-            mode: (f ? 32768 : 16384) + 511,
-            size: f ? f.byteLength : 0,
+            mode: (file !== CONSTANT_FOLDER ? 32768 : 16384) + 511,
+            size: file === CONSTANT_FOLDER ? 0 : file.byteLength,
             mtime: Date.now()
         }, 0];
     }
