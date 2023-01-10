@@ -211,9 +211,11 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Prepare temp canvas
-        let autoBoxWidth = basementImage.width * countNums + hSpace * (countNums - 1);
+        const autoNumCount = maxLength === 0 ? countNums : maxLength;
+        let autoBoxWidth = basementImage.width * autoNumCount + hSpace * (autoNumCount - 1);
         if(iconImg) autoBoxWidth += iconImg.width + iconSpace;
-        if(unitImg) autoBoxWidth += hSpace + unitImg.width;
+        if(negativeImage) autoBoxWidth += hSpace + negativeImage.width;
+        if(unitImg) autoBoxWidth += unitImg.width;
         if(dotImage) autoBoxWidth += hSpace + dotImage.width;
 
         const boxHeight = config.h !== undefined ? config.h : fullHeight;
@@ -275,7 +277,9 @@ export class TextImageWidget extends BaseWidget {
         const config = this.config;
 
         // Find text
-        let text = null, maxLength = 1;
+        let text = null,
+            maxLength = 0;
+
         if(config.type) {
             text = player.getDeviceState(config.type, "string");
             maxLength = player.getDeviceState(config.type, "maxLength");

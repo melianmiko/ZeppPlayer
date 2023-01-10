@@ -129,7 +129,7 @@ export class DatePointer extends BaseWidget {
 
             let img;
             try {
-                img = await TextImageWidget.draw(runtime, value, 1, {
+                img = await TextImageWidget.draw(runtime, value, 0, {
                     font_array: config[prefix + "array"],
                     h_space: config[prefix + "space"],
                     unit_sc: config[prefix + "unit_sc"],
@@ -266,7 +266,7 @@ export class DateWidget extends BaseWidget {
                 }
 
                 try {
-                    img = await TextImageWidget.draw(runtime, value, 1, {
+                    img = await TextImageWidget.draw(runtime, value, 0, {
                         font_array: config[prefix + lang + "_array"],
                         h_space: config[prefix + "space"],
                         unit_sc: config[prefix + "unit_sc"],
