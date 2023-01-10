@@ -77,12 +77,9 @@ export default class HuamiFsMock {
 
     stat(path) {
         path = this.parsePath(path);
-        console.log(path);
 
         const file = this.getFile(path);
         if(!file) return [null, -1];
-
-        console.log(path, file, file === CONSTANT_FOLDER);
 
         return [{
             mode: (file !== CONSTANT_FOLDER ? 32768 : 16384) + 511,
