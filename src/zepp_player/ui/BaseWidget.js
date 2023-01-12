@@ -68,10 +68,6 @@ export class BaseWidget {
     }
 
     setProperty(prop, val) {
-        if(!this._isVisible() && prop !== "visible") {
-            return;
-        }
-
         if(prop === undefined) {
             console.warn("This prop was missing in simulator. Please, debug me...");
         }
