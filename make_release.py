@@ -37,7 +37,7 @@ def make_linux():
 		shutil.rmtree(cache)
 
 	os.mkdir("dist")
-	with TarFile.open(f"dist/ZeppPlayer_linux_v{get_version()}.tar.gz", "x:gz") as tar:
+	with TarFile.open(f"dist/ZeppPlayer_v{get_version()}_linux.tar.gz", "x:gz") as tar:
 		tar.add("package.json")
 		tar.add("package-lock.json")
 		tar.add("start.sh")
@@ -52,7 +52,7 @@ def make_darwin():
 	subprocess.Popen(["npm", "run", "build"]).wait()
 	subprocess.Popen(["pyinstaller", 'ZeppPlayer.osx.spec']).wait()
 
-	with TarFile.open(f"dist/ZeppPlayer_macos_v{get_version()}.tar.gz", "x:gz") as tar:
+	with TarFile.open(f"dist/ZeppPlayer_v{get_version()}_macos.tar.gz", "x:gz") as tar:
 		tar.add("dist/ZeppPlayer.app", recursive=True)
 
 
@@ -65,7 +65,7 @@ def make_win32():
 	subprocess.Popen(["npm.cmd", "run", "build"]).wait()
 	subprocess.Popen(["pyinstaller.exe", spec_file]).wait()
 
-	with ZipFile(f"dist/ZeppPlayer_win32_v{get_version()}.zip", "w", ZIP_DEFLATED) as zip:
+	with ZipFile(f"dist/ZeppPlayer_v{get_version()}_win32.zip", "w", ZIP_DEFLATED) as zip:
 		zip.write("package.json")
 		zip.write("package-lock.json")
 		zip.write(f"dist/{dist_file}", dist_file)
