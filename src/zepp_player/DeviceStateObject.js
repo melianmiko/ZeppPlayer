@@ -314,7 +314,7 @@ export function createDeviceState() {
             type: "number",
             groupIcon: "sunny",
             displayName: "Current",
-            maxLength: 3,
+            maxLength: 2,
             getString: (t) => t.value.toString(),
             getProgress: () => state.WEATHER_CURRENT_ICON.value / 28,
             shift: (tick, t) => (Math.abs(t.value) + 2) % 30 * (tick % 4 < 2 ? -1 : 1)
@@ -324,7 +324,7 @@ export function createDeviceState() {
             type: "number",
             groupIcon: "sunny",
             displayName: "High",
-            maxLength: 3,
+            maxLength: 2,
             getString: (t) => t.value.toString(),
             shift: (tick, t) => (Math.abs(t.value) + 2) % 30
         },
@@ -333,7 +333,7 @@ export function createDeviceState() {
             type: "number",
             groupIcon: "sunny",
             displayName: "Low",
-            maxLength: 3,
+            maxLength: 2,
             getString: (t) => t.value.toString(),
             shift: (tick, t) => (Math.abs(t.value) + 2) % 15 * (tick % 4 < 2 ? -1 : 1)
         },
