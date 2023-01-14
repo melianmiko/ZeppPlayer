@@ -12,9 +12,9 @@ jobs:
       - name: Create virtualenv
         run: python3 -m venv venv
       - name: Install deps
-        run: .\venv\Scripts\pip install -r requirements.txt
+        run: pip install -r requirements.txt
       - name: Build bundle
-        run: .\venv\Scripts\python make_release.py
+        run: python make_release.py
       - name: Remove unwanted binaries
         run: del dist/ZeppPlayer.exe
       - name: Archive code coverage results
