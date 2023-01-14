@@ -9,6 +9,8 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11' 
+      - name: Setup npm deps
+        run: npm ci
       - name: Create virtualenv
         run: python3 -m venv venv
       - name: Install deps
@@ -27,6 +29,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup npm deps
+        run: npm ci
       - name: Try to build
         run: python3 make_release.py
       - name: Archive code coverage results
