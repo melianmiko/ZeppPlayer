@@ -63,7 +63,7 @@ def make_win32():
 	spec_file = "ZeppPlayer.win32.spec"
 	dist_file = "ZeppPlayer.exe"
 	subprocess.Popen(["npm.cmd", "run", "build"]).wait()
-	subprocess.Popen(["pyinstaller.exe", spec_file]).wait()
+	subprocess.Popen([r"venv\Scripts\pyinstaller.exe", spec_file]).wait()
 
 	with ZipFile(f"dist/ZeppPlayer_v{get_version()}_win32.zip", "w", ZIP_DEFLATED) as zip:
 		zip.write("package.json")
