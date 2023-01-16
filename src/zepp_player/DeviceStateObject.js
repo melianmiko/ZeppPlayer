@@ -198,13 +198,9 @@ export function createDeviceState() {
             groupIcon: "fitness_center",
             maxLength: 4,
             getString: (t) => {
-                let km = Math.floor(t.value).toString(),
-                    dm = Math.round((t.value % 1) * 100).toString().padStart(2, "0");
-                
-                if(t.value >= 10) dm = dm[0];
-                return km + "." + dm;
+                return t.value.toFixed(2);
             },
-            shift: () => (state.DISTANCE.value + 0.5) % 20
+            shift: () => (state.DISTANCE.value + 0.75) % 20
         },
         CAL: {
             value: 320,
