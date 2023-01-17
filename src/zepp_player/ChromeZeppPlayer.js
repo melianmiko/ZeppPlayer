@@ -133,11 +133,13 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         };
     }
 
-    async render() {
-        const canvas = await super.render(...arguments);
+    async render(force=false) {
+        const canvas = await super.render(force);
 
         if(this.uiOverlayVisible) {
-            const [x, y] = this.uiOverlayPosition;
+            let [x, y] = this.uiOverlayPosition;
+            y += this.renderScroll;
+
             const context = canvas.getContext("2d");
             const baseColor = this.getDeviceState("OVERLAY_COLOR");
 
@@ -168,7 +170,10 @@ export class ChromeZeppPlayer extends ZeppPlayer {
                 const [x1, y1, x2, y2] = widget.positionInfo;
                 if(x > x1 && x < x2 && y > y1 && y < y2) {
                     context.beginPath();
-                    context.rect(x1, y1, x2 - x1, y2 - y1);
+                    context.rect(x1,
+                        y1 - this.renderScroll,
+                        x2 - x1,
+                        y2 - y1);
                     context.stroke();
                 }
             }
@@ -189,7 +194,10 @@ export class ChromeZeppPlayer extends ZeppPlayer {
                 const {x1, y1, x2, y2} = data;
                 if(x > x1 && x < x2 && y > y1 && y < y2) {
                     context.beginPath();
-                    context.rect(x1, y1, x2 - x1, y2 - y1);
+                    context.rect(x1,
+                        y1 - this.renderScroll,
+                        x2 - x1,
+                        y2 - y1);
                     context.stroke();
                     break;
                 }
@@ -199,8 +207,8 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             context.strokeStyle = baseColor;
             context.beginPath();
             context.setLineDash([10, 2]);
-            context.moveTo(0, y);
-            context.lineTo(canvas.width, y);
+            context.moveTo(0, y - this.renderScroll);
+            context.lineTo(canvas.width, y - this.renderScroll);
             context.moveTo(x, 0);
             context.lineTo(x, canvas.height);
             context.stroke();
@@ -208,11 +216,11 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             // Cursor coordinates
             context.font = "12px monospace";
             context.fillStyle = baseColor;
-            const text = `${x}, ${y}`
+            const text = `${x}, ${y - this.renderScroll}`
             const metrics = context.measureText(text);
             const tx = x > canvas.width / 2 ? x - metrics.width - 2 : x + 2;
-            const ty = y > canvas.height / 2 ? y - 4 : y + 14;
-            context.fillText(text,tx, ty);
+            const ty = y - this.renderScroll > canvas.height / 2 ? y - 4 : y + 14;
+            context.fillText(text, tx, ty - this.renderScroll);
 
             context.restore();
         }
