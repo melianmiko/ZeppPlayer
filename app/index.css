@@ -90,6 +90,7 @@ aside.caption {
 
 .root > div {
     flex: 1;
+    min-width: 0;
 }
 
 .player_root {
@@ -195,6 +196,7 @@ select {
     font-family: monospace;
     height: 200px;
     padding: 5px 10px;
+    white-space: nowrap;
 }
 
 #view_console > div > span {

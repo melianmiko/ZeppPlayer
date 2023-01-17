@@ -91,7 +91,7 @@ export default class HuamiSettingMock {
         this[getter] = () => this.store[getter];
         if(setter !== "") this[setter] = (val) => {
             console.info("[hmSettings]", getter, "=", val);
-            this.runtime.onConsole("hmSettings", [getter, "=", val]);
+            this.runtime.onConsole("device", [setter, "=", val]);
             this.store[getter] = val;
             return 0;
         };

@@ -264,13 +264,23 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
      * @param runtime new runtime
      */
     attachRuntime(runtime) {
+        const SL_DESCRIPTOR = {
+            1: "(normal)",
+            2: "(aod)",
+            4: "(settings)"
+        }
         this.renderScroll = 0;
 
         this._lastCanvas = null;
         this.currentRuntime = runtime;
         this.path_script = runtime.scriptPath;
+        runtime.refresh_required = 'attach';
 
-        runtime.refresh_required = 'init';
+        this.onConsole("ZeppPlayer", [
+            "Switch to",
+            runtime.scriptPath.split("/").pop(),
+            SL_DESCRIPTOR[runtime.showLevel]
+        ]);
     }
 
     getModulePath(modulePath) {
@@ -333,11 +343,12 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         let error = null;
         try {
             await runtime.start();
-            this.currentRuntime = runtime;
         } catch(e) {
             error = e;
             this.handleScriptError(e);
         }
+
+        this.attachRuntime(runtime);
 
         if(this.mustRestart) {
             this.onConsole("ZeppPlayer", ["Auto-fix applied, restarting..."])
@@ -386,8 +397,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         this._currentRenderLevel = val;
-        this.currentRuntime = val === 1 ? this.wfBaseRuntime : this.wfSubRuntime;
-        this.currentRuntime.refresh_required = true;
+        this.attachRuntime(val === 1 ? this.wfBaseRuntime : this.wfSubRuntime);
 
         if(currentVal === 4)
             await this.init();

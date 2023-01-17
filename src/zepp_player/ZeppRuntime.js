@@ -45,11 +45,8 @@ export default class ZeppRuntime {
 
     async start() {
         if(this.initTime) this.destroy();
-        this.onConsole("runtime", [
-            "Begin runtime init",
-            `SL:${this.showLevel}`,
-            this.scriptPath.split("/").pop()
-        ]);
+        console.debug("ZeppRuntime.start()",
+            this.scriptPath.split("/").pop() + ":" + this.scriptPath);
 
         const extra = this.player.getEvalAdditionalData();
         const scriptFile = await this.player.loadFile(this.scriptPath);
@@ -115,11 +112,8 @@ export default class ZeppRuntime {
         this.env = null;
         this.initTime = null;
         this.contentHeight = 0;
-        this.onConsole("runtime", [
-            "Runtime destroyed",
-            `SL:${this.showLevel}`,
-            this.scriptPath.split("/").pop()
-        ]);
+        console.debug("ZeppRuntime.destroy()",
+            this.scriptPath.split("/").pop() + ":" + this.scriptPath);
     }
 
     handleEvent(name, x, y, info) {
@@ -220,7 +214,7 @@ export default class ZeppRuntime {
             st.height = canvas.height;
             st.getContext("2d").drawImage(canvas, 0, 0);
 
-            console.log("[ZeppPlaye] Do stage dump", 
+            console.log("[ZeppPlaye] Do stage dump",
                         this.player.stages.length, 
                         widget.constructor.name, 
                         widget._getPlainConfig());
