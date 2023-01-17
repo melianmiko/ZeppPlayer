@@ -214,7 +214,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         // this.onConsole("ZeppPlayer", ['Assets loaded.']);
 
         this.appType = appConfig.app.appType;
-        this.setPage(modulePath);
+        this.path_script = this.getModulePath(modulePath);
     }
 
     async readDirectoryRecursive(path, arr=null) {
@@ -250,45 +250,59 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.vfs["render_fail.png"] = await this.loadFile("/app/render_fail.png");
     }
 
-    setPage(modulePath) {
-        this.path_script = this.path_project + "/" + modulePath + ".js";
-        console.info("Continue with page", this.path_script);
+    /**
+     * Will stop and destroy current runtime.
+     */
+    finishCurrentRuntime() {
+        this.currentRuntime.callDelegates("pause_call");
+        this.currentRuntime.uiPause = true;
+        this.currentRuntime.destroy();
+    }
+
+    /**
+     * Set new currentRuntime and refresh screen
+     * @param runtime new runtime
+     */
+    attachRuntime(runtime) {
+        this.renderScroll = 0;
+
+        this._lastCanvas = null;
+        this.currentRuntime = runtime;
+        this.path_script = runtime.scriptPath;
+
+        runtime.refresh_required = 'init';
+    }
+
+    getModulePath(modulePath) {
+        return this.path_project + "/" + modulePath + ".js";
     }
 
     async enterPage(url, param) {
-        this.currentRuntime.uiPause = true;
-        this.currentRuntime.callDelegates("pause_call");
-        this.backStack.push(this.currentRuntime);
+        // Down current page
+        this.finishCurrentRuntime();
+        this.backStack.push([
+            this.currentRuntime.scriptPath,
+            this.currentRuntime.onInitParam
+        ]);
 
-        // New runtime
-        this.setPage(url);
-        const runtime = new ZeppRuntime(this, this.path_script, 1);
+        // Start new page
+        const runtime = new ZeppRuntime(this, this.getModulePath(url), 1);
         runtime.onInitParam = param;
         await runtime.start();
-        runtime.refresh_required = 'init';
-
-        this.currentRuntime = runtime;
-        this.renderScroll = 0;
-        this._lastCanvas = null;
+        this.attachRuntime(runtime);
     }
 
     async back() {
         if(this.backStack.length < 1) return;
-
-        // Finish current
-        this.currentRuntime.callDelegates("pause_call");
-        this.currentRuntime.uiPause = true;
-        this.currentRuntime.destroy();
+        this.finishCurrentRuntime();
 
         // Get prev
-        const runtime = this.backStack.pop();
-        runtime.uiPause = false;
-        runtime.callDelegates("resume_call");
-        runtime.refresh_required = "back";
+        const [script, param] = this.backStack.pop();
+        const runtime = new ZeppRuntime(this, script, 1);
+        runtime.onInitParam = param;
+        await runtime.start();
 
-        this.path_script = runtime.scriptPath;
-        this.currentRuntime = runtime;
-        this._lastCanvas = null;
+        this.attachRuntime(runtime);
     }
 
     async finish() {

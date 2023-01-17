@@ -45,7 +45,11 @@ export default class ZeppRuntime {
 
     async start() {
         if(this.initTime) this.destroy();
-        this.onConsole("runtime", ["Begin runtime init", `SL:${this.showLevel}`]);
+        this.onConsole("runtime", [
+            "Begin runtime init",
+            `SL:${this.showLevel}`,
+            this.scriptPath.split("/").pop()
+        ]);
 
         const extra = this.player.getEvalAdditionalData();
         const scriptFile = await this.player.loadFile(this.scriptPath);
@@ -111,7 +115,11 @@ export default class ZeppRuntime {
         this.env = null;
         this.initTime = null;
         this.contentHeight = 0;
-        this.onConsole("runtime", ["Runtime destroyed", `SL:${this.showLevel}`]);
+        this.onConsole("runtime", [
+            "Runtime destroyed",
+            `SL:${this.showLevel}`,
+            this.scriptPath.split("/").pop()
+        ]);
     }
 
     handleEvent(name, x, y, info) {
