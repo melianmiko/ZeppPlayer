@@ -21,6 +21,7 @@ export class ConsoleManager {
 
     colors = {
         ZeppPlayer: "#ff7043",
+        device: "#96ffa0",
         SystemWarning: "#ff9900",
         runtime: "#4cf",
         error: "#f22",

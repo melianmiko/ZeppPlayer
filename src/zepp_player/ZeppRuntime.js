@@ -1,4 +1,5 @@
 import { createPageEnv } from "./SyystemEnvironment";
+import { ScreenRootEventHandler } from "./ui/ScreenRootEventHandler";
 
 export default class ZeppRuntime {
     widgets = [];
@@ -49,6 +50,9 @@ export default class ZeppRuntime {
         const extra = this.player.getEvalAdditionalData();
         const scriptFile = await this.player.loadFile(this.scriptPath);
         const text = new TextDecoder().decode(scriptFile);
+
+        this.appGestureHandler = () => false;
+        this.rootEventHandler = new ScreenRootEventHandler(this);
 
         const env = createPageEnv(this, this.player.appEnv);
         if(this.player.globalScopeFix.length > 0) {
@@ -106,14 +110,36 @@ export default class ZeppRuntime {
         this.module = null;
         this.env = null;
         this.initTime = null;
+        this.contentHeight = 0;
         this.onConsole("runtime", ["Runtime destroyed", `SL:${this.showLevel}`]);
+    }
+
+    handleEvent(name, x, y, info) {
+        y += this.player.renderScroll;
+
+        if(this.rootEventHandler[name])
+            this.rootEventHandler[name](info);
+
+        for(let i = this.events.length-1; i >= 0; i--) {
+            const data = this.events[i];
+            if(data.x1 < x && x < data.x2 && data.y1 < y && y < data.y2) {
+                if(data.events[name])
+                    data.events[name](info);
+                return;
+            }
+        }
+
+        // if(name === "onmousemove")
+        //     this.rootEventHandler.onmousemove(info);
     }
 
     dropEvents(events, x1, y1, x2, y2) {
         this.events.push({
             events: events,
             x1, y1, x2, y2
-        })
+        });
+
+        if(y2 > this.contentHeight) this.contentHeight = y2;
     }
 
     callDelegates(delegateName) {
@@ -128,6 +154,7 @@ export default class ZeppRuntime {
     onRenderBegin() {
         this.events = [];
         this.postRenderTasks = [];
+        this.contentHeight = 0;
         this.refresh_required = false;
         this.render_counter = (this.render_counter + 1) % 3000;
     }
@@ -137,6 +164,13 @@ export default class ZeppRuntime {
     }
 
     async onRenderFinish() {
+        // Handle overscroll
+        const maxScroll = this.contentHeight - this.screen[1]
+        if(this.player.renderScroll > maxScroll) {
+            this.player.renderScroll = maxScroll;
+        }
+
+        // Run post-render tasks
         for(const fnc of this.postRenderTasks) {
             try {
                 await fnc();

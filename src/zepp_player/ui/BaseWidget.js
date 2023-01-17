@@ -31,7 +31,13 @@ export class BaseWidget {
             "onmouseup": null,
             "onmousedown": null
         };
+
+        this.init();
     }
+
+    async render() {}
+
+    init() {}
 
     playerWidgetIdentify() {
         let title = this.config.__widget;

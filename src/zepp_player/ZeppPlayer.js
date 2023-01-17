@@ -26,10 +26,6 @@ import {createAppEnv} from "./SyystemEnvironment";
 import {DeviceProfiles} from "./DeviceProfiles";
 
 export default class ZeppPlayer extends ZeppPlayerConfig {
-    LEVEL_NORMAL = 1;
-    LEVEL_AOD = 2;
-    LEVEL_EDIT = 4;
-
     _lastCanvas = null;
     fullLanguage = 'en-US';
     profileName = "sb7";
@@ -345,16 +341,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
     }
 
-    handleEvent(name, x, y, info) {
-        y += this.renderScroll;
-        for(let i = this.currentRuntime.events.length-1; i >= 0; i--) {
-            const data = this.currentRuntime.events[i];
-            if(data.x1 < x && x < data.x2 && data.y1 < y && y < data.y2) {
-                if(data.events[name])
-                    data.events[name](info);
-                return;
-            }
-        }
+    handleEvent() {
+        if(this.currentRuntime) this.currentRuntime.handleEvent(...arguments)
     }
 
     async setRenderLevel(val) {

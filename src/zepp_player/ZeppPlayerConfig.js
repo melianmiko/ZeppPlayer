@@ -34,7 +34,7 @@ export default class ZeppPlayerConfig {
     }
 
     set renderScroll(v) {
-        this._renderScroll = v;
+        this._renderScroll = Math.max(0, v);
         if(this.currentRuntime) this.currentRuntime.refresh_required = true;
     }
 

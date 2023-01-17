@@ -83,6 +83,13 @@ export class ChromeZeppPlayer extends ZeppPlayer {
                 this.uiOverlayVisible = false;
                 this.currentRuntime.refresh_required = "uiOverlay";
             }
+        };
+
+        block.onwheel = (e) => {
+            if(this.currentRuntime) {
+                if(this.currentRuntime.rootEventHandler.onwheel(e.deltaY))
+                    e.preventDefault();
+            }
         }
 
         block.onmousedown = (e) => {
@@ -93,13 +100,14 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         };
 
         block.onmouseup = (e) => {
-            e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
             isMouseDown = false;
             this.handleEvent("onmouseup", x, y, {x, y});
         };
 
-        block.onmouseout = () => {
+        block.onmouseout = (e) => {
+            const [x, y] = this._fetchCoordinates(e);
+            if(isMouseDown) this.handleEvent("onmouseup", {x, y})
             isMouseDown = false;
         }
 

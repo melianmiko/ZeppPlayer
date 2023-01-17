@@ -42,7 +42,7 @@ export class HmApp {
     alarmCancel() {}
 
     startApp(options) {
-        console.log("startApp", options);
+        this.runtime.onConsole("device", ["startApp", options]);
     }
 
     gotoPage(conf) {
@@ -86,17 +86,19 @@ export class HmApp {
     }
 
     gesture = {
-        TOP: "TOP",
-        LEFT: "LEFT",
-        RIGHT: "RIGHT",
-        BOTTOM: "BOTTOM"
+        TOP: "up",
+        LEFT: "left",
+        RIGHT: "right",
+        BOTTOM: "bottom"
     }
 
     registerGestureEvent(callback) {
-        this.runtime.gestureCallback = callback;
+        this.runtime.appGestureHandler = callback;
     }
 
-    unregisterGestureEvent() {}
+    unregisterGestureEvent() {
+        this.runtime.appGestureHandler = () => false;
+    }
 
     registerKeyEvent() {}
     unregisterKeyEvent() {}
