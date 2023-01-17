@@ -22,7 +22,6 @@ export default class ZeppRuntime {
         this.render_counter = 0;
 
         this.vfs = this.player.vfs;
-        this.path_project = this.player.path_project;
         this.screen = this.player.screen;
         this.appConfig = this.player.appConfig;
         this.withScriptConsole = this.player.withScriptConsole;
@@ -48,7 +47,7 @@ export default class ZeppRuntime {
         console.debug("ZeppRuntime.start()",
             this.scriptPath.split("/").pop() + ":" + this.scriptPath);
 
-        const extra = this.player.getEvalAdditionalData();
+        const extra = this.player.getEvalAdditionalData(this.scriptPath);
         const scriptFile = await this.player.loadFile(this.scriptPath);
         const text = new TextDecoder().decode(scriptFile);
 
@@ -93,6 +92,60 @@ export default class ZeppRuntime {
         this.callDelegates("resume_call");
 
         this.initTime = Date.now();
+    }
+
+    async render(canvas) {
+        // Prepare props
+        this.events = [];
+        this.postRenderTasks = [];
+        this.contentHeight = 0;
+        this.refresh_required = false;
+        this.render_counter = (this.render_counter + 1) % 3000;
+
+        // Render all widgets
+        const stages = {
+            normal: [],
+            postReverse: [],
+            toplevel: [],
+        }
+
+        for(let i in this.widgets) {
+            const widget = this.widgets[i];
+            if(!widget) continue;
+            const stage = widget._renderStage ? widget._renderStage : "normal";
+            if(stages[stage])
+                stages[stage].push(widget);
+        }
+        stages.postReverse.reverse();
+
+        for(let stage in stages) {
+            for(let i in stages[stage]) {
+                const widget = stages[stage][i];
+                if(!widget) continue;
+
+                await this.renderWidget(widget, canvas);
+            }
+        }
+
+        // Handle overscroll
+        const maxScroll = this.contentHeight - this.screen[1]
+        if(this.player.renderScroll > maxScroll) {
+            this.player.renderScroll = maxScroll;
+        }
+
+        // Run post-render tasks
+        for(const fnc of this.postRenderTasks) {
+            try {
+                await fnc();
+            } catch(e) {
+                console.warn("Post-render task failed", fnc, e);
+            }
+        }
+    }
+
+    setPause(val) {
+        this.callDelegates(val ? "pause_call" : "resume_call");
+        this.uiPause = val;
     }
 
     requestPageSwitch(conf) {
@@ -153,33 +206,8 @@ export default class ZeppRuntime {
         }
     }
 
-    onRenderBegin() {
-        this.events = [];
-        this.postRenderTasks = [];
-        this.contentHeight = 0;
-        this.refresh_required = false;
-        this.render_counter = (this.render_counter + 1) % 3000;
-    }
-
     addPostRenderTask(fnc) {
         this.postRenderTasks.push(fnc);
-    }
-
-    async onRenderFinish() {
-        // Handle overscroll
-        const maxScroll = this.contentHeight - this.screen[1]
-        if(this.player.renderScroll > maxScroll) {
-            this.player.renderScroll = maxScroll;
-        }
-
-        // Run post-render tasks
-        for(const fnc of this.postRenderTasks) {
-            try {
-                await fnc();
-            } catch(e) {
-                console.warn("Post-render task failed", fnc, e);
-            }
-        }
     }
 
     async renderWidget(widget, canvas) {
@@ -206,25 +234,10 @@ export default class ZeppRuntime {
         }
 
         ctx.globalAlpha = 1;
-
-        if(this.player.withStagingDump) {
-            // Stage data
-            const st = this.newCanvas();
-            st.width = canvas.width;
-            st.height = canvas.height;
-            st.getContext("2d").drawImage(canvas, 0, 0);
-
-            console.log("[ZeppPlaye] Do stage dump",
-                        this.player.stages.length, 
-                        widget.constructor.name, 
-                        widget._getPlainConfig());
-
-            this.player.stages.push(st);
-        }
     }
 
     getImageFormat(path) {
-        path = this.player.getAssetPath(path);
+        path = this.player.getVfsAssetPath(path);
         if(!this.vfs[path]) throw new Error("Undefined asset: " + path);
 
         const data = this.vfs[path];
@@ -265,8 +278,8 @@ export default class ZeppRuntime {
         return this.player.getDeviceState(...arguments);
     }
 
-    handleScriptError() {
-        this.player.handleScriptError(...arguments);
+    autoFixGlobalScopeError() {
+        this.player.autoFixGlobalScopeError(...arguments);
     }
 
     back() {

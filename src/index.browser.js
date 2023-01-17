@@ -72,9 +72,6 @@ const start = async () => {
     root.height = player.screen[1];
     player.setupHTMLEvents(root);
 
-    // Render in cycle
-    let lastRefresh = 0;
-
     const refresh = async () => {
         await performRefresh();
         requestAnimationFrame(refresh);
@@ -89,7 +86,6 @@ const start = async () => {
             canvas = await player.render();
         } catch(e) {
             console.error("Render err", e);
-            canvas = await player.getAssetImage("render_fail.png", true);
             player.refresh_required = false;
         }
         const rotation = player.rotation;
@@ -107,7 +103,7 @@ const start = async () => {
         ctx.restore();
     }
 
-        refresh();
+    refresh();
 };
 
 initVersionUI();

@@ -26,50 +26,54 @@ import {createAppEnv} from "./SyystemEnvironment";
 import {DeviceProfiles} from "./DeviceProfiles";
 
 export default class ZeppPlayer extends ZeppPlayerConfig {
-    _lastCanvas = null;
-    fullLanguage = 'en-US';
-    profileName = "sb7";
-
-    withStagingDump = false;
-    stages = [];
-    vfs = {};
-
     constructor() {
         super();
 
-        // Device config
-        this.screen = [192, 490];
-        this.path_script = "";
-        this.path_project = "";
+        this._lastCanvas = null;
+        this.profileName = "sb7";
+        this.projectPath = "";
         this.appEnv = null;
-
-        // Render stage data
         this.render_counter = 0;
-
-        // Script data
         this.currentRuntime = null;
         this.wfBaseRuntime = null;
         this.wfSubRuntime = null;
         this.backStack = [];
         this.globalScopeFix = [];
-        this.initTime = 0;
-        this.appType = "";
 
         // Device state
         this._deviceState = createDeviceState();
         this._deviceStateChangeEvents = {};
-
-        // Events
-        this.onConsole = (_, __) => null;
-        this.onRestart = () => null;
     }
+
+    /**
+     * Overridable onConsole event
+     */
+    onConsole() {}
+
+    /**
+     * Overridable onRestart ev
+     */
+    onRestart() {}
 
     get profileData() {
         return DeviceProfiles[this.profileName];
     }
 
-    async getAssetImage(path, noPrefix=false) {
-        if(!noPrefix) path = this.getAssetPath(path);
+    get screen() {
+        return [this.profileData.screenWidth, this.profileData.screenHeight];
+    }
+
+    get appType() {
+        return this.appConfig.app.appType;
+    }
+
+    /**
+     * Get asset image from app-relative path
+     * @param path image path
+     * @returns {Promise<HTMLCanvasElement|*>} Target image canvas
+     */
+    async getAssetImage(path) {
+        path = this.getVfsAssetPath(path);
         if(this.imgCache[path]) return this.imgCache[path];
         if(!this.vfs[path]) throw new Error("Undefined asset: " + path);
 
@@ -80,51 +84,39 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         if(uint[0] === 137 && uint[1] === 80) {
             img = await this._loadPNG(data);
         } else {
-            img = await this._loadTGA(data);
+            const tga = new TGAImage(data, this.profileData);
+            await tga.didLoad;
+
+            img = tga.canvas;
         }
 
         this.imgCache[path] = img;
         return img;
     }
 
-    async _loadTGA(data) {
-        if(!this.__tga_first_use) {
-            this.onConsole("ZeppPlayer", [
-                "We're using TGA images loader. This will reduce performance."
-            ]);
-            this.__tga_first_use = true;
-        }
-
-        const tga = new TGAImage(data, this.profileData);
-        await tga.didLoad;
-
-        const id = (new TextDecoder()).decode(tga._imageID.slice(0, 4));
-        if(id !== "SOMH") this.onConsole("SystemWarning", [
-            "Some file(s) aren't ZeppOS-compatible TGA. This may not work on real device."
-        ]);
-
-        return tga.canvas;
-    }
-
+    /**
+     * Reset emulated system settings.
+     */
     wipeSettings() {
         this._deviceState = createDeviceState();
         PersistentStorage.wipe();
     }
 
-    setPause(val) {
-        this.currentRuntime.callDelegates(val ? "pause_call" : "resume_call");
-        this.currentRuntime.uiPause = val;
-    }
-
-    handleScriptError(e) {
+    /**
+     * Parse error message and try to fix global undefined vars
+     * @param e Error obj
+     */
+    autoFixGlobalScopeError(e) {
         if(e.message.endsWith("is not defined")) {
             const name = e.message.split(" ")[0];
             if(this.globalScopeFix.indexOf(name) < 0) {
                 console.log("%cAuto-fix global define of " + name, 'color: #8cf')
                 this.globalScopeFix.push(name);
-                this.mustRestart = true;
+                return true;
             }
         }
+
+        return false;
     }
 
     getVfsAppPath() {
@@ -133,7 +125,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         return '/storage/js_' + pkg.appType + "s/" + idn;
     }
 
-    getAssetPath(path) {
+    getVfsAssetPath(path) {
         return this.getVfsAppPath() + "/assets/" + path;
     }
 
@@ -172,17 +164,23 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     async setProject(path) {
-        const jsonFile = await this.loadFile(path + '/app.json');
-        const jsonText = new TextDecoder().decode(jsonFile);
-        const appConfig = JSON.parse(jsonText);
-        this.appConfig = appConfig;
-        this.path_project = path;
+        this.projectPath = path;
+        this.overlayTool = new Overlay(this);
+        this.vfs = {};
 
-        // Load profile data
-        this.screen = [this.profileData.screenWidth, this.profileData.screenHeight];
+        await this._loadAppConfig();
+        await this._loadAppJs();
+        await this.overlayTool.init();
+        await this.preloadProjectAssets(path + "/");
+    }
 
-        // Try to execute app.js
-        const appJsFile = await this.loadFile(path + '/app.js');
+    /**
+     * Read and execute app.js form current project
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _loadAppJs() {
+        const appJsFile = await this.loadFile(this.projectPath + '/app.js');
         const appJsText = new TextDecoder().decode(appJsFile);
         const appEnv = createAppEnv(this);
 
@@ -195,26 +193,37 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         this.appEnv = appEnv;
+    }
 
-        // Find init page
-        let modulePath = null;
+    /**
+     * Read app.json from current project.
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _loadAppConfig() {
+        const jsonFile = await this.loadFile(this.projectPath + '/app.json');
+        const jsonText = new TextDecoder().decode(jsonFile);
+        this.appConfig = JSON.parse(jsonText);
+    }
+
+    /**
+     * Find initial module name for current app.
+     * @returns {*|string}
+     */
+    getInitModuleName() {
+        const appConfig = this.appConfig;
+
         if(appConfig.app.appType === "watchface") {
             // Run as watchface
-            modulePath = "watchface/index";
+            let modulePath = "watchface/index";
             if(appConfig.module && appConfig.module.watchface)
                 modulePath = appConfig.module.watchface.path;
+
+            return modulePath
         } else if(appConfig.app.appType === "app") {
-            // Run as app (experimental)
-            modulePath = appConfig.module.page.pages[0];
-        }
-
-        // Preload content
-        this.onConsole("ZeppPlayer", ['Preloading assets, please be patient...']);
-        await this.preloadProjectAssets(path + "/");
-        // this.onConsole("ZeppPlayer", ['Assets loaded.']);
-
-        this.appType = appConfig.app.appType;
-        this.path_script = this.getModulePath(modulePath);
+            // Run as app
+            return appConfig.module.page.pages[0];
+        } else throw new Error("Unsupported appType");
     }
 
     async readDirectoryRecursive(path, arr=null) {
@@ -239,21 +248,16 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const vfsRoot = this.getVfsAppPath();
 
         for(let i = 0; i < urls.length; i++) {
-            const vfsPath = urls[i].replace(this.path_project, vfsRoot);
+            const vfsPath = urls[i].replace(this.projectPath, vfsRoot);
             this.vfs[vfsPath] = contents[i];
         }
-
-        if(this.profileData.hasOverlay) {
-            this.vfs["player_overlay.png"] = await this.loadFile(`/app/overlay/${this.profileName}.png`);
-        }
-
-        this.vfs["render_fail.png"] = await this.loadFile("/app/render_fail.png");
     }
 
     /**
      * Will stop and destroy current runtime.
+     * @private
      */
-    finishCurrentRuntime() {
+    _finishCurrentRuntime() {
         this.currentRuntime.callDelegates("pause_call");
         this.currentRuntime.uiPause = true;
         this.currentRuntime.destroy();
@@ -262,8 +266,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     /**
      * Set new currentRuntime and refresh screen
      * @param runtime new runtime
+     * @private
      */
-    attachRuntime(runtime) {
+    _attachRuntime(runtime) {
         const SL_DESCRIPTOR = {
             1: "(normal)",
             2: "(aod)",
@@ -273,7 +278,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         this._lastCanvas = null;
         this.currentRuntime = runtime;
-        this.path_script = runtime.scriptPath;
         runtime.refresh_required = 'attach';
 
         this.onConsole("ZeppPlayer", [
@@ -284,12 +288,12 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     getModulePath(modulePath) {
-        return this.path_project + "/" + modulePath + ".js";
+        return this.projectPath + "/" + modulePath + ".js";
     }
 
     async enterPage(url, param) {
         // Down current page
-        this.finishCurrentRuntime();
+        this._finishCurrentRuntime();
         this.backStack.push([
             this.currentRuntime.scriptPath,
             this.currentRuntime.onInitParam
@@ -299,12 +303,12 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const runtime = new ZeppRuntime(this, this.getModulePath(url), 1);
         runtime.onInitParam = param;
         await runtime.start();
-        this.attachRuntime(runtime);
+        this._attachRuntime(runtime);
     }
 
     async back() {
         if(this.backStack.length < 1) return;
-        this.finishCurrentRuntime();
+        this._finishCurrentRuntime();
 
         // Get prev
         const [script, param] = this.backStack.pop();
@@ -312,14 +316,17 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         runtime.onInitParam = param;
         await runtime.start();
 
-        this.attachRuntime(runtime);
+        this._attachRuntime(runtime);
     }
 
     async finish() {
-        if(!this.wfBaseRuntime) return;
+        for(const runtime of [this.wfBaseRuntime, this.wfSubRuntime, this.currentRuntime]) {
+            if(runtime) await runtime.destroy();
+        }
 
-        this.wfBaseRuntime.destroy();
         this.wfBaseRuntime = null;
+        this.wfSubRuntime = null;
+        this.currentRuntime = null;
         this.render_counter = 0;
         this._deviceStateChangeEvents = {};
         this.mustRestart = false;
@@ -335,39 +342,31 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         await this.finish();
         await this.onRestart();
 
-        this.mustRestart = false;
-
-        const runtime = new ZeppRuntime(this, this.path_script, 1);
+        // Create first runtime
+        const path = this.getModulePath(this.getInitModuleName());
+        const runtime = new ZeppRuntime(this, path, 1);
         this.wfBaseRuntime = runtime;
 
-        let error = null;
+        // Try to execute their js
         try {
             await runtime.start();
         } catch(e) {
-            error = e;
-            this.handleScriptError(e);
-        }
+            if(this.autoFixGlobalScopeError(e)) {
+                this.onConsole("ZeppPlayer", ["Auto-fix applied, restarting..."])
+                return await this.init();
+            }
 
-        this.attachRuntime(runtime);
-
-        if(this.mustRestart) {
-            this.onConsole("ZeppPlayer", ["Auto-fix applied, restarting..."])
-            await this.init();
-            return;
-        } else if(error !== null) {
-            console.error(error);
+            console.error(e);
             this.onConsole("ZeppPlayer", ["Init failed"]);
         }
 
+        // Attach runtime, switch to subpage, if required
+        this._attachRuntime(runtime);
         if(this._currentRenderLevel !== 1) {
             const val = this._currentRenderLevel;
             this._currentRenderLevel = 1;
             await this.setRenderLevel(val);
         }
-    }
-
-    handleEvent() {
-        if(this.currentRuntime) this.currentRuntime.handleEvent(...arguments)
     }
 
     async setRenderLevel(val) {
@@ -384,7 +383,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         if(val !== 1) {
             // Prepare sub-runtime
-            this.wfSubRuntime = new ZeppRuntime(this, this.path_script, val);
+            const path = this.getModulePath(this.getInitModuleName());
+            this.wfSubRuntime = new ZeppRuntime(this, path, val);
             await this.wfSubRuntime.start();
         }
 
@@ -397,7 +397,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         this._currentRenderLevel = val;
-        this.attachRuntime(val === 1 ? this.wfBaseRuntime : this.wfSubRuntime);
+        this._attachRuntime(val === 1 ? this.wfBaseRuntime : this.wfSubRuntime);
 
         if(currentVal === 4)
             await this.init();
@@ -425,56 +425,11 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        // Prepare props
-        this.stages = [];
-        await runtime.onRenderBegin();
-
-        // Render all widgets
-        const stages = {
-            normal: [],
-            post: [],
-            postReverse: [],
-            toplevel: [],
-        }
-
-        for(let i in runtime.widgets) {
-            const widget = runtime.widgets[i];
-            if(!widget) continue;
-            const stage = widget._renderStage ? widget._renderStage : "normal";
-            stages[stage].push(widget);
-        }
-
-        stages.postReverse.reverse();
-
-        for(let stage in stages) {
-            for(let i in stages[stage]) {
-                const widget = stages[stage][i];
-                if(!widget) continue;
-
-                await runtime.renderWidget(widget, canvas);
-            }
-        }
-
-        await runtime.onRenderFinish();
+        await this.currentRuntime.render(canvas);
 
         // Frames
         if(this.showEventZones) {
-            ctx.strokeStyle = "rgba(0, 153, 255, 0.5)";
-            ctx.lineWidth = 2;
-            for(let data of runtime.events) {
-                let hasNoNull = false;
-                for(let i in data.events) {
-                    if(data.events[i] !== null) {
-                        hasNoNull = true;
-                        break;
-                    }
-                }
-
-                if(!hasNoNull) continue;
-
-                const {x1, y1, x2, y2} = data;
-                ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-            }
+            await this.overlayTool.drawEventZones(canvas, runtime.events);
         }
 
         // Shifts
@@ -494,7 +449,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         // Overlay
         if(this.render_overlay && this.profileData.hasOverlay) {
-            await Overlay.draw(this, canvas);
+            await this.overlayTool.drawDeviceFrame(canvas);
         }
 
         this.render_counter = (this.render_counter + 1) % 3000;

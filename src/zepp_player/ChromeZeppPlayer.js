@@ -64,8 +64,8 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         localStorage.zp_deviceState = JSON.stringify(out);
     }
 
-    getEvalAdditionalData() {
-        return `//# sourceURL=${location.href.substring(0, location.href.length-1)}${this.path_script};`
+    getEvalAdditionalData(scriptPath) {
+        return `//# sourceURL=${location.href.substring(0, location.href.length-1)}${scriptPath}`
     }
 
     setupHTMLEvents(block) {
@@ -96,18 +96,18 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
             isMouseDown = true;
-            this.handleEvent("onmousedown", x, y, {x, y});
+            this.currentRuntime.handleEvent("onmousedown", x, y, {x, y});
         };
 
         block.onmouseup = (e) => {
             const [x, y] = this._fetchCoordinates(e);
             isMouseDown = false;
-            this.handleEvent("onmouseup", x, y, {x, y});
+            this.currentRuntime.handleEvent("onmouseup", x, y, {x, y});
         };
 
         block.onmouseout = (e) => {
             const [x, y] = this._fetchCoordinates(e);
-            if(isMouseDown) this.handleEvent("onmouseup", {x, y})
+            if(isMouseDown) this.currentRuntime.handleEvent("onmouseup", {x, y})
             isMouseDown = false;
         }
 
@@ -115,7 +115,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             e.preventDefault();
             const [x, y] = this._fetchCoordinates(e);
             if(isMouseDown)
-                this.handleEvent("onmousemove", x, y, {x, y});
+                this.currentRuntime.handleEvent("onmousemove", x, y, {x, y});
 
             if(this.uiOverlayVisible) {
                 const rect = e.target.getBoundingClientRect();

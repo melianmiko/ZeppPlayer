@@ -26,7 +26,7 @@ export class ConsoleMock {
         try {
             this.player.onConsole(level, args);
             if(args[0] instanceof Error) {
-                this.player.handleScriptError(args[0]);
+                this.player.autoFixGlobalScopeError(args[0]);
             }
         } catch(e) {}
     }

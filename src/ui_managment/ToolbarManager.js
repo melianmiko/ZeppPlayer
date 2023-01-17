@@ -280,7 +280,7 @@ export class ToolbarManager {
 
     static doTogglePause() {
         const player = ToolbarManager.player;
-        player.setPause(!player.currentRuntime.uiPause);
+        player.currentRuntime.setPause(!player.currentRuntime.uiPause);
         ToolbarManager._refresh();
     }
 
