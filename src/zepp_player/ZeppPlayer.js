@@ -307,7 +307,10 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     async back() {
-        if(this.backStack.length < 1) return;
+        if(this.backStack.length < 1) {
+            this.onConsole("device", ["back(): backStack is empty"])
+            return;
+        }
         this._finishCurrentRuntime();
 
         // Get prev

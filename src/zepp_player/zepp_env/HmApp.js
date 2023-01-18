@@ -42,6 +42,8 @@ export class HmApp {
     alarmCancel() {}
 
     startApp(options) {
+        const appId = this.runtime.player.appConfig.app.appId;
+        if(options.appid === appId) return this.gotoPage(options);
         this.runtime.onConsole("device", ["startApp", options]);
     }
 
