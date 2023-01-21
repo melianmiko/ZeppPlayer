@@ -7,4 +7,4 @@ requests==2.28.1
 waitress~=2.1.2
 PyGObject~=3.42.2; sys_platform == "linux"
 pyinstaller==5.7
-mmk-updater==0.12.2
+mmk-updater==0.13.1

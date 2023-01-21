@@ -27,7 +27,7 @@ def open_projects():
 def list_projects_legacy():
     out = ""
 
-    for file in PROJECTS_DIR.iterdir():
+    for file in sorted(PROJECTS_DIR.iterdir()):
         if not file.is_dir():
             continue
         if not (file / "app.json").is_file():
