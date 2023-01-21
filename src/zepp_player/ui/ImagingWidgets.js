@@ -287,7 +287,10 @@ export class TextImageWidget extends BaseWidget {
             text = player.getDeviceState(config.type, "string");
             maxLength = player.getDeviceState(config.type, "maxLength");
 
-            if(config.padding) text = text.padStart(maxLength, "0");
+            if(config.padding) {
+                const countNums = text.replace(/\D/g,'').length;
+                text = text.padStart((maxLength - countNums) + text.length, "0");
+            }
         }
 
         if(config.text !== undefined) text = config.text;
