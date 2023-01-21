@@ -162,6 +162,9 @@ export class TextImageWidget extends BaseWidget {
         if(text === "" && config.type === "ALARM_CLOCK") {
             text = "0";
         }
+        if(text.indexOf(".") > -1 && !config.dot_image) {
+            text = text.substring(text.lastIndexOf("."));
+        }
 
         const countNums = text.replace(/\D/g,'').length;
 
@@ -185,15 +188,15 @@ export class TextImageWidget extends BaseWidget {
 
         if(config.negative_image) {
             negativeImage = await runtime.getAssetImage(config.negative_image);
-            if(text != null && text.indexOf("-") > -1)
+            if(text.indexOf("-") > -1)
                 fullWidth += negativeImage.width + hSpace;
         }
 
         if(config.dot_image) {
             dotImage = await runtime.getAssetImage(config.dot_image);
-            if(text != null && text.indexOf(".") > -1)
+            if(text.indexOf(".") > -1)
                 fullWidth += dotImage.width + hSpace;
-        } else if(text != null && text.indexOf(".") > -1) {
+        } else if(text.indexOf(".") > -1) {
             fullWidth += hSpace; // real device bug emulation
         }
 
@@ -206,7 +209,7 @@ export class TextImageWidget extends BaseWidget {
             try {
                 unitImg = await runtime.getAssetImage(config["unit_" + runtime.language]);
                 fullWidth += hSpace + unitImg.width;
-                if(text != null && text.indexOf("u") < 0) text += "u";
+                if(text.indexOf("u") < 0) text += "u";
             } catch(e) {}
         }
 
