@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedVariable
+
 import {BaseWidget} from "./BaseWidget";
 import {FillRectWidget, TextWidget} from "./DrawingWidgets";
 import {ImageWidget} from "./ImagingWidgets";
@@ -22,10 +24,10 @@ export class ScrollList extends BaseWidget {
         view.width = config.w;
         view.height = config.h;
 
-        let posY = this.scrollY;
+        let posY = this.scrollY, dtc, ic;
         for(let i = 0; i < config.data_type_config_count; i++) {
-            const dtc = config.data_type_config[i];
-            const ic = this._getItemType(dtc.type_id);
+            dtc = config.data_type_config[i];
+            ic = this._getItemType(dtc.type_id);
             for(let j = dtc.start; j <= dtc.end; j++) {
                 posY += await this._drawLine(ic, j, posY, view, player);
             }
@@ -43,7 +45,7 @@ export class ScrollList extends BaseWidget {
     }
 
     _getItemType(type_id) {
-        for(let i in this.config.item_config) {
+        for(let i = 0; i < this.config.item_config_count; i++) {
             if(this.config.item_config[i].type_id === type_id)
                 return this.config.item_config[i];
         }
