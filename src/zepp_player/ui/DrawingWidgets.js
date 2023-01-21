@@ -302,18 +302,25 @@ export class ArcProgressWidget extends BaseWidget {
         const ctx = canvas.getContext("2d");
         const width = config.line_width ? config.line_width : 1;
         const dN = (90 * width) / (Math.PI * config.radius) * (config.start_angle < config.end_angle ? -1 : 1);
-        const start = (-90 + config.start_angle - dN) / 180 * Math.PI;
         const len = (config.end_angle - config.start_angle) * level;
-        let end = start;
-        if(Math.abs(Math.PI * config.radius * len / 180) > width)
-            end = (-90 + config.start_angle + len + dN) / 180 * Math.PI;
 
         ctx.save();
         ctx.beginPath();
 
         ctx.lineWidth = width;
         ctx.strokeStyle = zeppColorToHex(config.color);
-        ctx.lineCap = "round";
+
+        let start, end;
+        if(Math.abs(len) < 360) {
+            ctx.lineCap = "round";
+            start = (-90 + config.start_angle - dN) / 180 * Math.PI;
+            end = start;
+            if(Math.abs(Math.PI * config.radius * len / 180) > width)
+                end = (-90 + config.start_angle + len + dN) / 180 * Math.PI;
+        } else {
+            start = config.start_angle * Math.PI;
+            end = config.end_angle * Math.PI;
+        }
 
         ctx.arc(config.center_x, config.center_y, config.radius, start, end, config.end_angle - config.start_angle < 0);
 
