@@ -13,3 +13,7 @@ less compatible.
 2. Enable that environment
 3. Install dependencies via `pip install -r requirements.txt`
 4. Run `python make_release.py`
+
+## Contributors
+- MelianMiko: Main developer
+- [Игорь Худяков](https://4pda.to/forum/index.php?showuser=5434953): Better SmartBnad7 overlay mask
