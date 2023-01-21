@@ -113,7 +113,7 @@ export function createDeviceState() {
             groupIcon: "settings",
             maxLength: 5,
             getBoolean: (v) => v.value !== "0",
-            getString: (t) => t.value,
+            getString: (t) => t.value.replaceAll(":", "."),
             getProgress: (t) => {
                 try {
                     const v = t.value.split(":");

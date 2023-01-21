@@ -172,7 +172,7 @@ export class TextImageWidget extends BaseWidget {
         const iconSpace = config.icon_space ? config.icon_space : 0;
         const basementImage = await runtime.getAssetImage(config.font_array[0]);
 
-        let fullWidth = countNums * basementImage.width + Math.max(0, countNums - 1) * hSpace,
+        let fullWidth = (countNums * basementImage.width) + Math.max(0, countNums - 1) * hSpace,
             fullHeight = basementImage.height;
 
         let iconImg = null,
@@ -317,7 +317,7 @@ export class TextImageWidget extends BaseWidget {
         super.dropEvents(player, [
             config.x, 
             config.y, 
-            config.x + tmp.widget,
+            config.x + tmp.width,
             config.y + tmp.height
         ]);
     }
@@ -359,7 +359,7 @@ export class AnimationWidget extends BaseWidget {
         try {
             const img = await player.getAssetImage(path);
             canvas.getContext("2d").drawImage(img, x, y);
-            super.dropEvents(player, [x, y, x + img.widget, y + img.height]);
+            super.dropEvents(player, [x, y, x + img.width, y + img.height]);
         } catch(e) {
             player.uiPause = true;
             throw e;
