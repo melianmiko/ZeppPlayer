@@ -321,25 +321,27 @@ export class EditGroupWidget extends BaseEditableWidget {
                 return;
             }
 
-            ctx.drawImage(tipsBg, dx + config.tips_x, dy + config.tips_y);
+            const tipsImg = player.newCanvas();
+            tipsImg.width = config.tips_width;
+            tipsImg.height = tipsBg.height;
+            const tipsCtx = tipsImg.getContext("2d");
 
-            if(!text) return;
-            const textImg = await TextWidget.drawText({
-                color: 0,
-                text,
-                text_size: 18,
-                w: config.tips_width - (config.tips_margin*2),
-                h: tipsBg.height,
-                align_h: "center_h",
-                align_v: "center_v"
-            }, player);
+            tipsCtx.drawImage(tipsBg, 0, 0);
 
-            const croppedTextImg = player.newCanvas();
-            croppedTextImg.width = config.tips_width + config.tips_margin;
-            croppedTextImg.height = textImg.height;
-            croppedTextImg.getContext("2d").drawImage(textImg, config.tips_margin, 0);
+            if(text) {
+                const textImg = await TextWidget.drawText({
+                    color: 0,
+                    text,
+                    text_size: 18,
+                    w: config.tips_width - (config.tips_margin*2),
+                    h: tipsBg.height,
+                    align_h: "center_h",
+                    align_v: "center_v"
+                }, player);
+                tipsCtx.drawImage(textImg, config.tips_margin, 0);
+            }
 
-            ctx.drawImage(croppedTextImg, dx + config.tips_x, dy + config.tips_y);
+            ctx.drawImage(tipsImg, dx + config.tips_x, dy + config.tips_y);
         });
 
         this.dropEvents(player, [
