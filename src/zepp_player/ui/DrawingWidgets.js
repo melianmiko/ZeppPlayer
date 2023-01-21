@@ -279,6 +279,9 @@ export class FillRectWidget extends BaseWidget {
 
     async render(canvas, player) {
         const config = this.config;
+        config.w = Math.round(config.w);
+        config.h = Math.round(config.h);
+
         if(config.w === 0 || config.h === 0) return;
         const box = FillRectWidget.draw(canvas, config, this.mode, player)
         this.dropEvents(player, box);
