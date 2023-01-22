@@ -51,16 +51,19 @@ export class ToolbarManager {
             }
 
             val ? block.classList.add("active") : block.classList.remove("active");
-            handler(val);
         };
 
         const performChange = () => {
             const val = !AppSettingsManager.getObject(configId, fallback);
             AppSettingsManager.setObject(configId, val);
             handleValue(val);
+            handler(val, false);
         };
 
-        handleValue(AppSettingsManager.getObject(configId, fallback));
+        const current = AppSettingsManager.getObject(configId, fallback)
+        handleValue(current);
+        handler(current, true);
+
         block.onclick = performChange;
         return performChange;
     }
@@ -74,6 +77,16 @@ export class ToolbarManager {
             fallback: true,
             handler: () => {}
         });
+
+        ToolbarManager.bindSwitchBtn({
+            blockId: "cfg_auto_refresh",
+            configId: "cfgAutoRefresh",
+            fallback: true,
+            handler: (newValue, initial) => {
+                if(!initial)
+                    location.reload();
+            }
+        })
 
         ToolbarManager.actionToggleEditor = ToolbarManager.bindSwitchBtn({
             blockId: "toggle_edit",
