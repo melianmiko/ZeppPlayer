@@ -162,7 +162,7 @@ export class ToolbarManager {
         document.getElementById("toolbar_side").classList.add(player.appType);
     }
 
-    static initProfileSelect() {
+    static initProfileSelect(player) {
         let current = "sb7";
         if(localStorage.zp_profile_name && DeviceProfiles[localStorage.zp_profile_name]) {
             current = localStorage.zp_profile_name;
@@ -176,12 +176,17 @@ export class ToolbarManager {
             picker.appendChild(opt);
         }
         picker.value = current;
-        picker.onchange = () => {
+        picker.onchange = async () => {
             localStorage.zp_profile_name = picker.value;
-            location.reload();
+            player.profileName = picker.value;
+            player.imgCache = {};
+            await player.overlayTool.init();
+            if(player.currentRuntime) {
+                player.currentRuntime.refresh_required = "profile_ch";
+            }
         };
 
-        return current;
+        player.profileName = current;
     }
 
     static handleKeypress(e) {
@@ -246,8 +251,8 @@ export class ToolbarManager {
         }
     }
 
-    static doRestart() {
-        ToolbarManager.player.init();
+    static async doRestart() {
+        await ToolbarManager.player.restart();
     }
 
     static doScroll(d) {
