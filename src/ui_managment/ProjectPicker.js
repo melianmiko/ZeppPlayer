@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import {ChangesWatcher} from "./ChangesWatcher";
+
 export class ProjectPicker {
     view = document.getElementById("project_select");
 
@@ -57,16 +59,18 @@ export class ProjectPicker {
         }
 
         // Event handler
-        const lastValue = this.view.value;
-        this.view.onchange = () => {
+        this.view.onchange = async () => {
             if(this.view.value === "<open_folder>") {
                 fetch("/api/open_projects");
-                this.view.value = lastValue;
+                this.view.value = localStorage.zepp_player_last_project;
                 return
             }
 
             localStorage.zepp_player_last_project = this.view.value;
-            location.reload();
+            await this.player.finish();
+            await this.player.setProject(this.getProject());
+            await this.player.init();
+            await ChangesWatcher.onProjectChange(this.player);
         };
     }
 }

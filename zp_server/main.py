@@ -4,7 +4,6 @@ import shutil
 import sys
 import webbrowser
 
-
 if sys.stdout is None:
     # Fix bottle crash when windowed
     from io import StringIO

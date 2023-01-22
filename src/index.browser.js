@@ -25,6 +25,7 @@ import { initVersionUI } from "./ui_managment/Updater.js";
 import { ChromeZeppPlayer } from "./zepp_player/ChromeZeppPlayer.js";
 import { PersistentStorage } from "./zepp_player/PersistentStorage.js";
 import {initCssSettings} from "./ui_managment/CssSettingsManager";
+import {ChangesWatcher} from "./ui_managment/ChangesWatcher";
 
 // const DISPLAY_FPS = 25;
 
@@ -58,6 +59,7 @@ const start = async () => {
     player.profileName = ToolbarManager.initProfileSelect();
 
     await player.setProject(proj);
+    await ChangesWatcher.init(player);
 
     ToolbarManager.init(player);
     EditorManager.init(player);
@@ -73,8 +75,15 @@ const start = async () => {
     player.setupHTMLEvents(root);
 
     const refresh = async () => {
-        await performRefresh();
-        requestAnimationFrame(refresh);
+        try {
+            await performRefresh();
+            requestAnimationFrame(refresh);
+        } catch(e) {
+            console.error("Refresh failed...", e);
+            setTimeout(() => {
+                refresh();
+            }, 2500);
+        }
     };
     
     const performRefresh = async () => {

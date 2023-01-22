@@ -7,6 +7,7 @@ import bottle
 import waitress
 
 import tk_tools, user_config
+import watcher
 from server_data import ROOT_DIR, PORT, HTML_TEMPLATE, PROJECTS_DIR
 
 log = logging.getLogger("ZPServer")
@@ -21,6 +22,20 @@ def start():
 def open_projects():
     subprocess.Popen(["open", str(PROJECTS_DIR)])
     return "true"
+
+
+@bottle.route("/api/watch/<project:path>")
+def set_watch(project):
+    if not (PROJECTS_DIR / project).is_dir():
+        log.info(f"No dir {PROJECTS_DIR / project}")
+        return ""
+    watcher.set_directory(PROJECTS_DIR / project)
+    return ""
+
+
+@bottle.route("/api/change_count")
+def get_watch():
+    return str(watcher.GlobalState.changes_counter)
 
 
 @bottle.route("/projects")

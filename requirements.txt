@@ -8,3 +8,4 @@ waitress~=2.1.2
 PyGObject~=3.42.2; sys_platform == "linux"
 pyinstaller==5.7
 mmk-updater==0.13.1
+watchdog==2.2.1

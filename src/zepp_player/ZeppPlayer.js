@@ -167,11 +167,18 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.projectPath = path;
         this.overlayTool = new Overlay(this);
         this.vfs = {};
+        this.imgCache = {};
 
         await this._loadAppConfig();
         await this._loadAppJs();
         await this.overlayTool.init();
         await this.preloadProjectAssets(path + "/");
+    }
+
+    async restart() {
+        await this.finish();
+        await this.setProject(this.projectPath);
+        await this.init();
     }
 
     /**
@@ -332,7 +339,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.currentRuntime = null;
         this.render_counter = 0;
         this._deviceStateChangeEvents = {};
-        this.mustRestart = false;
         this.onDestroy = [];
         this.backStack = [];
     }
