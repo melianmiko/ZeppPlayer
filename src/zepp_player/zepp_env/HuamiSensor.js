@@ -18,6 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import {ZeppNotImplementedError} from "../Errors";
+
 /**
  * hmSensor
  * 
@@ -29,6 +31,7 @@
     }
 
     createSensor(id) {
+        if(id === undefined) throw new ZeppNotImplementedError(`hmSensor.id.?`)
         return new id(this._runtime);
     }
 
@@ -42,7 +45,7 @@
         DISTANCE: DistanceSensor,
         STAND: StandSensor,
         WEATHER: WeatherSensor,
-        FAT_BURNING: FatBurningSensor,
+        FAT_BURRING: FatBurningSensor,
         SPO2: SPO2Sensor,
         BODY_TEMP: BodyTempSensor,
         STRESS: StressSensor,
@@ -51,7 +54,7 @@
         WORLD_CLOCK: WorldClockSensor,
         SLEEP: SleepSensor,
         MUSIC: MusicSensor,
-        ACTIVITY: ActivitySensor
+        ACTIVITY: ActivitySensor,
     }
 
     event = {
