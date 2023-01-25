@@ -270,18 +270,21 @@ class HeartSensor {
  */
 class PaiSensor {
     constructor(player) {
-        this.dailypai = player.getDeviceState("PAI_DAILY");
-        this.prepai0 = player.getDeviceState("PAI_DAILY") * 0.2;
-        this.prepai1 = player.getDeviceState("PAI_DAILY") * 0.3;
-        this.prepai2 = player.getDeviceState("PAI_DAILY") * 0.4;
-        this.prepai3 = player.getDeviceState("PAI_DAILY") * 0.5;
-        this.prepai4 = player.getDeviceState("PAI_DAILY") * 0.6;
-        this.prepai5 = player.getDeviceState("PAI_DAILY") * 0.7;
-        this.prepai6 = player.getDeviceState("PAI_DAILY") * 0.8;
-        this.totalpai = this.prepai0 + this.prepai1 + this.prepai2 + 
-            this.prepai3 + this.prepai4 + this.prepai5 + 
-            this.prepai6 + this.dailypai;
+        this.player = player;
     }
+
+    get totalpai() {
+        return this.player.getDeviceState("PAI_DAILY") * 4.5;
+    }
+
+    get dailypai() {return this.player.getDeviceState("PAI_DAILY");}
+    get prepai0() {return this.player.getDeviceState("PAI_DAILY") * 0.2;}
+    get prepai1() {return this.player.getDeviceState("PAI_DAILY") * 0.3;}
+    get prepai2() {return this.player.getDeviceState("PAI_DAILY") * 0.4;}
+    get prepai3() {return this.player.getDeviceState("PAI_DAILY") * 0.5;}
+    get prepai4() {return this.player.getDeviceState("PAI_DAILY") * 0.6;}
+    get prepai5() {return this.player.getDeviceState("PAI_DAILY") * 0.7;}
+    get prepai6() {return this.player.getDeviceState("PAI_DAILY") * 0.8;}
 
     addEventListener(name, callback) {}
 }
