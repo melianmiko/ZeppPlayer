@@ -34,7 +34,7 @@ def main():
 
     # Linux pystray backend force
     if sys.platform == "linux":
-        os.environ["PYSTRAY_BACKEND"] = "gtk"
+        os.environ["PYSTRAY_BACKEND"] = "appindicator"
 
     # Tray menu
     import pystray
