@@ -163,7 +163,7 @@ export class TextImageWidget extends BaseWidget {
             text = "0";
         }
         if(text.indexOf(".") > -1 && !config.dot_image) {
-            text = text.substring(text.lastIndexOf("."));
+            text = text.substring(0, text.lastIndexOf("."));
         }
 
         const countNums = text.replace(/\D/g,'').length;
