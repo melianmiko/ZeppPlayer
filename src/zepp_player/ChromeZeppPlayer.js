@@ -24,7 +24,8 @@ export class ChromeZeppPlayer extends ZeppPlayer {
     constructor() {
         super();
         this.rotation = 0;
-        this.uiOverlayVisible = false;
+        this._uiOverlayVisible = false;
+        this._htmlRootBlock = null;
         this.uiOverlayPosition = [0, 0];
     }
 
@@ -32,6 +33,16 @@ export class ChromeZeppPlayer extends ZeppPlayer {
         const resp = await fetch(path);
 
         return await resp.arrayBuffer();
+    }
+
+    get uiOverlayVisible() {
+        return this._uiOverlayVisible;
+    }
+
+    set uiOverlayVisible(value) {
+        if(this._htmlRootBlock)
+            this._htmlRootBlock.style.cursor = value ? "crosshair": ""
+        this._uiOverlayVisible = value;
     }
 
     async listDirectory(path) {
@@ -70,6 +81,8 @@ export class ChromeZeppPlayer extends ZeppPlayer {
 
     setupHTMLEvents(block) {
         let isMouseDown = false;
+
+        this._htmlRootBlock = block;
 
         document.documentElement.onkeydown = (e) => {
             if(e.key === "Shift") {
@@ -117,7 +130,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             if(isMouseDown)
                 this.currentRuntime.handleEvent("onmousemove", x, y, {x, y});
 
-            if(this.uiOverlayVisible) {
+            if(this._uiOverlayVisible) {
                 const rect = e.target.getBoundingClientRect();
                 const uiX = e.clientX - rect.left;
                 const uiY = e.clientY - rect.top;
@@ -136,7 +149,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
     async render(force=false) {
         const canvas = await super.render(force);
 
-        if(this.uiOverlayVisible) {
+        if(this._uiOverlayVisible) {
             let [x, y] = this.uiOverlayPosition;
             y += this.renderScroll;
 
@@ -218,7 +231,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             context.fillStyle = baseColor;
             const text = `${x}, ${y - this.renderScroll}`
             const metrics = context.measureText(text);
-            const tx = x > canvas.width / 2 ? x - metrics.width - 2 : x + 2;
+            const tx = x > canvas.width / 2 ? x - metrics.width - 6 : x + 6;
             const ty = y - this.renderScroll > canvas.height / 2 ? y - 4 : y + 14;
             context.fillText(text, tx, ty - this.renderScroll);
 
