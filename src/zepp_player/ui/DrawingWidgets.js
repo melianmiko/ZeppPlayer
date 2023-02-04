@@ -314,7 +314,10 @@ export class ArcProgressWidget extends BaseWidget {
         ctx.strokeStyle = zeppColorToHex(config.color);
 
         let start, end;
-        if(Math.abs(len) < 360) {
+        if(len === 0) {
+            // Nothing to draw
+            return;
+        } else if(Math.abs(len) < 360) {
             ctx.lineCap = "round";
             start = (-90 + config.start_angle - dN) / 180 * Math.PI;
             end = start;
