@@ -159,7 +159,7 @@ export class TextImageWidget extends BaseWidget {
             return null;
 
         text = String(text);
-        if(text === "" && config.type === "ALARM_CLOCK") {
+        if(text === "" && config.type === "ALARM_CLOCK" && !config.invalid_image) {
             text = "0";
         }
         if(text.indexOf(".") > -1 && !config.dot_image) {
@@ -287,7 +287,7 @@ export class TextImageWidget extends BaseWidget {
             text = player.getDeviceState(config.type, "string");
             maxLength = player.getDeviceState(config.type, "maxLength");
 
-            if(config.padding) {
+            if(config.padding && text !== "") {
                 const countNums = text.replace(/\D/g,'').length;
                 text = text.padStart((maxLength - countNums) + text.length, "0");
             }

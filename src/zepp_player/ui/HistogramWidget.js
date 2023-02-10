@@ -28,8 +28,6 @@ export class HistogramWidget extends BaseWidget {
         const config = this.config;
         const internalCanvas = player.newCanvas();
 
-        console.log(config);
-
         internalCanvas.width = config.w;
         internalCanvas.height = config.h;
 
@@ -37,7 +35,7 @@ export class HistogramWidget extends BaseWidget {
         await this.drawData(internalCanvas, player);
 
         canvas.getContext("2d").drawImage(internalCanvas, config.x, config.y);
-        this.dropEvents([
+        this.dropEvents(player, [
             config.x,
             config.y,
             config.x + config.w,

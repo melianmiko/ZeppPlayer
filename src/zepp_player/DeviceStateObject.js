@@ -111,7 +111,7 @@ export function createDeviceState() {
             value: "09:30",
             type: "string",
             groupIcon: "settings",
-            maxLength: 5,
+            maxLength: 4,
             getBoolean: (v) => v.value !== "0",
             getString: (t) => t.value.replaceAll(":", "."),
             getProgress: (t) => {
