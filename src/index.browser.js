@@ -27,9 +27,9 @@ import { PersistentStorage } from "./zepp_player/PersistentStorage.js";
 import {initCssSettings} from "./ui_managment/CssSettingsManager";
 import {ChangesWatcher} from "./ui_managment/ChangesWatcher";
 
-// const DISPLAY_FPS = 25;
+const DISPLAY_FPS = 60;
 
-// const DISPLAY_DELTA = 1000 / DISPLAY_FPS;
+const DISPLAY_DELTA = 1000 / DISPLAY_FPS;
 
 /**
  * Start all
@@ -74,10 +74,17 @@ const start = async () => {
     root.height = player.screen[1];
     player.setupHTMLEvents(root);
 
+    // Render config
+    let lastRender = 0;
+
     const refresh = async () => {
         try {
-            await performRefresh();
             requestAnimationFrame(refresh);
+
+            if(Date.now() - lastRender > DISPLAY_DELTA) {
+                await performRefresh();
+                lastRender = Date.now();
+            }
         } catch(e) {
             console.error("Refresh failed...", e);
             setTimeout(() => {
