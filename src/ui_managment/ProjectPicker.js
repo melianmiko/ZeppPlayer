@@ -53,6 +53,12 @@ export class ProjectPicker {
         opt.innerText = "<file manager...>";
         this.view.appendChild(opt);
 
+        // Add "change folder" option
+        const opt2 = document.createElement("option");
+        opt2.value = "<change_folder>";
+        opt2.innerText = "<change directory...>";
+        this.view.appendChild(opt2);
+
         // Load current option
         if(localStorage.zepp_player_last_project) {
             this.view.value = localStorage.zepp_player_last_project;
@@ -64,6 +70,10 @@ export class ProjectPicker {
                 fetch("/api/open_projects");
                 this.view.value = localStorage.zepp_player_last_project;
                 return
+            } else if(this.view.value === "<change_folder>") {
+                fetch("/api/change_projects");
+                this.view.value = localStorage.zepp_player_last_project;
+                return;
             }
 
             localStorage.zepp_player_last_project = this.view.value;

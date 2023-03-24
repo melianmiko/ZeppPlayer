@@ -72,10 +72,11 @@ def build_menu():
         pystray.MenuItem('Website', lambda: webbrowser.open(LINK_WEB)),
         pystray.MenuItem('Source code', lambda: webbrowser.open(LINK_SRC)),
         pystray.Menu.SEPARATOR,
-        pystray.MenuItem("Check for updates", toggle_updater,
+        pystray.MenuItem("Check for update on start", toggle_updater,
                          checked=lambda _: user_config.get_prop("check_updates", True)),
         pystray.MenuItem("Open browser on start", toggle_auto_browser,
                          checked=lambda _: user_config.get_prop("auto_browser", True)),
+        pystray.MenuItem('Change projects directory...', user_config.select_projects_dir),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem(f"ver. {updater.get_self_version()}", None, enabled=False),
         pystray.MenuItem("Exit", do_exit)

@@ -9,7 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/projects" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.10 (ZeppPlayer)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

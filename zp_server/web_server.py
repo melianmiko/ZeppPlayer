@@ -2,6 +2,7 @@ import json
 import logging
 import subprocess
 import sys
+from pathlib import Path
 
 import bottle
 import waitress
@@ -13,6 +14,10 @@ from server_data import ROOT_DIR, PORT, HTML_TEMPLATE, PROJECTS_DIR
 log = logging.getLogger("ZPServer")
 
 
+def _get_projects_dir():
+    return Path(user_config.get_prop("projects_path", PROJECTS_DIR))
+
+
 @tk_tools.async_with_ui("WebServer")
 def start():
     waitress.serve(bottle.default_app(), listen=f"127.0.0.1:{PORT}", threads=6)
@@ -20,16 +25,23 @@ def start():
 
 @bottle.route("/api/open_projects")
 def open_projects():
-    subprocess.Popen(["open", str(PROJECTS_DIR)])
+    projects_dir = _get_projects_dir()
+    subprocess.Popen(["open", str(projects_dir)])
     return "true"
+
+
+@bottle.route("/api/change_projects")
+def select_projects_dir():
+    user_config.select_projects_dir()
 
 
 @bottle.route("/api/watch/<project:path>")
 def set_watch(project):
-    if not (PROJECTS_DIR / project).is_dir():
-        log.info(f"No dir {PROJECTS_DIR / project}")
+    projects_dir = _get_projects_dir()
+    if not (projects_dir / project).is_dir():
+        log.info(f"No dir {projects_dir / project}")
         return ""
-    watcher.set_directory(PROJECTS_DIR / project)
+    watcher.set_directory(projects_dir / project)
     return ""
 
 
@@ -40,9 +52,11 @@ def get_watch():
 
 @bottle.route("/projects")
 def list_projects_legacy():
+    projects_dir = _get_projects_dir()
+    print(projects_dir)
     out = ""
 
-    for file in sorted(PROJECTS_DIR.iterdir()):
+    for file in sorted(projects_dir.iterdir()):
         if not file.is_dir():
             continue
         if not (file / "app.json").is_file():
@@ -54,7 +68,9 @@ def list_projects_legacy():
 
 @bottle.route("/projects/<filename:path>")
 def project_file(filename):
-    path = PROJECTS_DIR / filename
+    projects_dir = _get_projects_dir()
+    path = projects_dir / filename
+
     if path.is_dir():
         """deprecated"""
         out = ""
@@ -65,7 +81,7 @@ def project_file(filename):
                 out += f"<a href=\"{file.name}\">{file.name}</a>\n"
         return HTML_TEMPLATE.replace("{}", out)
 
-    return with_headers(bottle.static_file(filename, PROJECTS_DIR))
+    return with_headers(bottle.static_file(filename, projects_dir))
 
 
 @bottle.route("/")

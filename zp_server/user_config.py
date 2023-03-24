@@ -1,7 +1,8 @@
 import json
 import logging
 
-from server_data import CONFIG_DIR
+from server_data import CONFIG_DIR, PROJECTS_DIR
+from tkinter import filedialog, messagebox
 
 CONFIG_FILE = CONFIG_DIR / "zepp_player.json"
 log = logging.getLogger("UserConfig")
@@ -38,3 +39,11 @@ def _do_load():
     except json.JSONDecodeError:
         pass
     State.is_loaded = True
+
+
+def select_projects_dir():
+    new_dir = filedialog.askdirectory(initialdir=PROJECTS_DIR)
+    if len(new_dir) == 0:
+        return
+    set_prop("projects_path", new_dir)
+    messagebox.showinfo("ZeppPlayer", "Project directory changed. Please refresh all player tabs.")

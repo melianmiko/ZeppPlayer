@@ -6,8 +6,8 @@
 init_venv()
 {
 	echo "Creating venv..."
-	python -m venv venv
-	venv/bin/pip install -r requirements.txt
+	python3 -m venv venv
+	venv/bin/pip3 install -r requirements.txt
 	touch venv/.ready
 }
 
@@ -15,7 +15,7 @@ init_venv()
 
 if [[ "$1" == "dev" ]]
 then
-	venv/bin/python zp_server/main.py
+	venv/bin/python3 zp_server/main.py
 else
-	venv/bin/python zp_server/main.py > /dev/null 2>&1 &
+	venv/bin/python3 zp_server/main.py > /dev/null 2>&1 &
 fi

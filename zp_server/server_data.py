@@ -15,7 +15,9 @@ else:
     CONFIG_DIR = Path.home() / ".config/ZeppPLayer"
 
 PROJECTS_DIR = ROOT_DIR / "projects"
-if sys.platform == "darwin":
+
+# macOS, flatpak and linux packages - redirect projects to config dir
+if sys.platform == "darwin" or str(ROOT_DIR).startswith("/opt") or str(ROOT_DIR).startswith("/app"):
     PROJECTS_DIR = CONFIG_DIR / "projects"
 
 LINK_WEB = "https://melianmiko.ru/en/zepp_player"
