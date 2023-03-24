@@ -1,6 +1,8 @@
-zeppplayer (1.5.2-2) jammy; urgency=medium
+zeppplayer (1.5.3-1) jammy; urgency=medium
 
   * First debian build
   * Add projects dir change option
+  * Add corner_flag support
+  * Fix some bugs
 
- -- MelianMiko <melianmiko@gmail.com>  Fri, 24 Mar 2023 18:08:33 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Fri, 24 Mar 2023 19:34:34 +0700
