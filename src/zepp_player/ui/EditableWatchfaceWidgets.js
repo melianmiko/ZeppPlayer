@@ -306,9 +306,7 @@ export class EditGroupWidget extends BaseEditableWidget {
         try {
             const overlay = await player.getAssetImage(
                 isActive ? config.select_image : config.un_select_image);
-            const ox = (width - overlay.width) / 2;
-            const oy = (height - overlay.height) / 2;
-            ctx.drawImage(overlay, config.x + ox, config.y + oy);
+            ctx.drawImage(overlay, config.x, config.y);
         } catch(e) {
             // No overlay
         }

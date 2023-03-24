@@ -1,5 +1,4 @@
 tar-ignore = "venv"
 tar-ignore = "src"
 tar-ignore = "node_modules"
-tar-ignore = "docs"
 tar-ignore = "**/__pycache__"

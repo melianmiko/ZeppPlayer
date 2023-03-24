@@ -15,7 +15,7 @@ init_venv()
 
 if [[ "$1" == "dev" ]]
 then
-	venv/bin/python3 zp_server/main.py
+	venv/bin/python3 -m zp_server
 else
-	venv/bin/python3 zp_server/main.py > /dev/null 2>&1 &
+	venv/bin/python3 -m zp_server > /dev/null 2>&1 &
 fi

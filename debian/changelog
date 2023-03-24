@@ -1,4 +1,4 @@
-zeppplayer (1.5.2-1) jammy; urgency=medium
+zeppplayer (1.5.2-2) jammy; urgency=medium
 
   * First debian build
   * Add projects dir change option
