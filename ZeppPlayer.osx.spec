@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['zp_server/main.py'],
+    ['zp_server/__main__.py'],
     pathex=[],
     binaries=[],
     datas=[('package.json', '.'), ('venv/lib/python3.11/site-packages/sv_ttk', 'sv_ttk'), ('app', 'app'), ('projects/demo', 'projects/demo')],
