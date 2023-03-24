@@ -7,9 +7,8 @@ from pathlib import Path
 import bottle
 import waitress
 
-import tk_tools, user_config
-import watcher
-from server_data import ROOT_DIR, PORT, HTML_TEMPLATE, PROJECTS_DIR
+from zp_server import watcher, user_config, tk_tools
+from zp_server.server_data import ROOT_DIR, PORT, HTML_TEMPLATE, PROJECTS_DIR
 
 log = logging.getLogger("ZPServer")
 

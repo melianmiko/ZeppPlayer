@@ -7,8 +7,8 @@ from tkinter import ttk
 
 import sv_ttk
 
-from high_dpi_tkinter import MakeTkDPIAware
-from server_data import ROOT_DIR
+from zp_server.high_dpi_tkinter import MakeTkDPIAware
+from zp_server.server_data import ROOT_DIR
 
 
 class Config:

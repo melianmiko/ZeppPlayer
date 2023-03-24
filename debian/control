@@ -1,0 +1,17 @@
+Source: zeppplayer
+Section: utils
+Priority: optional
+Maintainer: MelianMiko <melianmiko@gmail.com>
+Build-Depends: debhelper-compat (= 12), python3-pip, python3, make
+Standards-Version: 4.4.1
+Homepage: https://github.com/melianmiko/ZeppPlayer
+
+Package: zeppplayer
+Architecture: all
+Depends:
+ ${misc:Depends}, python3, python3-gi, python3-requests, python3-tk,
+ python3-pil, libgtk-3-0, gir1.2-appindicator3-0.1 | gir1.2-ayatanaappindicator3-0.1
+Description:
+ ZeppOS emulator that can run their apps & watch faces on PC
+ .
+ Requires any Chromium-based browser

@@ -1,7 +1,7 @@
 import json
 import logging
 
-from server_data import CONFIG_DIR, PROJECTS_DIR
+from zp_server.server_data import CONFIG_DIR, PROJECTS_DIR
 from tkinter import filedialog, messagebox
 
 CONFIG_FILE = CONFIG_DIR / "zepp_player.json"

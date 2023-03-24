@@ -1,0 +1,6 @@
+zeppplayer (1.5.2-1) jammy; urgency=medium
+
+  * First debian build
+  * Add projects dir change option
+
+ -- MelianMiko <melianmiko@gmail.com>  Fri, 24 Mar 2023 18:08:33 +0700

@@ -14,10 +14,8 @@ if sys.stdout is None:
 import requests
 from PIL import Image
 
-import web_server
-import user_config
-import updater
-from server_data import LINK_SRC, LINK_WEB, PORT, ROOT_DIR, CONFIG_DIR, PROJECTS_DIR
+from zp_server import web_server, user_config, updater
+from zp_server.server_data import LINK_SRC, LINK_WEB, PORT, ROOT_DIR, CONFIG_DIR, PROJECTS_DIR
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -58,7 +56,7 @@ def prepare_dirs():
     if not CONFIG_DIR.exists():
         CONFIG_DIR.mkdir(parents=True)
 
-    if sys.platform == "darwin" and not PROJECTS_DIR.exists():
+    if not PROJECTS_DIR.exists() and PROJECTS_DIR != ROOT_DIR / "projects":
         shutil.copytree(ROOT_DIR / "projects", PROJECTS_DIR)
 
 

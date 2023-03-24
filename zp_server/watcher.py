@@ -5,6 +5,7 @@ from watchdog.observers import Observer
 
 log = logging.getLogger("Watcher")
 
+
 class GlobalState:
     observer = None     # type: Observer|None
     changes_counter = 0

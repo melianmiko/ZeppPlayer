@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=ZeppPlayer
+Comment=ZeppOS Emulator
+Icon=/opt/zeppplayer/app/icon.png
+Exec=/usr/bin/zeppplayer
+Actions=
+Categories=Development;

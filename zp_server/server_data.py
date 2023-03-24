@@ -3,7 +3,7 @@ import sys
 
 from pathlib import Path
 
-ROOT_DIR = Path(os.getcwd())
+ROOT_DIR = Path(__file__).resolve().parent.parent
 if hasattr(sys, "frozen"):
     ROOT_DIR = Path(os.path.dirname(sys.executable))
 

@@ -1,9 +1,10 @@
 import json
 
-import tk_tools
-from mmk_updater.ui_tkinter import TkinterUiMod
 from mmk_updater import UpdaterTool
-from server_data import ROOT_DIR
+from mmk_updater.ui_tkinter import TkinterUiMod
+
+from zp_server import tk_tools
+from zp_server.server_data import ROOT_DIR
 
 URL = "https://st.melianmiko.ru/zepp_player/release.json"
 
