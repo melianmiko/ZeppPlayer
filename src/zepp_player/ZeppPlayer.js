@@ -222,6 +222,13 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     getInitModuleName() {
         const appConfig = this.appConfig;
 
+        if(appConfig.targets) {
+            // Non-compiled zeus app...
+            // Use random device ident for now
+            const ident = Object.keys(appConfig.targets)[0];
+            appConfig.module = appConfig.targets[ident].module;
+        }
+
         if(appConfig.app.appType === "watchface") {
             // Run as watchface
             let modulePath = "watchface/index";

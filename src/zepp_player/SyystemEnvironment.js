@@ -30,6 +30,10 @@ export function createAppEnv(player) {
     const object = {};
 
     object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player);
+
+    // Copy some entries for non-compiled zeus apps
+    object.App = object.DeviceRuntimeCore.App;
+
     object.__$$module$$__ = {};
     object.__$$hmAppManager$$__ = {
         currentApp: {
@@ -60,6 +64,10 @@ export function createPageEnv(runtime, appRuntime) {
     object.hmSetting = new HuamiSettingMock(runtime);
     object.timer = new TimerMock(runtime);
     object.console = new ConsoleMock(runtime, console);
+
+    // Copy some entries for non-compiled zeus apps
+    object.WatchFace = object.DeviceRuntimeCore.WatchFace;
+    object.Page = object.DeviceRuntimeCore.Page;
 
     // Links
     object.__$$module$$__ = {};
