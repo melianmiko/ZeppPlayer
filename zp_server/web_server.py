@@ -29,11 +29,6 @@ def open_projects():
     return "true"
 
 
-@bottle.route("/api/change_projects")
-def select_projects_dir():
-    user_config.select_projects_dir()
-
-
 @bottle.route("/api/watch/<project:path>")
 def set_watch(project):
     projects_dir = _get_projects_dir()
@@ -47,6 +42,32 @@ def set_watch(project):
 @bottle.route("/api/change_count")
 def get_watch():
     return str(watcher.GlobalState.changes_counter)
+
+
+@bottle.get("/api/folder_chooser/")
+@bottle.get("/api/folder_chooser/<path:path>")
+def get_start_path(path=""):
+    path = (Path.home() / path).resolve()
+
+    items = []
+    for item in path.iterdir():
+        if item.is_dir():
+            items.append(item.name)
+
+    return {
+        "current_path": str(path),
+        "contents": items
+    }
+
+
+@bottle.get("/api/set_projects_dir/")
+@bottle.get("/api/set_projects_dir/<path:path>")
+def get_start_path(path=""):
+    path = (Path.home() / path).resolve()
+    assert path.is_dir()
+
+    user_config.set_prop("projects_path", str(path))
+    return "true"
 
 
 @bottle.route("/projects")

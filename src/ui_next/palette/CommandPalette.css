@@ -1,0 +1,39 @@
+.ui-command-palette {
+    background-color: var(--editor);
+    margin: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    width: 600px;
+    max-width: 90%;
+    user-select: none;
+}
+
+.ui-command-palette > input {
+    background: none;
+    display: block;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin-bottom: 12px;
+    height: 32px;
+    box-sizing: content-box;
+    color: var(--editor-text);
+}
+
+.ui-command-palette__items {
+    max-height: 400px;
+    overflow: auto;
+}
+
+.ui-command-palette__items__item {
+    margin-bottom: 4px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.ui-command-palette__items__item--active,
+.ui-command-palette__items__item:hover {
+    background-color: var(--panel);
+}

@@ -80,7 +80,7 @@ export default class ExplorerManager {
         header.innerHTML = title + " <aside class='" + subtitleClass + "'>" + subtitle + "</aside>";
 
         if(widget.config.visible === false || widget.config.visible === 0)
-            widgetView.style.opacity = 0.5;
+            widgetView.style.opacity = "0.5";
 
         // Config
         for(let prop in widget.config) {

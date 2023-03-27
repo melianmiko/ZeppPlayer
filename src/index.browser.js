@@ -26,6 +26,7 @@ import { ChromeZeppPlayer } from "./zepp_player/ChromeZeppPlayer.js";
 import { PersistentStorage } from "./zepp_player/PersistentStorage.js";
 import {initCssSettings} from "./ui_managment/CssSettingsManager";
 import {ChangesWatcher} from "./ui_managment/ChangesWatcher";
+import {start as startNgUi} from "./ui_next/RootComponent";
 
 const DISPLAY_FPS = 60;
 
@@ -37,6 +38,9 @@ const DISPLAY_DELTA = 1000 / DISPLAY_FPS;
 const start = async () => {
     const root = document.getElementById("display");
     const ctx = root.getContext("2d");
+
+    // Run ng UI
+    startNgUi(document.getElementById("ng-root"));
 
     // Preload font
     const font = new FontFace("allfont", "url(/app/allfont-Medium.ttf)");

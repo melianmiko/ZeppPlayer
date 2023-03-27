@@ -71,7 +71,7 @@ export class ProjectPicker {
                 this.view.value = localStorage.zepp_player_last_project;
                 return
             } else if(this.view.value === "<change_folder>") {
-                fetch("/api/change_projects");
+                window._setReactPane("change_projects_dir");
                 this.view.value = localStorage.zepp_player_last_project;
                 return;
             }

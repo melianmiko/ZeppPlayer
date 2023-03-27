@@ -74,7 +74,6 @@ def build_menu():
                          checked=lambda _: user_config.get_prop("check_updates", True)),
         pystray.MenuItem("Open browser on start", toggle_auto_browser,
                          checked=lambda _: user_config.get_prop("auto_browser", True)),
-        pystray.MenuItem('Change projects directory...', user_config.select_projects_dir),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem(f"ver. {updater.get_self_version()}", None, enabled=False),
         pystray.MenuItem("Exit", do_exit)

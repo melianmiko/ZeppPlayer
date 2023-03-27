@@ -1,7 +1,7 @@
 *~
 
-/app/index.browser.js
-/app/index.cli.js
+/app/index.browser.*
+/app/index.cli.*
 /ZeppPlayer.exe
 
 /_*
