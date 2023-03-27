@@ -24,7 +24,7 @@ export function createDeviceState() {
             groupIcon: "calendar_month",
             maxLength: 0, // not required
             getString: (t) => t.value.toString(),
-            getProgress: (t) => (t.value % 12) / 12,
+            getProgress: (t) => t.value / 12,
             shift: (tick) => tick % 2 === 0 ? (state.HOUR.value + 1) % 24 : null
         },
         MINUTE: {
@@ -33,7 +33,7 @@ export function createDeviceState() {
             maxLength: 0, // not required
             groupIcon: "calendar_month",
             getString: (t) => t.value.toString(),
-            getProgress: (t) => (t.value % 60) / 60,
+            getProgress: (t) => t.value / 60,
             shift: () => (state.MINUTE.value + 5) % 60
         },
         SECOND: {
@@ -42,7 +42,7 @@ export function createDeviceState() {
             maxLength: 0, // not required
             groupIcon: "calendar_month",
             getString: (t) => t.value.toString(),
-            getProgress: (t) => (t.value % 60) / 60,
+            getProgress: (t) => t.value / 60,
             shift: () => (state.SECOND.value + 1) % 60
         },
         DAY: {

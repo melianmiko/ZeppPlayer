@@ -59,9 +59,9 @@ export class DatePointer extends BaseWidget {
     async render(canvas, player) {
         const config = this.config;
 
-        const hourProgress = player.getDeviceState("HOUR", "progress");
-        const minuteProgress = player.getDeviceState("MINUTE", "progress");
-        const secondProgress = player.getDeviceState("SECOND", "progress")
+        const hourProgress = player.getDeviceState("HOUR", "pointer_progress");
+        const minuteProgress = player.getDeviceState("MINUTE", "pointer_progress");
+        const secondProgress = player.getDeviceState("SECOND", "pointer_progress")
 
         const data = [
             ["hour_", hourProgress + (minuteProgress / 12)],
@@ -81,7 +81,7 @@ export class DatePointer extends BaseWidget {
                     center_y: config[prefix + "centerY"],
                     pos_x: config[prefix + "centerX"] - (config[prefix + "posX"]),
                     pos_y: config[prefix + "centerY"] - (config[prefix + "posY"]),
-                    angle: 360 * (180 + value)
+                    angle: 360 * value
                 });
             }
 
