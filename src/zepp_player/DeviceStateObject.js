@@ -375,6 +375,22 @@ export function createDeviceState() {
             getProgress: (t) => t.value / 100,
             shift: () => state.HUMIDITY.value % 92 + 8
         },
+        ALTIMETER: {
+            value: 0,
+            type: "number",
+            maxLength: 3,
+            groupIcon: "sunny",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 100
+        },
+        WIND_DIRECTION: {
+            value: 0,
+            type: "number",
+            maxLength: 3,
+            groupIcon: "sunny",
+            getString: (t) => t.value.toString(),
+            getProgress: (t) => t.value / 100
+        },
         UVI: {
             value: 10,
             type: "number",
@@ -391,7 +407,7 @@ export function createDeviceState() {
             maxLength: 1,
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value ? 1 : 0,
-            shift: (tick, t) => tick % 3 == 0 ? !t.value : null
+            shift: (tick, t) => tick % 3 === 0 ? !t.value : null
         },
         MUSIC_ARTIST: {
             value: "Crusher-P",

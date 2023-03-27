@@ -273,6 +273,7 @@ export default class HuamiUIMock {
         "SUN_RISE": "SUN_RISE",
         "SUN_SET": "SUN_SET",
         "WIND": "WIND",
+        "WIND_DIRECTION": "WIND_DIRECTION",
         "STRESS": "STRESS",
         "SPO2": "SPO2",
         "ALTIMETER": "ALTIMETER",

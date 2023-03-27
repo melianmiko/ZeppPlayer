@@ -21,6 +21,9 @@ import { BaseWidget } from "./BaseWidget.js";
 import { FillRectWidget, TextWidget } from "./DrawingWidgets.js";
 import { ImageWidget } from "./ImagingWidgets.js";
 
+/**
+ * hmUI.widget.BUTTON
+ */
 export class ButtonWidget extends BaseWidget {
     constructor(config) {
         super(config);
@@ -34,7 +37,7 @@ export class ButtonWidget extends BaseWidget {
         this.addEventListener("onmouseup", (info) => {
             this.pressed = false;
             config.__runtime.refresh_required = "button"; // we changed color/bg
-            if(config.click_func) config.click_func(info);
+            if(config.click_func) config.click_func(this);
         });
 
         this.addEventListener = () => {}; // ignore other events
