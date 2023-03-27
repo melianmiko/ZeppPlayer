@@ -234,10 +234,10 @@ export class TextImageWidget extends BaseWidget {
         let px = 0;
         switch(config.align_h) {
             case "center_h":
-                px = Math.max(0, (tmp.width - fullWidth) / 2);
+                px = (tmp.width - fullWidth) / 2;
                 break;
             case "right":
-                px = Math.max(0, tmp.width - fullWidth);
+                px = tmp.width - fullWidth;
         }
 
         // Draw
