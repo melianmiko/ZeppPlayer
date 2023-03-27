@@ -1,6 +1,6 @@
 {
   "name": "zeppplayer",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Mi Band 7 preview tool",
   "main": "app/zepp_player/cli.js",
   "scripts": {
@@ -19,8 +19,8 @@
   "author": "MelianMiko",
   "license": "Apache 2.0",
   "dependencies": {
-    "buffer": "^6.0.3",
     "canvas": "^2.11.0",
+    "buffer": "^6.0.3",
     "file-saver": "^2.0.5",
     "fs": "^0.0.1-security"
   },
