@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 log = logging.getLogger("Watcher")
 
@@ -11,10 +12,23 @@ class GlobalState:
     changes_counter = 0
 
 
-class _Handler:
-    @staticmethod
-    def dispatch(e):
-        GlobalState.changes_counter += 1
+def _handle():
+    log.info("Project changed!")
+    GlobalState.changes_counter += 1
+
+
+class ChangeHandler(FileSystemEventHandler):
+    def on_moved(self, event):
+        _handle()
+
+    def on_modified(self, event):
+        _handle()
+
+    def on_created(self, event):
+        _handle()
+
+    def on_deleted(self, event):
+        _handle()
 
 
 def set_directory(path: Path):
@@ -24,12 +38,13 @@ def set_directory(path: Path):
         GlobalState.observer.join()
 
     observer = Observer()
+    handler = ChangeHandler()
     if (path / "assets").is_dir():
-        observer.schedule(_Handler, str(path / "assets"), recursive=True)
+        observer.schedule(handler, str(path / "assets"), recursive=True)
     if (path / "watchface").is_dir():
-        observer.schedule(_Handler, str(path / "watchface"), recursive=True)
+        observer.schedule(handler, str(path / "watchface"), recursive=True)
     if (path / "page").is_dir():
-        observer.schedule(_Handler, str(path / "page"), recursive=True)
+        observer.schedule(handler, str(path / "page"), recursive=True)
     observer.start()
 
     GlobalState.observer = observer

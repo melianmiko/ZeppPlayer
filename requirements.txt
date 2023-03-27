@@ -1,10 +1,10 @@
 pystray~=0.19.4
-bottle~=0.12.23
-Pillow~=9.3.0
-sv_ttk==2.4
-requests==2.28.1
+bottle~=0.12.25
+Pillow~=9.4.0
+sv_ttk==2.4.2
+requests==2.28.2
 waitress~=2.1.2
-PyGObject~=3.42.2; sys_platform == "linux"
-pyinstaller==5.7
+PyGObject~=3.44.1; sys_platform == "linux"
+pyinstaller==5.9
 mmk-updater==0.13.1
-watchdog==2.2.1
+watchdog==3.0.0

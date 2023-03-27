@@ -1,6 +1,6 @@
 pystray~=0.19.4
-bottle~=0.12.23
-sv_ttk==2.4
+bottle~=0.12.25
+sv_ttk==2.4.2
 waitress~=2.1.2
 mmk-updater==0.13.1
-watchdog==2.2.1
+watchdog==3.0.0
