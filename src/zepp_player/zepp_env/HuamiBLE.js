@@ -17,10 +17,18 @@
 */
 
 export class HuamiBLEMock {
+    constructor(runtime) {
+        this.runtime = runtime;
+    }
+
     createConnect() {}
     disConnect() {}
     send() {}
-    connectStatus() {return false;}
+
+    connectStatus() {
+        return !this.runtime.getDeviceState("DISCONNECT", "boolean");
+    }
+
     addListener() {}
     removeListener() {}
     

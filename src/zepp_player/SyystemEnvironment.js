@@ -59,7 +59,7 @@ export function createPageEnv(runtime, appRuntime) {
     object.hmUI = new HuamiUIMock(runtime);
     object.hmFS = new HuamiFsMock(runtime);
     object.hmApp = new HmApp(runtime);
-    object.hmBle = new HuamiBLEMock();
+    object.hmBle = new HuamiBLEMock(runtime);
     object.hmSensor = new HuamiSensorMock(runtime);
     object.hmSetting = new HuamiSettingMock(runtime);
     object.timer = new TimerMock(runtime);
