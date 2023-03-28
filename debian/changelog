@@ -1,10 +1,7 @@
-zeppplayer (1.5.4-1) bookworm jammy kinetic; urgency=medium
+zeppplayer (1.5.5-1) bookworm jammy kinetic; urgency=medium
 
-  * Fix TEXT_IMG align with overflow
-  * Add some data_type's
-  * Fix time pointer progress
-  * Use in-browser projects folder picker (fix macos)
-  * Update dependencies
+  * Fix: WIND, WIND_DIRECTION, SUN_CURRENT data type's
+  * Fix: Copy default_type to PersistentStorage on EDIT_GROUP init
 
- -- MelianMiko <melianmiko@gmail.com>  Tue, 28 Mar 2023 00:49:59 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Wed, 29 Mar 2023 01:21:50 +0700
 
