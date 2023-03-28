@@ -378,7 +378,7 @@ export function createDeviceState() {
         ALTIMETER: {
             value: 0,
             type: "number",
-            maxLength: 3,
+            maxLength: 4,
             groupIcon: "sunny",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 100
