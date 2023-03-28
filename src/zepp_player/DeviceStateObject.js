@@ -351,7 +351,7 @@ export function createDeviceState() {
         WIND: {
             value: 2,
             type: "number",
-            maxLength: 3,
+            maxLength: 2,
             groupIcon: "sunny",
             getString: (t) => t.value.toString(),
             getProgress: (t) => t.value / 100,
@@ -389,7 +389,7 @@ export function createDeviceState() {
             maxLength: 3,
             groupIcon: "sunny",
             getString: (t) => t.value.toString(),
-            getProgress: (t) => t.value / 100
+            getProgress: (t) => t.value / 7
         },
         UVI: {
             value: 10,
