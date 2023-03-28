@@ -257,8 +257,10 @@ export class EditGroupWidget extends BaseEditableWidget {
         super(config);
 
         config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
-        if(config.current_type === null || config.current_type === undefined)
+        if(config.current_type === null || config.current_type === undefined) {
             config.current_type = config.default_type;
+            PersistentStorage.set("wfEdit", config.edit_id, config.default_type);
+        }
 
         this.addEventListener("onmouseup", () => {
             if(!this.zp_isActive()) return this.zp_setActive();
