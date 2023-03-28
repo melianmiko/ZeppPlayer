@@ -1,4 +1,8 @@
 tar-ignore = "venv"
 tar-ignore = "src"
+tar-ignore = "dist"
+tar-ignore = ".git"
+tar-ignore = ".github"
+tar-ignore = ".idea"
 tar-ignore = "node_modules"
 tar-ignore = "**/__pycache__"

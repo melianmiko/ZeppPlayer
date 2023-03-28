@@ -1,8 +1,10 @@
-zeppplayer (1.5.3-1) jammy; urgency=medium
+zeppplayer (1.5.4-1) bookworm jammy kinetic; urgency=medium
 
-  * First debian build
-  * Add projects dir change option
-  * Add corner_flag support
-  * Fix some bugs
+  * Fix TEXT_IMG align with overflow
+  * Add some data_type's
+  * Fix time pointer progress
+  * Use in-browser projects folder picker (fix macos)
+  * Update dependencies
 
- -- MelianMiko <melianmiko@gmail.com>  Fri, 24 Mar 2023 19:34:34 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Tue, 28 Mar 2023 00:49:59 +0700
+

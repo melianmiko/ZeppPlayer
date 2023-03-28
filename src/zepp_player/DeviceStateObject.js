@@ -445,15 +445,20 @@ export function createDeviceState() {
             },
             getProgress: (t) => t.value / 45
         },
-        SUN_CURRENT: { // ???
-            value: 0,
-            type: "number",
-            maxLength: 3,
-            getString: (t) => t.value.toString(),
-            getProgress: () => state.HOUR.value / 24
-        },
         MOON: { // ???
             getProgress: () => 0.3
+        },
+        SUN_CURRENT: { // ???
+            value: 0,
+            notEditable: true,
+            maxLength: 5,
+            getString: () => {
+                const current = state.HOUR.value + (state.MINUTE.value / 100);
+                if(current <= 6.30 || current >= 21.30) {
+                    return state.SUN_RISE.value;
+                }
+                return state.SUN_SET.value;
+            },
         },
         SUN_SET: {
             value: "21.30",
