@@ -448,7 +448,7 @@ export function createDeviceState() {
         MOON: { // ???
             getProgress: () => 0.3
         },
-        SUN_CURRENT: { // ???
+        SUN_CURRENT: {
             value: 0,
             notEditable: true,
             maxLength: 5,
@@ -463,11 +463,13 @@ export function createDeviceState() {
         SUN_SET: {
             value: "21.30",
             notEditable: true,
+            maxLength: 5,
             getString: (t) => t.value
         },
         SUN_RISE: {
             value: "06.30",
             notEditable: true,
+            maxLength: 5,
             getString: (t) => t.value
         }
     };
