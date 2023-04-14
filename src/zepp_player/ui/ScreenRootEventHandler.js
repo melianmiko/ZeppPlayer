@@ -41,10 +41,10 @@ export class ScreenRootEventHandler {
             } else if (this.startCoords[0] - x > DIRECTION_THR) {
                 this.direction = "left";
             } else if (y - this.startCoords[1] > DIRECTION_THR) {
-                this.direction = "up";
+                this.direction = "down";
                 if(this.startScroll > 0) this.inScroll = true;
             } else if(this.startCoords[1] - y > DIRECTION_THR) {
-                this.direction = "down";
+                this.direction = "up";
                 if(this.startScroll < this.maxScroll) this.inScroll = true;
             } else return;
         }
@@ -65,11 +65,11 @@ export class ScreenRootEventHandler {
                     target = this.runtime.screen[0];
                     break;
                 case "up":
-                    delta = y - this.startCoords[1];
+                    delta = this.startCoords[1] - y;
                     target = this.runtime.screen[1];
                     break;
                 case "down":
-                    delta = this.startCoords[1] - y;
+                    delta = y - this.startCoords[1];
                     target = this.runtime.screen[1];
                     break;
             }

@@ -88,10 +88,10 @@ export class HmApp {
     }
 
     gesture = {
-        TOP: "up",
+        UP: "up",
         LEFT: "left",
         RIGHT: "right",
-        BOTTOM: "bottom"
+        DOWN: "down"
     }
 
     registerGestureEvent(callback) {
