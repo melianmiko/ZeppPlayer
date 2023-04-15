@@ -28,6 +28,7 @@ import { AnimationWidget, ClickableImageWidget, ImageProgressWidget, ImageStatus
 import {ScrollList} from "./ScrollList";
 
 export default class HuamiUIMock {
+    _idCounter = 0;
     _widget = {
         IMG: ImageWidget,
         IMG_POINTER: PointerWidget,
@@ -75,6 +76,7 @@ export default class HuamiUIMock {
         const targetId = widget.config.__id;
         for(let i in widgets) {
             if(widgets[i].config.__id === targetId) {
+                console.log(widgets[i].config.__id, targetId);
                 widgets.splice(parseInt(i), 1);
                 this.runtime.refresh_required = "del_widget";
                 return;
@@ -104,11 +106,12 @@ export default class HuamiUIMock {
         }
 
         config.__widget = type;
-        config.__id = this.runtime.widgets.length;
+        config.__id = this._idCounter;
         config.__runtime = this.runtime;
 
         const i = new Widget(config);
         this.runtime.widgets.push(i);
+        this._idCounter++;
         this.runtime.refresh_required = "add_widget";
 
         return i;

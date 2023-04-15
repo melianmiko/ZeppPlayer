@@ -64,8 +64,10 @@ export default class ZeppRuntime {
                 " without var/let/const, this is legacy way. List:", this.player.globalScopeFix]);
         }
 
+        const script = `${extra}\n(${Object.keys(env).toString() }) => {${text}}`;
+
         try {
-            const fnc = eval(`(${Object.keys(env).toString() }) => {${text}; \n${extra}\n}`)
+            const fnc = eval(script)
             fnc(...Object.values(env));
         } catch(e) {
             this.onConsole("error", ["Script load failed", e]);
