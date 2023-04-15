@@ -158,12 +158,21 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this._deviceStateChangeEvents[type].push(callback);
     }
 
-    setDeviceState(type, value) {
+    setDeviceState(type, value, requireRefresh=true) {
         this._deviceState[type].value = value;
         if(this._deviceStateChangeEvents[type]) {
             for(let i in this._deviceStateChangeEvents[type]) {
                 this._deviceStateChangeEvents[type][i]()
             }
+        }
+
+        if(this.currentRuntime && requireRefresh)
+            this.currentRuntime.refresh_required = "set_state";
+    }
+
+    setDeviceStateMany(data) {
+        for(const type in data) {
+            this.setDeviceState(type, data[type], false);
         }
 
         if(this.currentRuntime)

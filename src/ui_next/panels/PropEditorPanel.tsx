@@ -22,6 +22,7 @@ import ZeppPlayer from "../../zepp_player/ZeppPlayer";
 import {GroupedPlayerStates} from "../types/PlayerProps";
 import {PropEditorGroup} from "./prop_editor/PropEditorGroup";
 import {PropEditorEntry} from "./prop_editor/PropEditorEntry";
+import {RealTimeSwitch} from "./prop_editor/RealTimeSwitch";
 
 function withGroupedPlayerProps(player: ZeppPlayer) {
     const [data, setData] = React.useState<GroupedPlayerStates>(null);
@@ -48,11 +49,16 @@ export function PropEditorPanel(props: PropsWithPlayer<{}>) {
     const states = withGroupedPlayerProps(props.player);
 
     if(!states) return null;
-    return Object.keys((states)).map((group) => (
-        <PropEditorGroup icon={group}>
-            {Object.keys(states[group]).map((name) => (
-                <PropEditorEntry entry={states[group][name]} name={name} player={props.player} />
+    return (
+        <>
+            <RealTimeSwitch player={props.player} />
+            {Object.keys((states)).map((group) => (
+                <PropEditorGroup icon={group}>
+                    {Object.keys(states[group]).map((name) => (
+                        <PropEditorEntry entry={states[group][name]} name={name} player={props.player} />
+                    ))}
+                </PropEditorGroup>
             ))}
-        </PropEditorGroup>
-    ))
+        </>
+    )
 }

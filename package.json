@@ -19,18 +19,20 @@
   "author": "MelianMiko",
   "license": "Apache 2.0",
   "dependencies": {
-    "canvas": "^2.11.0",
     "buffer": "^6.0.3",
+    "canvas": "^2.11.0",
     "file-saver": "^2.0.5",
     "fs": "^0.0.1-security"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.1",
     "esbuild": "^0.14.49",
     "gif-encoder-2": "^1.0.5",
     "normalize-path": "^3.0.0",
     "path-normalize": "^6.0.6",
     "preact": "^10.13.2",
     "tga": "^1.0.7",
+    "uuid": "^9.0.0",
     "yargs": "^17.5.1"
   }
 }

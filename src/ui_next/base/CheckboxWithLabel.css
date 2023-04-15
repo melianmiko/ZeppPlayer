@@ -1,0 +1,12 @@
+.ui-cb-with-label {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+}
+
+.ui-cb-with-label__label {
+    padding-left: 8px;
+    font-size: .9rem;
+    position: relative;
+    top: 0.1em;
+}
