@@ -181,6 +181,7 @@ export class ToolbarManager {
             player.profileName = picker.value;
             player.imgCache = {};
             await player.overlayTool.init();
+            await player.init();
             if(player.currentRuntime) {
                 player.currentRuntime.refresh_required = "profile_ch";
             }

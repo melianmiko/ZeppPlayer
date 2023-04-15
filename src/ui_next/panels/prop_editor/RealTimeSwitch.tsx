@@ -12,6 +12,7 @@ export function RealTimeSwitch(props: PropsWithPlayer<{}>) {
         <div style={{padding: "0 8px"}}>
             <CheckboxWithLabel onChange={toggle}
                                label="Real-time clock" />
+            <hr />
         </div>
     )
 }
