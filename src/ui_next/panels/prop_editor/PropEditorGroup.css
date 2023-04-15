@@ -1,0 +1,16 @@
+.props-group {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.props-group__icon {
+    margin: 8px 16px 8px 8px;
+    color: var(--editor-text);
+    opacity: .5;
+}
+
+.props-group__content {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+}

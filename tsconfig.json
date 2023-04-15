@@ -3,7 +3,7 @@
     "moduleResolution": "node",
     "outDir": "./dist/",
     "module": "es2020",
-    "target": "ES2019",
+    "target": "ES2021",
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "allowJs": true,

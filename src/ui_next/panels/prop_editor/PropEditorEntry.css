@@ -1,0 +1,32 @@
+.props-entry {
+    margin-right: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.props-entry__title {
+    font-weight: normal;
+    color: var(--editor-text);
+    opacity: .6;
+    padding: 0;
+    margin: 8px 0;
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+.props-entry input,
+.props-entry select {
+    margin: 0;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 32px;
+    height: 24px;
+}
+
+.props-entry input[type=checkbox] {
+    margin: 4px;
+    height: 16px;
+    width: 16px;
+    min-width: 16px; /* override chrome default style */
+}

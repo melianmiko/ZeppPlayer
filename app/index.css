@@ -211,58 +211,6 @@ select {
     height: 200px;
 }
 
-.cfg_panel {
-    font-size: .9em;
-}
-
-.cfg_panel > div {
-    display: flex;
-    margin-bottom: 12px;
-}
-
-.cfg_panel .group_icon {
-    margin: 8px 16px 8px 8px;
-    color: var(--editor-text);
-    opacity: .5;
-}
-
-.cfg_panel > div > .contents {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.cfg_panel .editor_item {
-    margin-right: 12px;
-}
-
-.cfg_panel .editor_item > h3 {
-    font-weight: normal;
-    color: var(--editor-text);
-    opacity: .6;
-    padding: 0;
-    margin: 8px 0;
-    font-size: 0.85em;
-    cursor: pointer;
-}
-
-.cfg_panel .editor_item select,
-.cfg_panel .editor_item input {
-    margin: 0;
-    padding: 4px 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    min-width: 32px;
-    height: 24px;
-}
-
-.cfg_panel .editor_item input[type=checkbox] {
-    margin: 4px;
-    height: 16px;
-    width: 16px;
-    min-width: 16px; /* override chrome default style */
-}
-
 /* Version info box */
 
 #version_box {

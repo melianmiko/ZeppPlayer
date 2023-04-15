@@ -16,17 +16,17 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { ConsoleManager } from "./ui_managment/ConsoleManager.js";
-import { EditorManager } from "./ui_managment/EditorManager.js";
+import {ConsoleManager} from "./ui_managment/ConsoleManager.js";
 import ExplorerManager from "./ui_managment/ExplorerManager.js";
-import { ProjectPicker } from "./ui_managment/ProjectPicker.js";
-import { ToolbarManager } from "./ui_managment/ToolbarManager.js";
-import { initVersionUI } from "./ui_managment/Updater.js";
-import { ChromeZeppPlayer } from "./zepp_player/ChromeZeppPlayer.js";
-import { PersistentStorage } from "./zepp_player/PersistentStorage.js";
+import {ProjectPicker} from "./ui_managment/ProjectPicker.js";
+import {ToolbarManager} from "./ui_managment/ToolbarManager.js";
+import {initVersionUI} from "./ui_managment/Updater.js";
+import {ChromeZeppPlayer} from "./zepp_player/ChromeZeppPlayer.js";
+import {PersistentStorage} from "./zepp_player/PersistentStorage.js";
 import {initCssSettings} from "./ui_managment/CssSettingsManager";
 import {ChangesWatcher} from "./ui_managment/ChangesWatcher";
 import {start as startNgUi} from "./ui_next/RootComponent";
+import {PlayerSettingsLoader} from "./ui_next/PlayerSettingsLoader";
 
 const DISPLAY_FPS = 60;
 
@@ -39,16 +39,16 @@ const start = async () => {
     const root = document.getElementById("display");
     const ctx = root.getContext("2d");
 
-    // Run ng UI
-    startNgUi(document.getElementById("ng-root"));
-
     // Preload font
     const font = new FontFace("allfont", "url(/app/allfont-Medium.ttf)");
     await font.load();
     document.fonts.add(font);
 
     const player = new ChromeZeppPlayer();
-    // player.system_fps = DISPLAY_FPS;
+
+    // Run ng UI
+    PlayerSettingsLoader.loadAll(player);
+    startNgUi(document.getElementById("ng-root"), player);
 
     // Make storage available from browser console
     window.PersistentStorage = PersistentStorage;
@@ -66,7 +66,7 @@ const start = async () => {
     await ChangesWatcher.init(player);
 
     ToolbarManager.init(player);
-    EditorManager.init(player);
+    // EditorManager.init(player);
     ConsoleManager.init(player);
     ExplorerManager.init(player);
     initCssSettings();

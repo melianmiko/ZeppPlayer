@@ -1,6 +1,8 @@
 import {render} from "preact";
 import React from "preact/compat";
 import {ServerDirectoryPicker} from "./ServerDirectoryPicker";
+import {PropEditorPanel} from "./panels/PropEditorPanel";
+import ZeppPlayer from "../zepp_player/ZeppPlayer";
 
 
 export function RootComponent() {
@@ -15,6 +17,9 @@ export function RootComponent() {
     )
 }
 
-export function start(node: HTMLElement) {
+export function start(node: HTMLElement, player: ZeppPlayer) {
     render(<RootComponent />, node);
+
+    // Override legacy components
+    render(<PropEditorPanel player={player} />, document.getElementById("view_edit"));
 }
