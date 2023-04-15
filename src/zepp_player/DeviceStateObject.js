@@ -445,8 +445,11 @@ export function createDeviceState() {
             },
             getProgress: (t) => t.value / 45
         },
-        MOON: { // ???
-            getProgress: () => 0.3
+        MOON: {
+            value: 0,
+            maxLength: 1,
+            type: "number",
+            getProgress: (t) => Math.max(0, t.value / 7)
         },
         SUN_CURRENT: {
             value: 0,

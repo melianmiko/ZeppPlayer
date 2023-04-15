@@ -76,7 +76,6 @@ export default class HuamiUIMock {
         const targetId = widget.config.__id;
         for(let i in widgets) {
             if(widgets[i].config.__id === targetId) {
-                console.log(widgets[i].config.__id, targetId);
                 widgets.splice(parseInt(i), 1);
                 this.runtime.refresh_required = "del_widget";
                 return;
