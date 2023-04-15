@@ -5,3 +5,12 @@ zeppplayer (1.5.5-1) bookworm jammy kinetic; urgency=medium
 
  -- MelianMiko <melianmiko@gmail.com>  Wed, 29 Mar 2023 01:21:50 +0700
 
+zeppplayer (1.5.6-1) bookworm jammy kinetic lunar; urgency=medium
+
+  * Fix: hmUI.deleteWidget() bugs
+  * Fix: re-init player when changing device profile
+  * Fix: hmUI.data_type.MOON support
+  * New: Real-time clock mode
+
+ -- MelianMiko <melianmiko@gmail.com>  Sat, 15 Apr 2023 19:37:22 +0700
+
