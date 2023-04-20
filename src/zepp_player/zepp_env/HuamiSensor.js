@@ -77,7 +77,6 @@ import {ZeppNotImplementedError} from "../Errors";
         this.player = player;
 
         // Fixed
-        this.utc = Date.now();
         this.lunar_day = this.day;
         this.lunar_month = this.month;
         this.lunar_solar_term = "ZeppPlayer";
@@ -104,6 +103,10 @@ import {ZeppNotImplementedError} from "../Errors";
 
     removeEventListener(_) {
         this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
+    }
+
+    get utc() {
+        return Date.now();
     }
 
     get week() {
