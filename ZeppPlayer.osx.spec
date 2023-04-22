@@ -1,14 +1,20 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import sys
 
 block_cipher = None
-
+py_version = sys.version_info
+py_version_string = f"{py_version.major}.{py_version.minor}"
 
 a = Analysis(
     ['zp_server/__main__.py'],
     pathex=[],
     binaries=[],
-    datas=[('package.json', '.'), ('venv/lib/python3.11/site-packages/sv_ttk', 'sv_ttk'), ('app', 'app'), ('projects/demo', 'projects/demo')],
+    datas=[
+        ('package.json', '.'),
+        (f"venv/lib/python{py_version_string}/site-packages/sv_ttk", 'sv_ttk'),
+        ('app', 'app'),
+        ('projects/demo', 'projects/demo')
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
