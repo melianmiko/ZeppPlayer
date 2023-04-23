@@ -43,11 +43,6 @@ export function createAppEnv(player) {
         }
     };
 
-    // Zeus compat
-    object.App = (config) => {
-        object.__$$hmAppManager$$__.currentApp.app = core.App(config);
-    }
-
     return object;
 }
 
@@ -68,27 +63,6 @@ export function createPageEnv(runtime, appRuntime) {
     object.hmSetting = new HuamiSettingMock(runtime);
     object.timer = new TimerMock(runtime);
     object.console = new ConsoleMock(runtime, console);
-
-    // Some Zeus virtual functions
-    object.px = (val) => {
-        const realWidth = runtime.screen[0];
-        const designWidth = runtime.appConfig.designWidth;
-        if(!designWidth) return val;
-        return val;
-    };
-    object.getApp = () => {
-        return {
-            _options: object.__$$hmAppManager$$__.currentApp.app
-        }
-    }
-
-    // Copy some entries for non-compiled zeus apps
-    object.Page = (config) => {
-        object.__$$hmAppManager$$__.currentApp.current.module = core.Page(config);
-    };
-    object.WatchFace = (config) => {
-        object.__$$hmAppManager$$__.currentApp.current.module = core.WatchFace(config);
-    };
 
     // Links
     object.__$$module$$__ = {};

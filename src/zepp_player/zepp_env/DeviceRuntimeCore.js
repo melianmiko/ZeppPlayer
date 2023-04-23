@@ -78,6 +78,7 @@ export default class DeviceRuntimeCoreMock {
     App(config) {
         const defTemplate = {
             __globals__: {},
+            _options: config,
             onCreate: () => {}
         }
 
