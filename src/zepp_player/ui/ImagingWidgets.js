@@ -153,27 +153,32 @@ export class MissingWidget extends ImageWidget {
  */
 export class TextImageWidget extends BaseWidget {
     setPropertyBanlist = ["text"];
-    
+
+    static getAlignOffsetX(align, boxWidth, contentWidth) {
+        switch(align) {
+            case "center_h":
+                return (boxWidth - contentWidth) / 2;
+            case "right":
+                return boxWidth - contentWidth;
+            default:
+                return 0;
+        }
+    }
+
     static async draw(runtime, text, maxLength, config) {
         if(!config.font_array || config.font_array.length < 1)
             return null;
 
         text = String(text);
-        if(text === "" && config.type === "ALARM_CLOCK" && !config.invalid_image) {
-            text = "0";
-        }
-        if(text.indexOf(".") > -1 && !config.dot_image) {
-            text = text.substring(0, text.lastIndexOf("."));
-        }
 
         const countNums = text.replace(/\D/g,'').length;
+        const valueMissing = text === "" || text === null || text === undefined;
 
         const hSpace = config.h_space ? config.h_space : 0;
         const iconSpace = config.icon_space ? config.icon_space : 0;
         const basementImage = await runtime.getAssetImage(config.font_array[0]);
 
-        let fullWidth = (countNums * basementImage.width) + Math.max(0, countNums - 1) * hSpace,
-            fullHeight = basementImage.height;
+        let fullWidth = (countNums * basementImage.width) + Math.max(0, countNums - 1) * hSpace;
 
         let iconImg = null,
             unitImg = null,
@@ -181,7 +186,7 @@ export class TextImageWidget extends BaseWidget {
             negativeImage = null,
             invalidImage = null;
 
-        if(config.invalid_image && (text === "" || text === null || text === undefined)) {
+        if(config.invalid_image && valueMissing) {
             invalidImage = await runtime.getAssetImage(config.invalid_image);
             fullWidth = invalidImage;
         }
@@ -213,77 +218,83 @@ export class TextImageWidget extends BaseWidget {
             } catch(e) {}
         }
 
-        // Prepare temp canvas
-        const autoNumCount = maxLength === 0 ? countNums : maxLength;
-        let autoBoxWidth = basementImage.width * autoNumCount + hSpace * (autoNumCount - 1);
-        if(iconImg) autoBoxWidth += iconImg.width + iconSpace;
-        if(negativeImage) autoBoxWidth += hSpace + negativeImage.width;
-        if(unitImg) autoBoxWidth += unitImg.width;
-        if(dotImage) autoBoxWidth += hSpace + dotImage.width;
+        // Calculate sizes
+        let boxHeight = config.h;
+        if(boxHeight === undefined) {
+            boxHeight = basementImage.height;
+        }
 
-        const boxHeight = config.h !== undefined ? config.h : fullHeight;
-        const boxWidth = config.w !== undefined ? config.w : autoBoxWidth;
-
+        let boxWidth = config.w;
+        if(boxWidth === undefined) {
+            const autoNumCount = maxLength === 0 ? countNums : maxLength;
+            boxWidth = basementImage.width * autoNumCount + hSpace * (autoNumCount - 1);
+            if(iconImg) boxWidth += iconImg.width + iconSpace;
+            if(negativeImage) boxWidth += hSpace + negativeImage.width;
+            if(unitImg) boxWidth += unitImg.width;
+            if(dotImage) boxWidth += hSpace + dotImage.width;
+        }
         if(boxWidth === 0 || boxHeight === 0) return null;
 
+        // Create canvas
         const tmp = runtime.newCanvas();
         tmp.width = boxWidth;
         tmp.height = boxHeight;
+        const ctx = tmp.getContext("2d");
 
-        // Align
-        let px = 0;
-        switch(config.align_h) {
-            case "center_h":
-                px = (tmp.width - fullWidth) / 2;
-                break;
-            case "right":
-                px = tmp.width - fullWidth;
+        // If no value and has invalidImage...
+        if(valueMissing && invalidImage) {
+            let px = TextImageWidget.getAlignOffsetX(config.align_h, tmp.width, invalidImage.width);
+            ctx.drawImage(invalidImage, px, 0);
+            return tmp;
+        } else if(valueMissing) {
+            text = "";
         }
 
         // Draw
-        const ctx = tmp.getContext("2d");
-        if(iconImg !== null) {
-            ctx.drawImage(iconImg, px, 0);
-            px += iconImg.width + iconSpace;
+        let px = TextImageWidget.getAlignOffsetX(config.align_h, tmp.width, fullWidth);
+
+        function drawIfDefined(image) {
+            if(image == null) return;
+            ctx.drawImage(image, px, 0);
+            px += image.width + hSpace;
         }
 
-        if(text === "" || text === null || text === undefined) {
-            if(invalidImage) {
-                ctx.drawImage(invalidImage, px, 0);
-                return tmp;
-            } else {
-                text = "";
-            }
-        }
-
+        drawIfDefined(iconImg);
         for(const liter of text) {
-            if(liter === "-" && negativeImage !== null) {
-                ctx.drawImage(negativeImage, px, 0);
-                px += negativeImage.width + hSpace;
-            } else if((liter === "." || liter === ":") && dotImage !== null) {
-                ctx.drawImage(dotImage, px, 0);
-                px += dotImage.width + hSpace;
-            } else if(liter === "u" && unitImg !== null) {
-                ctx.drawImage(unitImg, px, 0);
-                px += unitImg.width + hSpace;
-            } else if(!isNaN(liter)) {
-                const img = await runtime.getAssetImage(config.font_array[parseInt(liter)]);
-                ctx.drawImage(img, px, 0);
-                px += basementImage.width + hSpace;
+            switch (liter) {
+                case "-":
+                    drawIfDefined(negativeImage);
+                    break;
+                case ".":
+                case ":":
+                    drawIfDefined(dotImage);
+                    break;
+                case "u":
+                    drawIfDefined(unitImg);
+                    break;
+                default:
+                    if(!isNaN(parseInt(liter))) {
+                        const img = await runtime.getAssetImage(config.font_array[parseInt(liter)]);
+                        ctx.drawImage(img, px, 0);
+                        px += basementImage.width + hSpace;
+                    }
             }
         }
 
         return tmp;
     }
 
-    async render(canvas, player, customText=null) {
+    async render(canvas, player) {
         const config = this.config;
 
         // Find text
-        let text = null,
+        let text = "",
             maxLength = 0;
 
-        if(config.type) {
+        // Fetch text
+        if(config.text !== undefined) {
+            text = config.text;
+        } else if(config.type) {
             text = player.getDeviceState(config.type, "string");
             maxLength = player.getDeviceState(config.type, "maxLength");
 
@@ -293,8 +304,14 @@ export class TextImageWidget extends BaseWidget {
             }
         }
 
-        if(config.text !== undefined) text = config.text;
-        if(customText !== null) text = customText;
+        if(typeof text == "string") {
+            if(text === "" && config.type === "ALARM_CLOCK" && !config.invalid_image) {
+                text = "0";
+            }
+            if(text.indexOf(".") > -1 && !config.dot_image) {
+                text = text.substring(0, text.lastIndexOf("."));
+            }
+        }
 
         if(text === null || text === undefined) {
             if(!this.failed) {
@@ -316,7 +333,6 @@ export class TextImageWidget extends BaseWidget {
 
         // Draw result
         canvas.getContext("2d").drawImage(tmp, config.x, config.y);
-
         super.dropEvents(player, [
             config.x, 
             config.y, 

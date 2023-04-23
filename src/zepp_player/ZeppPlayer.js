@@ -184,6 +184,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.overlayTool = new Overlay(this);
         this.vfs = {};
         this.imgCache = {};
+        this.renderScroll = 0;
 
         await this._loadAppConfig();
         await this._loadAppJs();
