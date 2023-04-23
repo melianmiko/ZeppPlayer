@@ -23,8 +23,17 @@ export default class ZeppRuntime {
 
         this.vfs = this.player.vfs;
         this.screen = this.player.screen;
+        this.profileData = this.player.profileData;
         this.appConfig = this.player.appConfig;
         this.withScriptConsole = this.player.withScriptConsole;
+    }
+
+    get renderScroll() {
+        return this.player.renderScroll;
+    }
+
+    set renderScroll(val) {
+        this.player.renderScroll = val;
     }
 
     get language() {
@@ -131,8 +140,8 @@ export default class ZeppRuntime {
 
         // Handle overscroll
         const maxScroll = this.contentHeight - this.screen[1]
-        if(this.player.renderScroll > maxScroll) {
-            this.player.renderScroll = maxScroll;
+        if(this.renderScroll > maxScroll) {
+            this.renderScroll = maxScroll;
         }
 
         // Run post-render tasks

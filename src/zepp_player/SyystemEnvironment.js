@@ -74,7 +74,7 @@ export function createPageEnv(runtime, appRuntime) {
         const realWidth = runtime.screen[0];
         const designWidth = runtime.appConfig.designWidth;
         if(!designWidth) return val;
-        return val * designWidth / realWidth;
+        return val;
     };
     object.getApp = () => {
         return {

@@ -128,10 +128,10 @@ export default class HuamiSettingMock {
 
     getDeviceInfo() {
         return {
-            width: this.runtime.screen[0],
-            height: this.runtime.screen[1],
+            width: this.runtime.profileData.screenWidth,
+            height: this.runtime.profileData.screenHeight,
             screenShape: 1,
-            deviceName: "ZeppPlayer",
+            deviceName: this.runtime.profileData.deviceName,
             keyNumber: 0,
             deviceSource: 0
         }

@@ -304,7 +304,6 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             2: "(aod)",
             4: "(settings)"
         }
-        this.renderScroll = 0;
 
         this._lastCanvas = null;
         this.currentRuntime = runtime;
@@ -328,6 +327,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             this.currentRuntime.scriptPath,
             this.currentRuntime.onInitParam
         ]);
+        this.renderScroll = 0;
 
         // Start new page
         const runtime = new ZeppRuntime(this, this.getModulePath(url), 1);

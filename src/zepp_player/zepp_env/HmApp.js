@@ -59,7 +59,10 @@ export class HmApp {
     }
 
     setLayerX() {}
-    setLayerY() {}
+    setLayerY(y) {
+        this.runtime.renderScroll = -y;
+    }
+
     exit() {}
 
     gotoHome() {

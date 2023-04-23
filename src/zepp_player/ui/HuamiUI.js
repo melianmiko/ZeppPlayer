@@ -149,6 +149,9 @@ export default class HuamiUIMock {
 
     setStatusBarVisible() {}
 
+    updateStatusBarTitle() {}
+    setScrollView() {}
+
     getTextLayout(text, options) {
         const canvas = TextWidget.drawText({
             text,
