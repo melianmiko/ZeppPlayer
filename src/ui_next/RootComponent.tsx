@@ -3,6 +3,7 @@ import React from "preact/compat";
 import {ServerDirectoryPicker} from "./ServerDirectoryPicker";
 import {PropEditorPanel} from "./panels/PropEditorPanel";
 import ZeppPlayer from "../zepp_player/ZeppPlayer";
+import {CommandPicker} from "./CommandPicker";
 
 
 export function RootComponent() {
@@ -13,6 +14,8 @@ export function RootComponent() {
         <>
             <ServerDirectoryPicker open={pane == "change_projects_dir"}
                                    onCancel={() => setPane("")} />
+            <CommandPicker open={pane == "command_picker"}
+                           onCancel={() => setPane("")} />
         </>
     )
 }

@@ -157,6 +157,7 @@ export class ToolbarManager {
         ToolbarManager.doRestartBtn.onclick = () => ToolbarManager.doRestart();
 
         document.addEventListener("keyup", ToolbarManager.handleKeypress);
+        document.addEventListener("keydown", ToolbarManager.handleControlKey)
 
         // Add type class
         document.getElementById("toolbar_side").classList.add(player.appType);
@@ -190,6 +191,13 @@ export class ToolbarManager {
         player.profileName = current;
     }
 
+    static handleControlKey(e) {
+        if(e.ctrlKey && e.key === "p"){
+            e.preventDefault();
+            return false;
+        }
+    }
+
     static handleKeypress(e) {
         switch(e.key) {
             case "1":
@@ -200,6 +208,9 @@ export class ToolbarManager {
                 return;
             case "3":
                 ToolbarManager.doToggleMode(4);
+                return;
+            case "p":
+                if(e.ctrlKey) window._setReactPane("command_picker");
                 return;
             case "P":
                 ToolbarManager.doTogglePause();

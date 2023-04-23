@@ -55,14 +55,12 @@ const start = async () => {
     window.player = player;
 
     // Project picker
-    const picker = new ProjectPicker(player);
-    await picker.loadProjects();
+    await ProjectPicker.setup(player);
 
     // Load main script
-    const proj = picker.getProject();
     ToolbarManager.initProfileSelect(player);
 
-    await player.setProject(proj);
+    await player.setProject(ProjectPicker.getProject());
     await ChangesWatcher.init(player);
 
     ToolbarManager.init(player);

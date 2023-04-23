@@ -17,64 +17,74 @@
 */
 
 import {ChangesWatcher} from "./ChangesWatcher";
+import ZeppPlayer from "../zepp_player/ZeppPlayer";
+
+export type ProjectRow = {
+    title: string,
+    url: string,
+}
 
 export class ProjectPicker {
-    view = document.getElementById("project_select");
+    public static projects: ProjectRow[] = [];
+    private static view: HTMLSelectElement = document.getElementById("project_select") as HTMLSelectElement;
+    private static player: ZeppPlayer;
 
-    constructor(player) {
-        this.player = player;
+    static getProject() {
+        return ProjectPicker.view.value;
     }
 
-    getProject() {
-        return this.view.value;
-    }
-
-    async loadProjects() {
+    static async setup(player: ZeppPlayer) {
         const response = await fetch("/api/list_projects");
         const projects = await response.json();
-        // const projects = await this.player.listDirectory("projects");
+        ProjectPicker.projects = projects;
+        ProjectPicker.player = player;
 
         for(const row of projects) {
             const opt = document.createElement("option");
             opt.value = row.url;
             opt.innerText = row.title;
-            this.view.appendChild(opt);
+            ProjectPicker.view.appendChild(opt);
         }
 
         // Add "open folder" option
         const opt = document.createElement("option");
         opt.value = "<open_folder>";
         opt.innerText = "<file manager...>";
-        this.view.appendChild(opt);
+        ProjectPicker.view.appendChild(opt);
 
         // Add "change folder" option
         const opt2 = document.createElement("option");
         opt2.value = "<change_folder>";
         opt2.innerText = "<change directory...>";
-        this.view.appendChild(opt2);
+        ProjectPicker.view.appendChild(opt2);
 
         // Load current option
         if(localStorage.zepp_player_last_project) {
-            this.view.value = localStorage.zepp_player_last_project;
+            ProjectPicker.view.value = localStorage.zepp_player_last_project;
         }
 
         // Event handler
-        this.view.onchange = async () => {
-            if(this.view.value === "<open_folder>") {
-                fetch("/api/open_projects");
-                this.view.value = localStorage.zepp_player_last_project;
+        ProjectPicker.view.onchange = async () => {
+            if(ProjectPicker.view.value === "<open_folder>") {
+                await fetch("/api/open_projects");
+                ProjectPicker.view.value = localStorage.zepp_player_last_project;
                 return
             } else if(this.view.value === "<change_folder>") {
-                window._setReactPane("change_projects_dir");
-                this.view.value = localStorage.zepp_player_last_project;
+                (window as any)._setReactPane("change_projects_dir");
+                ProjectPicker.view.value = localStorage.zepp_player_last_project;
                 return;
             }
 
-            localStorage.zepp_player_last_project = this.view.value;
-            await this.player.finish();
-            await this.player.setProject(this.getProject());
-            await this.player.init();
-            await ChangesWatcher.onProjectChange(this.player);
+            await ProjectPicker.applyProjectUrl(ProjectPicker.view.value);
         };
+    }
+
+    static async applyProjectUrl(url: string) {
+        localStorage.zepp_player_last_project = url;
+        ProjectPicker.view.value = url;
+        await ProjectPicker.player.finish();
+        await ProjectPicker.player.setProject(ProjectPicker.getProject());
+        await ProjectPicker.player.init();
+        await ChangesWatcher.onProjectChange(this.player);
     }
 }

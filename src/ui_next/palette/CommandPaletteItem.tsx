@@ -6,7 +6,8 @@ import {CommandPaletteContext} from "./CommandPalette";
  */
 export type PaletteItemProps = {
     value: string,
-    children: string
+    children: string,
+    onSelect?: (v: string) => any,
 }
 
 /**

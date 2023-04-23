@@ -10,14 +10,14 @@ import {withFilteredPaletteItems} from "./withFilteredPaletteItems";
  */
 export const CommandPaletteContext = React.createContext<{
     value?: string,
-    onSelect?: (value: string) => any,
+    onSelect?: (value: any) => any,
 }>({});
 
 /**
  * Command palette component props
  */
 export type PaletteProps = React.PropsWithChildren<{
-    onSelect: (value: string) => any,
+    onSelect?: (value: string) => any,
     onCancel?: () => any,
 }>;
 
@@ -48,6 +48,9 @@ export function CommandPalette(props: PaletteProps) {
         input.oninput = () => {
             setState({localIndex: 0, search: input.value});
         };
+        input.onkeyup = (e) => {
+            e.stopPropagation();
+        };
         input.onkeydown = (e) => {
             switch (e.key) {
                 case "ArrowUp":
@@ -68,9 +71,11 @@ export function CommandPalette(props: PaletteProps) {
                     break;
                 case "Enter":
                     e.preventDefault();
-                    props.onSelect(items[localIndex].props.value);
+                    const itemProps = items[localIndex].props;
+                    if(itemProps.onSelect) itemProps.onSelect(itemProps.value);
+                    if(props.onSelect) props.onSelect(itemProps.value);
                     break;
-                case "Esc":
+                case "Escape":
                     e.preventDefault();
                     if(props.onCancel) props.onCancel();
                     break;
