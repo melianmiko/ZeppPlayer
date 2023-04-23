@@ -28,11 +28,9 @@ import { HmApp } from "./zepp_env/HmApp.js";
 
 export function createAppEnv(player) {
     const object = {};
+    const core = new DeviceRuntimeCoreMock(player);
 
-    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player);
-
-    // Copy some entries for non-compiled zeus apps
-    object.App = object.DeviceRuntimeCore.App;
+    object.DeviceRuntimeCore = core;
 
     object.__$$module$$__ = {};
     object.__$$hmAppManager$$__ = {
@@ -45,17 +43,23 @@ export function createAppEnv(player) {
         }
     };
 
+    // Zeus compat
+    object.App = (config) => {
+        object.__$$hmAppManager$$__.currentApp.app = core.App(config);
+    }
+
     return object;
 }
 
 export function createPageEnv(runtime, appRuntime) {
     const object = {};
+    const core = new DeviceRuntimeCoreMock(runtime);
 
     // Glob constants
     object.SLEEP_REFERENCE_ZERO = 24 * 60;
 
     // Base libraries
-    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(runtime);
+    object.DeviceRuntimeCore = core;
     object.hmUI = new HuamiUIMock(runtime);
     object.hmFS = new HuamiFsMock(runtime);
     object.hmApp = new HmApp(runtime);
@@ -65,9 +69,26 @@ export function createPageEnv(runtime, appRuntime) {
     object.timer = new TimerMock(runtime);
     object.console = new ConsoleMock(runtime, console);
 
+    // Some Zeus virtual functions
+    object.px = (val) => {
+        const realWidth = runtime.screen[0];
+        const designWidth = runtime.appConfig.designWidth;
+        if(!designWidth) return val;
+        return val * designWidth / realWidth;
+    };
+    object.getApp = () => {
+        return {
+            _options: object.__$$hmAppManager$$__.currentApp.app
+        }
+    }
+
     // Copy some entries for non-compiled zeus apps
-    object.WatchFace = object.DeviceRuntimeCore.WatchFace;
-    object.Page = object.DeviceRuntimeCore.Page;
+    object.Page = (config) => {
+        object.__$$hmAppManager$$__.currentApp.current.module = core.Page(config);
+    };
+    object.WatchFace = (config) => {
+        object.__$$hmAppManager$$__.currentApp.current.module = core.WatchFace(config);
+    };
 
     // Links
     object.__$$module$$__ = {};

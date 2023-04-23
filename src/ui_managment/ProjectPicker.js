@@ -26,24 +26,18 @@ export class ProjectPicker {
     }
 
     getProject() {
-        if(this.view.value === "")
-            this.view.value = this.view.getElementsByTagName("option")[0].value
-
-        return "/projects/" + this.view.value;
+        return this.view.value;
     }
 
     async loadProjects() {
-        const projects = await this.player.listDirectory("projects");
+        const response = await fetch("/api/list_projects");
+        const projects = await response.json();
+        // const projects = await this.player.listDirectory("projects");
 
-        for(let i in projects) {
-            if(projects[i].type !== "dir") continue;
-
-            let name = projects[i].name;
-            name = name.substring(0, name.length-1);
-
+        for(const row of projects) {
             const opt = document.createElement("option");
-            opt.value = name;
-            opt.innerText = name;
+            opt.value = row.url;
+            opt.innerText = row.title;
             this.view.appendChild(opt);
         }
 

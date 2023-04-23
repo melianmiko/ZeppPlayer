@@ -70,6 +70,30 @@ def get_start_path(path=""):
     return "true"
 
 
+@bottle.get("/api/list_projects")
+def list_projects():
+    projects_dir = _get_projects_dir()
+    out = []
+
+    for entry in sorted(projects_dir.iterdir()):
+        if not entry.is_dir():
+            continue
+        if not (entry / "app.json").is_file():
+            continue
+
+        load_url = f"/projects/{entry.name}"
+        if (entry / "build" / "app.json").is_file():
+            # ZMake build project fix
+            load_url = f"/projects/{entry.name}/build"
+
+        out.append({
+            "title": entry.name,
+            "url": load_url
+        })
+
+    return with_headers(bottle.Response(json.dumps(out)))
+
+
 @bottle.route("/projects")
 def list_projects_legacy():
     projects_dir = _get_projects_dir()

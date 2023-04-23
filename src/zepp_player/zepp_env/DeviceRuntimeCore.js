@@ -19,8 +19,9 @@
 import {TextWidget} from "../ui/DrawingWidgets";
 
 class HmUtilsMock {
-    constructor(runtime) {
+    constructor(runtime, currentAppContext) {
         this.runtime = runtime;
+        this.currentAppContext = currentAppContext;
     }
 
     gettextFactory(table, lang, fallback) {
