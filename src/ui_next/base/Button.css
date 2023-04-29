@@ -1,0 +1,32 @@
+.ui-button {
+    background-color: var(--input);
+    color: var(--input-text);
+    padding: 8px 16px;
+    margin: 8px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.ui-button--primary {
+    background-color: var(--accent);
+}
+
+.ui-button::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    transition: background-color .25s;
+    background-color: rgba(0,0,0,0);
+    content: "";
+}
+
+.ui-button:hover::before {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.ui-button:active::before {
+    background-color: rgba(0,0,0,0.15);
+}

@@ -71,23 +71,6 @@ export class ToolbarManager {
     static init(player) {
         ToolbarManager.player = player;
 
-        ToolbarManager.bindSwitchBtn({
-            blockId: "cfg_keep_state",
-            configId: "cfgKeepState",
-            fallback: true,
-            handler: () => {}
-        });
-
-        ToolbarManager.bindSwitchBtn({
-            blockId: "cfg_auto_refresh",
-            configId: "cfgAutoRefresh",
-            fallback: true,
-            handler: (newValue, initial) => {
-                if(!initial)
-                    location.reload();
-            }
-        })
-
         ToolbarManager.actionToggleEditor = ToolbarManager.bindSwitchBtn({
             blockId: "toggle_edit",
             configId: "panelEditorVisible",
@@ -112,15 +95,6 @@ export class ToolbarManager {
             fallback: true,
             handler: (v) => {
                 document.getElementById("view_explorer").style.display = v ? "" : "none";
-            }
-        });
-
-        ToolbarManager.actionToggleSettings = ToolbarManager.bindSwitchBtn({
-            blockId: "toggle_settings",
-            configId: "panelSettingsVisible",
-            fallback: true,
-            handler: (v) => {
-                document.getElementById("view_settings").style.display = v ? "" : "none";
             }
         });
 

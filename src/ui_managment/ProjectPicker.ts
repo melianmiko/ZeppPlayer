@@ -18,6 +18,7 @@
 
 import {ChangesWatcher} from "./ChangesWatcher";
 import ZeppPlayer from "../zepp_player/ZeppPlayer";
+import AppSettingsManager from "./AppSettingsManager";
 
 export type ProjectRow = {
     title: string,
@@ -34,7 +35,9 @@ export class ProjectPicker {
     }
 
     static async setup(player: ZeppPlayer) {
-        const response = await fetch("/api/list_projects");
+        const preferBuildDir = AppSettingsManager.getObject("preferBuildDir", true);
+
+        const response = await fetch(`/api/list_projects?preferBuildDir=${preferBuildDir}`);
         const projects = await response.json();
         ProjectPicker.projects = projects;
         ProjectPicker.player = player;

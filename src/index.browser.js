@@ -23,7 +23,6 @@ import {ToolbarManager} from "./ui_managment/ToolbarManager.js";
 import {initVersionUI} from "./ui_managment/Updater.js";
 import {ChromeZeppPlayer} from "./zepp_player/ChromeZeppPlayer.js";
 import {PersistentStorage} from "./zepp_player/PersistentStorage.js";
-import {initCssSettings} from "./ui_managment/CssSettingsManager";
 import {ChangesWatcher} from "./ui_managment/ChangesWatcher";
 import {start as startNgUi} from "./ui_next/RootComponent";
 import {PlayerSettingsLoader} from "./ui_next/PlayerSettingsLoader";
@@ -67,7 +66,7 @@ const start = async () => {
     // EditorManager.init(player);
     ConsoleManager.init(player);
     ExplorerManager.init(player);
-    initCssSettings();
+    // initCssSettings();
 
     await player.init();
 

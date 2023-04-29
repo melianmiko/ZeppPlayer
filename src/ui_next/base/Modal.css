@@ -1,0 +1,32 @@
+.ui-modal {
+  background-color: var(--panel);
+  border-radius: 8px;
+  margin: 24px;
+  max-height: calc(90% - 48px);
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-modal__title {
+  margin: 24px 16px;
+  font-size: 1.3em;
+  user-select: none;
+}
+
+.ui-modal__content {
+  overflow: auto;
+}
+
+.ui-modal__content--margin {
+  margin: 16px;
+}
+
+.ui-modal__actions {
+  user-select: none;
+  margin: 24px 8px 16px;
+}
+
+.ui-modal__actions > .ui-button {
+  display: inline-block;
+  margin: 0 8px;
+}

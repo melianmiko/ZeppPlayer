@@ -27,7 +27,7 @@
         <span title="Object explorer" class="material-symbols-outlined bigscreen" id="toggle_explorer">
             explorer
         </span>
-        <span title="Player settings" class="material-symbols-outlined bigscreen" id="toggle_settings">
+        <span title="Player settings" class="material-symbols-outlined bigscreen" onclick="_setReactPane('settings')">
             settings
         </span>
     </div>
@@ -82,78 +82,12 @@
         <div class="root">
             <canvas id="display"></canvas>
             <div class="bigscreen">
-                <div id="view_settings" class="base_panel cfg_panel" style="display: none">
-                    <div>
-                        <span class="group_icon material-symbols-outlined">
-                            smartphone
-                        </span>
-                        <div class="contents">
-                            <div class="editor_item">
-                                <h3>Keep state</h3>
-                                <input type="checkbox" id="cfg_keep_state" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Auto-refresh</h3>
-                                <input type="checkbox" id="cfg_auto_refresh" />
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <span class="group_icon material-symbols-outlined">
-                            palette
-                        </span>
-                        <div class="contents">
-                            <div class="editor_item">
-                                <h3>Background</h3>
-                                <input type="color" id="css_background" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Foreground</h3>
-                                <input type="color" id="css_foreground" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Panel</h3>
-                                <input type="color" id="css_panel" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Panel text</h3>
-                                <input type="color" id="css_panel-text" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Editor</h3>
-                                <input type="color" id="css_editor" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Editor text</h3>
-                                <input type="color" id="css_editor-text" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Input field</h3>
-                                <input type="color" id="css_input" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Input field text</h3>
-                                <input type="color" id="css_input-text" />
-                            </div>
-                            <div class="editor_item">
-                                <h3>Accent color</h3>
-                                <input type="color" id="css_accent" />
-                            </div>
-                        </div>
-                    </div>
-                    <aside class="caption">
-                        Any changes will be applied after page refresh.
-                        <a href="#" onclick="localStorage.clear(); location.reload()">
-                            Wipe everything.
-                        </a>
-                    </aside>
-                </div>
                 <div id="view_console" class="base_panel" style="display: none"></div>
                 <div id="view_edit" class="base_panel" style="display: none"></div>
                 <div id="view_explorer" class="base_panel" style="display: none">
                     <div>
-                        <button id="explorer_reload_widgets">Widgets</button>
-                        <button id="explorer_reload_timers">Timers</button>
+                        <button class="legacy-button" id="explorer_reload_widgets">Widgets</button>
+                        <button class="legacy-button" id="explorer_reload_timers">Timers</button>
                     </div>
                     <div id="explorer_data">
                         <aside class="caption">

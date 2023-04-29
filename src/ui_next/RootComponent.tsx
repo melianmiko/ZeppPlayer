@@ -4,6 +4,9 @@ import {ServerDirectoryPicker} from "./ServerDirectoryPicker";
 import {PropEditorPanel} from "./panels/PropEditorPanel";
 import ZeppPlayer from "../zepp_player/ZeppPlayer";
 import {CommandPicker} from "./CommandPicker";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "./base/Modal";
+import {Button} from "./base/Button";
+import {PlayerSettingsPane} from "./settings_pane/PlayerSettingsPane";
 
 
 export function RootComponent() {
@@ -16,6 +19,8 @@ export function RootComponent() {
                                    onCancel={() => setPane("")} />
             <CommandPicker open={pane == "command_picker"}
                            onCancel={() => setPane("")} />
+            <PlayerSettingsPane open={pane == "settings"}
+                                onCancel={() => setPane("")} />
         </>
     )
 }

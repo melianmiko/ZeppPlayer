@@ -165,7 +165,7 @@ hr {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-select, input, button {
+select, input, .legacy-button {
     background-color: var(--input);
     border: none;
     color: var(--input-text);

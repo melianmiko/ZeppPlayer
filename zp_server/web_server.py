@@ -75,6 +75,8 @@ def list_projects():
     projects_dir = _get_projects_dir()
     out = []
 
+    prefer_build = bottle.request.query["preferBuildDir"] == "true"
+
     for entry in sorted(projects_dir.iterdir()):
         if not entry.is_dir():
             continue
@@ -82,7 +84,7 @@ def list_projects():
             continue
 
         load_url = f"/projects/{entry.name}"
-        if (entry / "build" / "app.json").is_file():
+        if prefer_build and (entry / "build" / "app.json").is_file():
             # ZMake build project fix
             load_url = f"/projects/{entry.name}/build"
 
