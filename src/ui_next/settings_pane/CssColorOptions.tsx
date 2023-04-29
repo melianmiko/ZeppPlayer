@@ -18,7 +18,7 @@ export function CssColorOptions() {
         <>
             {Object.keys(CSS_OPTIONS).map((key) => <CssSettingsOption
                 title={CSS_OPTIONS[key]}
-                description="Player UI color"
+                description=""
                 cssPropName={key} />)}
         </>
     )

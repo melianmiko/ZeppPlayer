@@ -18,7 +18,7 @@ export function RootComponent() {
             <ServerDirectoryPicker open={pane == "change_projects_dir"}
                                    onCancel={() => setPane("")} />
             <CommandPicker open={pane == "command_picker"}
-                           onCancel={() => setPane("")} />
+                           changePane={setPane} />
             <PlayerSettingsPane open={pane == "settings"}
                                 onCancel={() => setPane("")} />
         </>

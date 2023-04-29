@@ -26,14 +26,16 @@
 
 .ui-settings-item__info {
     flex: 1;
+    margin-bottom: -0.3rem;
 }
 
 .ui-settings-item__title {
-    margin-bottom: .3em;
+    margin-bottom: .3rem;
     font-size: 1.1em;
 }
 
 .ui-settings-item__description {
+    margin-bottom: .3rem;
     font-size: .9em;
     opacity: .6;
 }

@@ -16,7 +16,7 @@ export function PlayerSettingsPane(props: BackdropProps) {
     }
 
     return (
-        <Dialog {...props}>
+        <Dialog {...props} maxWidth="500px">
             <DialogTitle>
                 ZeppPlayer Settings
             </DialogTitle>
