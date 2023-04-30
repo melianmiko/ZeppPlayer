@@ -19,7 +19,7 @@
 import { PersistentStorage } from "../PersistentStorage.js";
 import { BaseWidget } from "./BaseWidget.js";
 import { ImageWidget } from "./ImagingWidgets.js";
-import {TextWidget} from "./DrawingWidgets";
+import {TextWidget} from "./widget/TextWidget";
 
 /**
  * BaseWidget with some extra fixes for editor widgets.

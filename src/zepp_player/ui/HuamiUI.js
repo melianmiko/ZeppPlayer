@@ -20,12 +20,13 @@
 
 import {GroupWidget, DelegateWidget, RadioGroupWidget, StateButtonWidget} from "./ApplicationWidgets.js"
 import { DatePointer, DateWidget, TimePointer, TimeWidget, WeekdayWidget } from "./DatetimeWidgets.js";
-import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget, TextWidget } from "./DrawingWidgets.js";
+import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget } from "./DrawingWidgets.js";
 import {EditableBackground, EditGroupWidget, EditPointerWidget} from "./EditableWatchfaceWidgets.js";
 import { ButtonWidget } from "./FormWidgets.js";
 import { HistogramWidget } from "./HistogramWidget.js";
 import { AnimationWidget, ClickableImageWidget, ImageProgressWidget, ImageStatusWidget, ImageWidget, LevelWidget, MissingWidget, PointerWidget, TextImageWidget } from "./ImagingWidgets.js";
 import {ScrollList} from "./ScrollList";
+import {TextWidget} from "./widget/TextWidget";
 
 export default class HuamiUIMock {
     _idCounter = 0;

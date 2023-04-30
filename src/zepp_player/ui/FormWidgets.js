@@ -18,8 +18,9 @@
 
 import { zeppColorToHex } from "../Utils.js";
 import { BaseWidget } from "./BaseWidget.js";
-import { FillRectWidget, TextWidget } from "./DrawingWidgets.js";
+import { FillRectWidget } from "./DrawingWidgets.js";
 import { ImageWidget } from "./ImagingWidgets.js";
+import {TextWidget} from "./widget/TextWidget";
 
 /**
  * hmUI.widget.BUTTON

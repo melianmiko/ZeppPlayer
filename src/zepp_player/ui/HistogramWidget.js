@@ -18,7 +18,7 @@
 
 import { zeppColorToHex } from "../Utils.js";
 import { BaseWidget } from "./BaseWidget.js";
-import { TextWidget } from "./DrawingWidgets.js";
+import {TextWidget} from "./widget/TextWidget";
 
 /**
  * hmUI.widget.HISTOGRAM

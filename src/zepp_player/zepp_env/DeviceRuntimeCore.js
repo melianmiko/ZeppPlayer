@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {TextWidget} from "../ui/DrawingWidgets";
+import {TextWidget} from "../ui/widget/TextWidget";
 
 class HmUtilsMock {
     constructor(runtime, currentAppContext) {

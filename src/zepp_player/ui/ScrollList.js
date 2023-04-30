@@ -1,8 +1,9 @@
 // noinspection JSUnresolvedVariable
 
 import {BaseWidget} from "./BaseWidget";
-import {FillRectWidget, TextWidget} from "./DrawingWidgets";
+import {FillRectWidget} from "./DrawingWidgets";
 import {ImageWidget} from "./ImagingWidgets";
+import {TextWidget} from "./widget/TextWidget";
 
 export class ScrollList extends BaseWidget {
     constructor(conf) {
