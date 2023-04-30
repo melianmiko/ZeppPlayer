@@ -1,3 +1,13 @@
+zeppplayer (1.6-1) bookworm jammy kinetic lunar; urgency=medium
+
+  * Fix: TEXT_IMG unit alignment
+  * Fix: TIME sensor ".utc" prop update
+  * New: Switch to "build" subfolder if them exists (can be disabled)
+  * New: Command palette (Ctrl-P)
+  * Refactor: New settings modal
+
+ -- MelianMiko <melianmiko@gmail.com>  Sun, 30 Apr 2023 18:28:30 +0700
+
 zeppplayer (1.5.6-1) bookworm jammy kinetic lunar; urgency=medium
 
   * Fix: hmUI.deleteWidget() bugs

@@ -213,7 +213,7 @@ export class TextImageWidget extends BaseWidget {
         if(config["unit_" + runtime.language]) {
             try {
                 unitImg = await runtime.getAssetImage(config["unit_" + runtime.language]);
-                fullWidth += hSpace + unitImg.width;
+                // fullWidth += hSpace + unitImg.width;
                 if(text.indexOf("u") < 0) text += "u";
             } catch(e) {}
         }
