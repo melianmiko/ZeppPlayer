@@ -421,6 +421,18 @@ export function createDeviceState() {
             type: "string",
             maxLength: 12 // UI align
         },
+        STOP_WATCH: {
+            value: "-",
+            maxLength: 5,
+            groupIcon: "apps",
+            getString: (t) => t.value
+        },
+        COUNT_DOWN: {
+            value: "-",
+            maxLength: 5,
+            groupIcon: "apps",
+            getString: (t) => t.value
+        },
         FAT_BURNING: {
             value: 0,
             type: "number",
@@ -474,7 +486,7 @@ export function createDeviceState() {
             notEditable: true,
             maxLength: 5,
             getString: (t) => t.value
-        }
+        },
     };
 
     return state;
