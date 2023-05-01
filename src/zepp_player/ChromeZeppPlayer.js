@@ -154,7 +154,7 @@ export class ChromeZeppPlayer extends ZeppPlayer {
             y += this.renderScroll;
 
             const context = canvas.getContext("2d");
-            const baseColor = this.getDeviceState("OVERLAY_COLOR");
+            const baseColor = this.getDeviceState("OVERLAY_COLOR", "string");
 
             context.save();
             context.lineWidth = 1;

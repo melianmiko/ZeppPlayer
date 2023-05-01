@@ -103,9 +103,7 @@ export class ToolbarManager {
             configId: "overlayVisible",
             fallback: true,
             handler: (v) => {
-                ToolbarManager.player.render_overlay = v;
-                if(ToolbarManager.player.currentRuntime)
-                    ToolbarManager.player.currentRuntime.refresh_required = "ui";
+                ToolbarManager.player.config.renderDeviceOverlay = v;
             }
         })
 
@@ -221,14 +219,14 @@ export class ToolbarManager {
      */
     static _refresh() {
         const runtime = ToolbarManager.player.currentRuntime
+        const renderLevel = ToolbarManager.player.getRenderLevel();
         const data = [
             [ToolbarManager.toggleEventZones, ToolbarManager.player.showEventZones],
             [ToolbarManager.togglePause, runtime && runtime.uiPause],
             [ToolbarManager.toggleShift, ToolbarManager.player.withShift],
-            // [ToolbarManager.toggleFrames, ToolbarManager.player.render_overlay],
-            [ToolbarManager.toggleMode1, ToolbarManager.player.current_level === 1],
-            [ToolbarManager.toggleMode2, ToolbarManager.player.current_level === 2],
-            [ToolbarManager.toggleMode4, ToolbarManager.player.current_level === 4]
+            [ToolbarManager.toggleMode1, renderLevel === 1],
+            [ToolbarManager.toggleMode2, renderLevel === 2],
+            [ToolbarManager.toggleMode4, renderLevel === 4]
         ];
 
         for(let i in data) {

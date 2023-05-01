@@ -21,13 +21,9 @@ export default class ZeppPlayerConfig {
 
     _currentRenderLevel = 1;
     _renderEventZones = false;
-    _renderWithoutTransparency = true;
     _renderAutoShift = false;
     _renderOverlay = true;
-    _renderLanguage = "en";
     _renderScroll = 0;
-
-    withScriptConsole = true;
 
     get renderScroll() {
         return this._renderScroll;
@@ -37,24 +33,7 @@ export default class ZeppPlayerConfig {
         this._renderScroll = Math.max(0, v);
         if(this.currentRuntime) this.currentRuntime.refresh_required = true;
     }
-
-    get current_level() {
-        return this._currentRenderLevel;
-    }
-
-    set current_level(_) {
-        throw new Error("Can't set directly, use setRenderLevel()")
-    }
-
-    get render_overlay() {
-        return this._renderOverlay;
-    }
-
-    set render_overlay(val) {
-        this._renderOverlay = val;
-        if(this.currentRuntime) this.currentRuntime.refresh_required = true;
-    }
-
+    
     get showEventZones() {
         return this._renderEventZones;
     }
@@ -62,15 +41,6 @@ export default class ZeppPlayerConfig {
     set showEventZones(val) {
         this._renderEventZones = val;
         if(this.currentRuntime) this.currentRuntime.refresh_required = true;
-    }
-
-    get withoutTransparency() {
-        return this._renderWithoutTransparency;
-    }
-
-    set withoutTransparency(val) {
-        this._renderWithoutTransparency = val;
-        this.refresh_required = true; 
     }
 
     get withShift() {

@@ -1,11 +1,10 @@
 import {PropsWithPlayer} from "../../types/ReactProps";
 import React from "preact/compat";
 import {CheckboxWithLabel} from "../../base/CheckboxWithLabel";
-import {RealTimeTicker} from "../../../zepp_player/tools/RealTimeTicker";
 
 export function RealTimeSwitch(props: PropsWithPlayer<{}>) {
     function toggle(e: any) {
-        e.target.checked ? RealTimeTicker.start(props.player) : RealTimeTicker.stop();
+        props.player.config.enableRTC = e.target.checked;
     }
 
     return (

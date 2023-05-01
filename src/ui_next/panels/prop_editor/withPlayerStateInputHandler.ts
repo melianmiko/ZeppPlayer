@@ -7,7 +7,7 @@ export function withPlayerStateInputHandler(props: PropEditorEntryProps): [strin
 
     function onInput(e: any) {
         let value = e.target.value;
-        if(props.entry.type === "number") value = Number(value);
+        if(props.entry.displayConfig.type === "number") value = Number(value);
 
         props.player.setDeviceState(props.name, value);
         setValue(value);

@@ -23,6 +23,7 @@ import {GroupedPlayerStates} from "../types/PlayerProps";
 import {PropEditorGroup} from "./prop_editor/PropEditorGroup";
 import {PropEditorEntry} from "./prop_editor/PropEditorEntry";
 import {RealTimeSwitch} from "./prop_editor/RealTimeSwitch";
+import {DeviceStateEntry} from "../../zepp_player/device_state/DeviceStateEntry";
 
 function withGroupedPlayerProps(player: ZeppPlayer) {
     const [data, setData] = React.useState<GroupedPlayerStates>(null);
@@ -32,8 +33,9 @@ function withGroupedPlayerProps(player: ZeppPlayer) {
 
         const groupedStates: GroupedPlayerStates = {};
         for(const key in player._deviceState) {
-            const entry = player.getStateEntry(key);
-            const group = entry.groupIcon ? entry.groupIcon : "inventory_2";
+            const entry: DeviceStateEntry<any> = player.getStateEntry(key);
+            if(!entry.displayConfig) continue;
+            const group = entry.displayConfig.groupIcon;
             if(!groupedStates.hasOwnProperty(group))
                 groupedStates[group] = {};
             groupedStates[group][key] = entry;

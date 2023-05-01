@@ -30,7 +30,6 @@ export class NodeZeppPlayer extends ZeppPlayer {
 
         // Create fake localStorage for persistent
         global.localStorage = {};
-        this.withScriptConsole = false;
     }
 
     async listDirectory(path) {

@@ -26,8 +26,18 @@ import {createAppEnv} from "./SyystemEnvironment";
 import {DeviceProfiles} from "./DeviceProfiles";
 
 export default class ZeppPlayer extends ZeppPlayerConfig {
+    timerRtcUpdate = null;
+
+    config = {
+        renderWithoutTransparency: true,
+        enableRTC: false,
+        renderDeviceOverlay: true,
+    }
+
     constructor() {
         super();
+
+        this.config = ZeppPlayer.createConfigProxy(this);
 
         this._lastCanvas = null;
         this.profileName = "sb7";
@@ -43,6 +53,33 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         // Device state
         this._deviceState = createDeviceState();
         this._deviceStateChangeEvents = {};
+    }
+
+    static createConfigProxy(player) {
+        return new Proxy(player.config, {
+            set(obj, prop, value) {
+                obj[prop] = value;
+                player.handleConfigChange();
+                return true;
+            }
+        })
+    }
+
+    handleConfigChange() {
+        if(this.timerRtcUpdate !== null && !this.config.enableRTC) {
+            clearInterval(this.timerRtcUpdate)
+            this.timerRtcUpdate = null
+        } else if(this.timerRtcUpdate === null && this.config.enableRTC) {
+            this.timerRtcUpdate = setInterval(() => {
+                if(this.currentRuntime) {
+                    this.currentRuntime.refresh_required = "rtc_timer";
+                }
+            }, 500);
+        }
+
+        if(this.currentRuntime) {
+            this.currentRuntime.refresh_required = "config_changed";
+        }
     }
 
     /**
@@ -138,16 +175,17 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         const v = this._deviceState[type];
         switch(dataType) {
             case "progress":
-                return Math.min(1, v.getProgress(v));
+                return Math.min(1, v.getProgress(this));
             case "pointer_progress":
-                return v.getProgress(v);
+                return v.getProgress(this);
             case "string":
-                return v.getString(v);
+                return v.getString(this);
             case "maxLength":
-                return v.maxLength;
+                return v.displayConfig.maxLength;
             case "boolean":
-                return v.getBoolean(v);
+                return v.getBoolean(this);
             default:
+                if(v.getNumber) return v.getNumber(this);
                 return v.value;
         }
     }
@@ -159,7 +197,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
     }
 
     setDeviceState(type, value, requireRefresh=true) {
-        this._deviceState[type].value = value;
+        this._deviceState[type].setValue(value);
         if(this._deviceStateChangeEvents[type]) {
             for(let i in this._deviceStateChangeEvents[type]) {
                 this._deviceStateChangeEvents[type][i]()
@@ -402,9 +440,13 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
     }
 
+    getRenderLevel() {
+        return this._currentRenderLevel;
+    }
+
     async setRenderLevel(val) {
         if(this.appType !== "watchface") return;
-        if(val === this.current_level) return;
+        if(val === this._currentRenderLevel) return;
 
         const currentVal = this._currentRenderLevel;
 
@@ -453,7 +495,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         canvas.height = this.screen[1] + this.renderScroll;
 
         // Fill with black
-        if(this.withoutTransparency) {
+        if(this.config.renderWithoutTransparency) {
             ctx.fillStyle = "#000000";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
@@ -481,7 +523,7 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
 
         // Overlay
-        if(this.render_overlay && this.profileData.hasOverlay) {
+        if(this.config.renderDeviceOverlay && this.profileData.hasOverlay) {
             await this.overlayTool.drawDeviceFrame(canvas);
         }
 

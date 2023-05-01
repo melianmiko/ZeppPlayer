@@ -9,7 +9,7 @@ export function PropSelectInput(props: PropEditorEntryProps) {
 
     return (
         <select value={value} onInput={onInput} onKeyUp={preventPropagation}>
-            {props.entry.options.map((v) => <option>{v}</option>)}
+            {props.entry.displayConfig.options.map((v) => <option>{v}</option>)}
         </select>
     )
 }

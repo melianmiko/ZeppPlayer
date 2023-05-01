@@ -1,3 +1,5 @@
+import {DeviceStateEntry} from "../../zepp_player/device_state/DeviceStateEntry";
+
 export type PlayerStateEntry = {
     type?: "number" | "select" | "string" | "boolean",
     notEditable?: boolean,
@@ -14,6 +16,6 @@ export type PlayerStateEntry = {
 
 export type GroupedPlayerStates = {
     [id: string]: {
-        [name: string]: PlayerStateEntry
+        [name: string]: DeviceStateEntry<any>
     }
 };

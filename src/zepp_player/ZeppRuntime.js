@@ -25,7 +25,6 @@ export default class ZeppRuntime {
         this.screen = this.player.screen;
         this.profileData = this.player.profileData;
         this.appConfig = this.player.appConfig;
-        this.withScriptConsole = this.player.withScriptConsole;
     }
 
     get renderScroll() {
