@@ -12,7 +12,7 @@ export default class ZeppRuntime {
     onInitParam = null;
 
     uiPause = false;
-    refresh_required = false;
+    refresh_required = "";
     animMaxFPS = false;
     
     constructor(player, scriptPath, showLevel) {
@@ -110,7 +110,7 @@ export default class ZeppRuntime {
         this.events = [];
         this.postRenderTasks = [];
         this.contentHeight = 0;
-        this.refresh_required = false;
+        this.refresh_required = "";
         this.render_counter = (this.render_counter + 1) % 3000;
 
         // Render all widgets

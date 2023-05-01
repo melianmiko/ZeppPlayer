@@ -18,15 +18,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {GroupWidget, DelegateWidget, RadioGroupWidget, StateButtonWidget} from "./ApplicationWidgets.js"
-import { DatePointer, DateWidget, TimePointer, TimeWidget, WeekdayWidget } from "./DatetimeWidgets.js";
-import { ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget } from "./DrawingWidgets.js";
+import {DelegateWidget, GroupWidget, RadioGroupWidget, StateButtonWidget} from "./ApplicationWidgets.js"
+import {DatePointer, DateWidget, TimePointer, TimeWidget, WeekdayWidget} from "./DatetimeWidgets.js";
+import {ArcProgressWidget, ArcWidget, CircleWidget, FillRectWidget, StrokeRectWidget} from "./DrawingWidgets.js";
 import {EditableBackground, EditGroupWidget, EditPointerWidget} from "./EditableWatchfaceWidgets.js";
-import { ButtonWidget } from "./FormWidgets.js";
-import { HistogramWidget } from "./HistogramWidget.js";
-import { AnimationWidget, ClickableImageWidget, ImageProgressWidget, ImageStatusWidget, ImageWidget, LevelWidget, MissingWidget, PointerWidget, TextImageWidget } from "./ImagingWidgets.js";
+import {ButtonWidget} from "./FormWidgets.js";
+import {HistogramWidget} from "./HistogramWidget.js";
+import {
+    AnimationWidget,
+    ClickableImageWidget,
+    ImageProgressWidget,
+    ImageStatusWidget,
+    ImageWidget,
+    LevelWidget,
+    MissingWidget,
+    PointerWidget,
+    TextImageWidget
+} from "./ImagingWidgets.js";
 import {ScrollList} from "./ScrollList";
 import {TextWidget} from "./widget/TextWidget";
+import {PolylineWidget} from "./widget/PolylineWidget";
 
 export default class HuamiUIMock {
     _idCounter = 0;
@@ -51,6 +62,7 @@ export default class HuamiUIMock {
         WATCHFACE_EDIT_BG: EditableBackground,
         WATCHFACE_EDIT_GROUP: EditGroupWidget,
         WATCHFACE_EDIT_POINTER: EditPointerWidget,
+        GRADKIENT_POLYLINE: PolylineWidget,
         TIME_POINTER: TimePointer,
         DATE_POINTER: DatePointer,
         IMG_CLICK: ClickableImageWidget,

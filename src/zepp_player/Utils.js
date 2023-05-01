@@ -17,6 +17,8 @@
 */
 
 export function zeppColorToHex(i) {
+    if(i === null || i === undefined) return "#000000";
+
     if(typeof i == "string") {
         if(i.startsWith("0x")) {
             // Fuck you............

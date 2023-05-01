@@ -70,6 +70,9 @@ export function createPageEnv(runtime, appRuntime) {
     object.Logger = object.DeviceRuntimeCore.HmLogger;
     object.WatchFace = (conf) => object.DeviceRuntimeCore.WatchFace(conf);
 
+    // Override x to prevent conflict with preact
+    object.x = undefined;
+
     // Custom
     const glob = appRuntime.__$$hmAppManager$$__.currentApp.app.__globals__;
     for(let i in glob) {

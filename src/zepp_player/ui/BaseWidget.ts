@@ -16,26 +16,32 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export class BaseWidget {
-    setPropertyBanlist = [];
+import ZeppRuntime from "../ZeppRuntime";
+import {BaseWidgetConfig, BaseWidgetEventHandler, BaseWidgetEvents} from "../types/BaseWidgetTypes";
+import {CanvasEntry} from "../types/EnvironmentTypes";
 
-    constructor(config) {
+export abstract class BaseWidget<T> {
+    setPropertyBanlist: string[] = [];
+    config: BaseWidgetConfig & T;
+    runtime: ZeppRuntime;
+    positionInfo: [number, number, number, number];
+    events: BaseWidgetEvents = {
+        "onmousemove": null,
+        "onmouseup": null,
+        "onmousedown": null
+    }
+
+    constructor(config: BaseWidgetConfig & T) {
         this.config = config;
         this.runtime = config.__runtime;
-        this.positionInfo = false;
+        this.positionInfo = null;
 
         if(!this.config.visible) this.config.visible = true;
-
-        this.events = {
-            "onmousemove": null,
-            "onmouseup": null,
-            "onmousedown": null
-        };
 
         this.init();
     }
 
-    async render() {}
+    abstract render(canvas: CanvasEntry, runtime: ZeppRuntime): Promise<void>;
 
     init() {}
 
@@ -63,40 +69,34 @@ export class BaseWidget {
         return !((show_level & this.runtime.showLevel) === 0 && show_level);
     }
 
-    _getPlainConfig() {
-        const out = {};
+    setProperty(prop: string, val: any) {
+        const config = this.config as any;
 
-        for(let i in this.config) {
-            if(i[0] !== "_") out[i] = this.config[i];
-        }
-
-        return out;
-    }
-
-    setProperty(prop, val) {
         if(prop === undefined) {
             console.warn("This prop was missing in simulator. Please, debug me...");
         }
 
         if(prop === "more") {
-            for(var a in val) {
+            for(let a in val) {
                 if(this.setPropertyBanlist.indexOf(a) > -1) {
                     const info = `You can't set ${a} in ${this.constructor.name} via hmUI.prop.MORE. Player crashed.`;
                     this.runtime.onConsole("SystemWarning", [info]);
                     this.runtime.destroy();
                     throw new Error(info);
                 }
-                this.config[a] = val[a];
+                config[a] = val[a];
             }
             this.runtime.refresh_required = "set_prop";
             return;
         }
 
-        this.config[prop] = val;
+        config[prop] = val;
         this.runtime.refresh_required = "set_prop";
     }
 
-    getProperty(key, second) {
+    getProperty(key: string, second?: any): any {
+        const config = this.config as any;
+
         if(!this._isVisible()) {
             console.warn("attempt to getprop on invisible", this, key);
             return undefined;
@@ -104,31 +104,24 @@ export class BaseWidget {
 
         if(key === "more") {
             if(typeof second !== "object") 
-                this.player.onConsole("SystemWarning", [
+                this.runtime.onConsole("SystemWarning", [
                     "When using getProperty with MORE, you must give empty "+
                     "object as second param."
                 ]);
-            return this.config;
+            return config;
         }
-        return this.config[key];
+
+        return config[key];
     }
 
-    addEventListener(event, fn) {
+    addEventListener(event: string, fn: BaseWidgetEventHandler) {
         this.events[event] = fn;
     }
 
-    removeEventListener(event, fn) {
-        for(let a in this.events) {
-            if(this.events[a][0] === event && this.events[a][1] + "" === fn + "") {
-                this.events.splice(a, 1);
-                return;
-            }
-        }
-    }
-
-    dropEvents(player, zone=null) {
+    dropEvents(runtime: ZeppRuntime, zone: number[]=null) {
         const config = this.config;
-        if(zone == null) zone = [config.x, config.y, config.w, config.h];
+        if(zone == null)
+            zone = [config.x, config.y, config.w, config.h];
 
         let [x1, y1, x2, y2] = zone;
         if(config.__eventOffsetX) {
@@ -140,7 +133,7 @@ export class BaseWidget {
             y2 += config.__eventOffsetY;
         }
 
-        player.dropEvents(this.events, x1, y1, x2, y2);
+        runtime.dropEvents(this.events, x1, y1, x2, y2);
         this.positionInfo = [x1, y1, x2, y2];
     }
 }

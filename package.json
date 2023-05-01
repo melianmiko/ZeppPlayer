@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/uuid": "^9.0.1",
-    "esbuild": "^0.14.49",
+    "esbuild": "^0.17.18",
     "gif-encoder-2": "^1.0.5",
     "normalize-path": "^3.0.0",
     "path-normalize": "^6.0.6",
