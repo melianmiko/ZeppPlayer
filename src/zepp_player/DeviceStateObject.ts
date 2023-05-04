@@ -294,7 +294,7 @@ export function createDeviceState() {
                 maxLength: 4,
             },
             getString: () => {
-                return this.value.toFixed(2);
+                return this.getNumber().toFixed(2);
             },
         }),
         CAL: new NumberDeviceState({
