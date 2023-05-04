@@ -7,7 +7,6 @@ export class PlayerSettingsLoader {
         // Load CSS colors
         for(const key in CSS_OPTIONS) {
             const value = AppSettingsManager.getString(`css_${key}`, null);
-            console.log(key, value);
             if(value != null)
                 document.documentElement.style.setProperty(`--${key}`, value);
         }

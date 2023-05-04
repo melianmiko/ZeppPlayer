@@ -78,7 +78,7 @@ export abstract class BaseWidget<T> {
 
         if(prop === "more") {
             for(let a in val) {
-                if(this.setPropertyBanlist.indexOf(a) > -1) {
+                if(this.setPropertyBanlist.indexOf(a) > -1 && this.runtime.profileData.enablePropBanList) {
                     const info = `You can't set ${a} in ${this.constructor.name} via hmUI.prop.MORE. Player crashed.`;
                     this.runtime.onConsole("SystemWarning", [info]);
                     this.runtime.destroy();

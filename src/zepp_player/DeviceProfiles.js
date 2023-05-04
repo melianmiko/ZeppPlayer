@@ -4,6 +4,7 @@ export const DeviceProfiles = {
         screenWidth: 192,
         screenHeight: 490,
         deviceName: "Xiaomi Smart Band 7",
+        enablePropBanList: true,
     },
     ab7: {
         hasOverlay: true,

@@ -19,6 +19,10 @@ export class NumberDeviceState extends DeviceStateEntry<number> {
         return this.value;
     }
 
+    getString(player: ZeppPlayer): string {
+        return this.getNumber(player).toString();
+    }
+
     getProgress(player: ZeppPlayer): number {
         return this.getNumber(player) / this.maxValue;
     }
