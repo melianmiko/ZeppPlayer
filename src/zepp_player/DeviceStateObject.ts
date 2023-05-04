@@ -293,7 +293,7 @@ export function createDeviceState() {
                 groupIcon: "fitness_center",
                 maxLength: 4,
             },
-            getString: () => {
+            getString() {
                 return this.getNumber().toFixed(2);
             },
         }),
