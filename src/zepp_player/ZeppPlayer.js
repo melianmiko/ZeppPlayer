@@ -535,9 +535,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
     performShift(tick) {
         for(let i in this._deviceState) {
-            if(this._deviceState[i].shift) {
-                const v = this._deviceState[i].shift(tick, this._deviceState[i]);
-                if(v !== null) this.setDeviceState(i, v);
+            if(this._deviceState[i].performShift) {
+                this._deviceState[i].performShift(tick, this);
             }
         }
     }
