@@ -12,7 +12,7 @@ export class NumberDeviceState extends DeviceStateEntry<number> {
     }
 
     setValue(value: number) {
-        this.value = parseInt(value as any);
+        this.value = parseFloat(value as any);
     }
 
     getNumber(player: ZeppPlayer): number {
