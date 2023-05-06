@@ -9,8 +9,10 @@ less compatible.
 - [💿 Binary download](https://melianmiko.ru/en/zepp_player/)
 
 ## Build from source code
-1. Create python virtualenv
-2. Enable that environment
+Requirements: python3 with pip and venv, esbuild, nodejs and npm.
+
+1. `npm ci` and `npm run build`
+2. Create python virtualenv and activate them
 3. Install dependencies via `pip install -r requirements.txt`
 4. Run `python make_release.py`
 
