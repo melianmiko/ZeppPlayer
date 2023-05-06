@@ -54,7 +54,7 @@ export default class GifRecorder {
         for(let i = 0; i < FPS * SECONDS * 2; i++) {
             if(i === FPS*SECONDS) await this.player.setRenderLevel(2);
 
-            const canvas = await this.player.render();
+            const canvas = await this.player.render(true);
             gif.addFrame(canvas, {delay: Math.round(1000 / FPS)});
 
             this.player.performShift(i);

@@ -1,0 +1,5 @@
+PROJECT_ID=ZeppPlayer
+PROJECT_SERVER_DIR=zepp_player
+PROJECT_URL=https://melianmiko.ru/en/zepp_player
+WIN_AUTO_UNPACK=true
+
