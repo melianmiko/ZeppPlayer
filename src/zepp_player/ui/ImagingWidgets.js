@@ -255,13 +255,13 @@ export class TextImageWidget extends BaseWidget {
         // Draw
         let px = TextImageWidget.getAlignOffsetX(config.align_h, tmp.width, fullWidth);
 
-        function drawIfDefined(image) {
+        function drawIfDefined(image, spacing=hSpace) {
             if(image == null) return;
             ctx.drawImage(image, px, 0);
-            px += image.width + hSpace;
+            px += image.width + spacing;
         }
 
-        drawIfDefined(iconImg);
+        drawIfDefined(iconImg, iconSpace);
         for(const liter of text) {
             switch (liter) {
                 case "-":

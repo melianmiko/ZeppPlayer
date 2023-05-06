@@ -1,6 +1,7 @@
-zeppplayer (1.6.1.1-1) bookworm jammy kinetic lunar; urgency=medium
+zeppplayer (1.6.2-1) bookworm jammy kinetic lunar; urgency=medium
 
   * Fix +1 func
+  * Fix icon_space prop
 
  -- MelianMiko <melianmiko@gmail.com>  Sat, 06 May 2023 17:24:54 +0700
 
