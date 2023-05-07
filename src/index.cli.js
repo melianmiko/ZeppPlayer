@@ -37,6 +37,11 @@ const argv = yargs(hideBin(process.argv))
         default: true,
         boolean: true
     })
+    .option('dump', {
+        describe: "Only dump widgets list",
+        default: true,
+        boolean: true
+    })
     .option("o", {
         describe: "Output path, {} will be replaced with current project path",
         type: "string",
@@ -91,12 +96,26 @@ async function main() {
             player.withStagingDump = argv.stage;
     
             let output = argv.o.replace("{}", project);
-    
+
+            console.log("[ZeppPlayer] Rendering...");
+            const png = await player.render();
             if(argv.png) {
-                console.log("[ZeppPlayer] Rendering PNG...");
-                const png = await player.render();
                 fs.writeFileSync(output + "/preview.png", png.toBuffer());
                 console.log("[ZeppPlayer] PNG saved to: " + output + "/preview.png");
+            }
+
+            if(argv.dump) {
+                const widgetData = [];
+                for(const widget of player.currentRuntime.widgets) {
+                    const out = {};
+                    for(const key in widget.config)
+                        if(!key.startsWith("__") || key === "__widget")
+                            out[key] = widget.config[key];
+                    widgetData.push(out);
+                }
+
+                fs.writeFileSync(output + "/widgets.json", JSON.stringify(widgetData));
+                console.log("[ZeppPlayer] Widgets data saved to: " + output + "/widgets.json");
             }
 
             if(argv.gif) {
