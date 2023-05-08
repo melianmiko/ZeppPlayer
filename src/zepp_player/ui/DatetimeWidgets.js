@@ -305,8 +305,10 @@ export class DateWidget extends BaseWidget {
                 if(!offset) offset = 0;
                 let expectedWidth = fullLength * (basementImg.width + offset);
                 if(config[prefix + "unit_en"]) {
-                    let unit = await runtime.getAssetImage(config[prefix + "unit_en"]);
-                    expectedWidth += unit.width;
+                    try {
+                        let unit = await runtime.getAssetImage(config[prefix + "unit_en"]);
+                        expectedWidth += unit.width;
+                    } catch(e) {}
                 }
 
                 images.push([img, prefix, expectedWidth]);

@@ -1,5 +1,13 @@
+
+# This is build & deploy config
+# for my private auto-build script =)
+
 PROJECT_ID=ZeppPlayer
 PROJECT_SERVER_DIR=zepp_player
 PROJECT_URL=https://melianmiko.ru/en/zepp_player
 WIN_AUTO_UNPACK=true
+
+WITH_OSX=true
+WITH_WIN32=true
+WITH_DPKG=true
 

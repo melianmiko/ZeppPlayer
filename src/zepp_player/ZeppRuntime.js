@@ -233,14 +233,13 @@ export default class ZeppRuntime {
             await widget.render(canvas, this);
         } catch(e) {
             const [title, subtitle] = widget.playerWidgetIdentify();
-            console.warn(`%c Widget %c${title} %c${subtitle} %crender failed`,
+            console.warn(`%c Widget %c${title} %c${subtitle}%c render failed`,
                 "font-weight: bold",
                 "color: initial; font-weight: bold",
                 "color: #999; font-weight: bold",
                 "font-weight: bold", "\n\n",
                 "CONFIG: ", widget.config, "\n",
                 "ERROR: ", e);
-            throw new Error("widget_fail");
         }
 
         ctx.globalAlpha = 1;

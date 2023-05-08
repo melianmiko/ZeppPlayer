@@ -324,14 +324,8 @@ export class TextImageWidget extends BaseWidget {
         }
 
         // Render text
-        let tmp;
-        try {
-            tmp = await TextImageWidget.draw(player, text, maxLength, config);
-            if(tmp === null) return;
-        } catch(e) {
-            console.warn(e);
-            return;
-        }
+        let tmp = await TextImageWidget.draw(player, text, maxLength, config);
+        if(tmp === null) return;
 
         // Draw result
         canvas.getContext("2d").drawImage(tmp, config.x, config.y);
