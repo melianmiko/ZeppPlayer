@@ -55,6 +55,7 @@ export function createDeviceState() {
     const weatherIconEntry = new NumberDeviceState({
         value: 0,
         maxValue: 29,
+        shiftStep: 1,
         displayConfig: {
             maxLength: 2,
             groupIcon: "sunny",
@@ -273,7 +274,9 @@ export function createDeviceState() {
         STEP: new NumberDeviceState({
             value: 4500,
             shiftStep: 500,
-            maxValue: 9000,
+            get maxValue() {
+                return stepTargetEntry.value;
+            },
             displayConfig: {
                 type: "number",
                 groupIcon: "fitness_center",
@@ -300,7 +303,9 @@ export function createDeviceState() {
         CAL: new NumberDeviceState({
             value: 320,
             shiftStep: 30,
-            maxValue: 900,
+            get maxValue() {
+                return calTargetEntry.value;
+            },
             displayConfig: {
                 type: "number",
                 groupIcon: "fitness_center",
@@ -314,6 +319,9 @@ export function createDeviceState() {
         STAND: new NumberDeviceState({
             value: 12,
             shiftStep: 1,
+            get maxValue() {
+                return standTargetEntry.value;
+            },
             displayConfig: {
                 type: "number",
                 maxLength: 2,
@@ -322,7 +330,7 @@ export function createDeviceState() {
             getProgress(): number {
                 return this.value / standTargetEntry.value;
             },
-            getString: () => {
+            getString(): string {
                 return  this.value + "." + standTargetEntry.value;
             },
         }),

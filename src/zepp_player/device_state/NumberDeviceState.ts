@@ -30,6 +30,10 @@ export class NumberDeviceState extends DeviceStateEntry<number> {
     performShift(tick: number) {
         if(this.shiftStep == 0) return;
         if(tick % this.shiftTickCount != 0) return;
-        this.value = (this.value + this.shiftStep) % this.maxValue;
+        if(this.value == this.maxValue) {
+            this.value = 0;
+        } else {
+            this.value = Math.min(this.value + this.shiftStep, this.maxValue);
+        }
     }
 }
