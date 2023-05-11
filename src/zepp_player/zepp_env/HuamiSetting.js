@@ -138,7 +138,7 @@ export default class HuamiSettingMock {
     }
 
     getTimeFormat() {
-        return this.runtime.getDeviceState("AM_PM") === "hide" ? 1 : 0;
+        return this.runtime.getDeviceState("AM_PM", "string") === "hide" ? 1 : 0;
     }
 
     getScreenType() {

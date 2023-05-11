@@ -194,7 +194,7 @@ export class DatePointer extends BaseWidget {
         }
 
         // AM\PM
-        const ampmState = runtime.getDeviceState("AM_PM");
+        const ampmState = runtime.getDeviceState("AM_PM", "string");
         const lang = runtime.language;
         const ampmData = ["am", "pm"];
 
