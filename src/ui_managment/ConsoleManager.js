@@ -23,6 +23,7 @@ export class ConsoleManager {
         ZeppPlayer: "#ff7043",
         device: "#96ffa0",
         SystemWarning: "#ff9900",
+        ZeppPlayerFatalError: "#ff2222",
         runtime: "#4cf",
         error: "#f22",
         warn: "#ff6600"

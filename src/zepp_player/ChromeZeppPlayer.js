@@ -31,7 +31,22 @@ export class ChromeZeppPlayer extends ZeppPlayer {
 
     async loadFile(path) {
         const resp = await fetch(path);
+        if(resp.status !== 200) {
+            const message = [
+                "Can't fetch script file\nURL:", path
+            ];
 
+            if(this.appConfig.runtime.type === 2) {
+                message.push("\n\nIn app.json, runtime.type is set to 2.\n" +
+                    "Looks like this package is packaged into bytecode \n" +
+                    "(*.bin file), and no fallback JS file is provided. \n\n" +
+                    "We can't run QuickJS bytecode. and for now there's\n" +
+                    "no way to unpack them back into JS.\n\n");
+            }
+
+            this.onConsole("ZeppPlayerFatalError", message);
+            throw new Error(`Can't fetch script file ${path}`);
+        }
         return await resp.arrayBuffer();
     }
 

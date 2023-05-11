@@ -242,11 +242,12 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
      * @private
      */
     async _loadAppJs() {
-        const appJsFile = await this.loadFile(this.projectPath + '/app.js');
-        const appJsText = new TextDecoder().decode(appJsFile);
         const appEnv = createAppEnv(this);
 
         try {
+            const appJsFile = await this.loadFile(this.projectPath + '/app.js');
+            const appJsText = new TextDecoder().decode(appJsFile);
+
             const str = `(${Object.keys(appEnv).toString() }) => {${appJsText};}`;
             const appJs = eval(str);
             appJs(...Object.values(appEnv));
