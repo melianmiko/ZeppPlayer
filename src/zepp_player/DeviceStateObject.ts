@@ -167,7 +167,7 @@ export function createDeviceState() {
             value: 0,
             shiftStep: 1,
             shiftTickCount: 2,
-            maxValue: 7,
+            maxValue: 6,
             displayConfig: {
                 type: "number",
                 groupIcon: "calendar_month",
