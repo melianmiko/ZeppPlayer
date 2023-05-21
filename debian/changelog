@@ -1,3 +1,9 @@
+zeppplayer (1.6.6-1) bookworm jammy kinetic lunar; urgency=medium
+
+  * Fix some bugs, continue rewrite to TypeScript
+
+ -- MelianMiko <melianmiko@gmail.com>  Sun, 21 May 2023 20:27:54 +0700
+
 zeppplayer (1.6.5-1) bookworm jammy kinetic lunar; urgency=medium
 
   * Fix: AM/PM image don't work

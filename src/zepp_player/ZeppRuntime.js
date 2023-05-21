@@ -284,7 +284,7 @@ export default class ZeppRuntime {
     }
 
     autoFixGlobalScopeError() {
-        this.player.autoFixGlobalScopeError(...arguments);
+        return this.player.autoFixGlobalScopeError(...arguments);
     }
 
     back() {

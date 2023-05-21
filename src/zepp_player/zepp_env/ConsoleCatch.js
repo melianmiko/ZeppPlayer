@@ -25,9 +25,6 @@ export class ConsoleMock {
     _parse(level, args) {
         try {
             this.player.onConsole(level, args);
-            if(args[0] instanceof Error) {
-                this.player.autoFixGlobalScopeError(args[0]);
-            }
         } catch(e) {}
     }
 

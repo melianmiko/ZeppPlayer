@@ -86,6 +86,15 @@ export default abstract class ZeppPlayer {
                 this.currentRuntime.refresh_required = "config_changed";
         })
 
+        this.onConsoleOutput.add((_, data) => {
+            if(data[0] instanceof Error) {
+                if(this.autoFixGlobalScopeError(data[0])) {
+                    console.log("Env fixed, restarting");
+                    return this.init();
+                }
+            }
+        })
+
         setInterval(this.handleSecondChanged.bind(this), 1000);
     }
 
