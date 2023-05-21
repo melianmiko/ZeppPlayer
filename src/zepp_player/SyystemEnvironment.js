@@ -30,6 +30,10 @@ export function createAppEnv(player) {
     const object = {};
     const core = new DeviceRuntimeCoreMock(player);
 
+    object.hmFS = new HuamiFsMock(player);
+    object.hmSetting = new HuamiSettingMock(player);
+    object.hmApp = new HmApp(player);
+
     object.DeviceRuntimeCore = core;
 
     object.__$$module$$__ = {};

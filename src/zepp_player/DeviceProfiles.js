@@ -29,7 +29,8 @@ export const DeviceProfiles = {
         hasOverlay: true,
         screenWidth: 466,
         screenHeight: 466,
-        swapRedAndBlueTGA: true
+        swapRedAndBlueTGA: true,
+        deviceName: "GTR 4",
     },
     gts4mini: {
         hasOverlay: true,

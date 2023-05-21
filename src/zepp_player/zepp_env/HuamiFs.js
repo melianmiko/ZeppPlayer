@@ -21,6 +21,7 @@
 import {PersistentStorage} from "../PersistentStorage.js";
 
 const CONSTANT_FOLDER = 1;
+const normalize = require('path-normalize')
 
 export default class HuamiFsMock {
     O_RDONLY = 0;
@@ -45,7 +46,8 @@ export default class HuamiFsMock {
         const id = runtime.appConfig.app.appId.toString(16).padStart(8, "0").toUpperCase();
         const type = runtime.appConfig.app.appType;
 
-        this.vfsPrefix = "/storage/js_" + type + "s/" + id + "/";
+        this.appTypeDirName = `js_${type}s`;
+        this.appDirName = id;
         this.vfs = runtime.vfs;
     }
 
@@ -60,14 +62,6 @@ export default class HuamiFsMock {
         return this.vfs[path];
     }
 
-    parsePath(path) {
-        const normalize = require('path-normalize')
-        if(path[0] !== "/")
-            path = this.vfsPrefix + "assets/" + path;
-
-        return normalize(path);
-    }
-
     newFile(path) {
         const data = new ArrayBuffer(0);
         this.vfs[path] = data;
@@ -76,8 +70,16 @@ export default class HuamiFsMock {
     }
 
     stat(path) {
-        path = this.parsePath(path);
+        path = `/storage/${this.appTypeDirName}/data/${this.appDirName}/${path}`;
+        return this._performStat(normalize(path));
+    }
 
+    stat_asset(path) {
+        path = `/storage/${this.appTypeDirName}/${this.appDirName}/assets/${path}`;
+        return this._performStat(normalize(path));
+    }
+
+    _performStat(path) {
         const file = this.getFile(path);
         if(!file) return [null, -1];
 
@@ -88,22 +90,23 @@ export default class HuamiFsMock {
         }, 0];
     }
 
-    stat_asset(path) {
-        return this.stat(path);
+    open(path, flag) {
+        path = `/storage/${this.appTypeDirName}/data/${this.appDirName}/${path}`;
+        return this._performOpen(normalize(path), flag);
     }
 
-    open(path, flag) {
-        path = this.parsePath(path);
+    open_asset(path, flag) {
+        path = `/storage/${this.appTypeDirName}/${this.appDirName}/assets/${path}`;
+        return this._performOpen(normalize(path), flag);
+    }
+
+    _performOpen(path, flag) {
         let f = this.getFile(path);
         if(!f && (flag & 2) !== 0) {
             f = this.newFile(path);
         }
 
         return {data: f, flag, path, position: flag === 1 ? f.length : 0, store: "appFs"};
-    }
-
-    open_asset(path, flag) {
-        return this.open(path, flag);
     }
 
     seek(file, pos) {

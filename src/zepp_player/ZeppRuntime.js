@@ -95,12 +95,13 @@ export default class ZeppRuntime {
             if(this.module.onInit) this.module.onInit(this.onInitParam);
             if(this.module.build) this.module.build();
         } catch(e) {
-            this.onConsole("error", ["Module start failed", e]);
+            this.onConsole("error", ["Module start error", e]);
             throw e;
         }
+    }
 
+    postInit() {
         this.callDelegates("resume_call");
-
         this.initTime = Date.now();
     }
 

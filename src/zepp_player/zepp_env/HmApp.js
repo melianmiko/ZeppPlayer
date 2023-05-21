@@ -16,12 +16,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import ZeppRuntime from "../ZeppRuntime";
+
 export class HmApp {
     constructor(runtime) {
         this.runtime = runtime;
         this.timers = [];
 
-        runtime.onDestroy.push(() => {
+        if(runtime instanceof ZeppRuntime) runtime.onDestroy.push(() => {
             for(const a of this.timers) try {
                 clearTimeout(a);
             } catch(e) {}

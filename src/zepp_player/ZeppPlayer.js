@@ -248,7 +248,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             const appJsFile = await this.loadFile(this.projectPath + '/app.js');
             const appJsText = new TextDecoder().decode(appJsFile);
 
-            const str = `(${Object.keys(appEnv).toString() }) => {${appJsText};}`;
+            const extra = this.getEvalAdditionalData(this.projectPath + '/app.js');
+            const str = `${extra}\n(${Object.keys(appEnv).toString() }) => {${appJsText};}`;
             const appJs = eval(str);
             appJs(...Object.values(appEnv));
         } catch (e) {
@@ -432,6 +433,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             this.onConsole("ZeppPlayer", ["Init failed"]);
         }
 
+        runtime.postInit();
+
         // Attach runtime, switch to subpage, if required
         this._attachRuntime(runtime);
         if(this._currentRenderLevel !== 1) {
@@ -461,7 +464,13 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
             // Prepare sub-runtime
             const path = this.getModulePath(this.getInitModuleName());
             this.wfSubRuntime = new ZeppRuntime(this, path, val);
-            await this.wfSubRuntime.start();
+            try {
+                await this.wfSubRuntime.start();
+            } catch(e) {
+                this.onConsole("Error", ["Sub-runtime fail", e]);
+            }
+
+            this.wfSubRuntime.postInit();
         }
 
         if(val === 1 && currentVal !== 4) {
