@@ -10,8 +10,8 @@ export class ScreenRootEventHandler {
         const maxScroll = this.runtime.contentHeight - this.runtime.screen[1];
         if(maxScroll <= 0) return false;
 
-        this.runtime.player.renderScroll = Math.min(maxScroll,
-            this.runtime.player.renderScroll + delta);
+        const config = this.runtime.player.config;
+        config.renderScroll = Math.max(0, Math.min(config.renderScroll + delta, maxScroll));
 
         return true;
     }
@@ -21,7 +21,7 @@ export class ScreenRootEventHandler {
         this.direction = 0;
         this.inScroll = false;
         this.performGesture = "";
-        this.startScroll = this.runtime.player.renderScroll;
+        this.startScroll = this.runtime.player.config.renderScroll;
         this.maxScroll = this.runtime.contentHeight - this.runtime.screen[1];
     }
 
@@ -49,10 +49,9 @@ export class ScreenRootEventHandler {
             } else return;
         }
 
-        const runtime = this.runtime;
-        const player = this.runtime.player;
+        const config = this.runtime.player.config;
         if(this.inScroll) {
-            player.renderScroll = this.startScroll + (this.startCoords[1] - y);
+            config.renderScroll = Math.max(0, this.startScroll + (this.startCoords[1] - y));
         } else {
             let delta, target;
             switch(this.direction) {

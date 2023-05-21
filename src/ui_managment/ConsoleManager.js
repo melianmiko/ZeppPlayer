@@ -36,11 +36,11 @@ export class ConsoleManager {
     constructor(player) {
         this.player = player;
 
-        player.onRestart = () => this.wipe();
-        player.onConsole = (level, data, extra) => {
-            this.writeBrowserConsole(level, data, extra)
-            this.write(level, data, extra);
-        }
+        player.onConsoleOutput.add((tag, data, extra) => {
+            if(tag === "PlayerRestarted") return this.wipe();
+            this.writeBrowserConsole(tag, data, extra)
+            this.write(tag, data, extra);
+        })
     }
 
     wipe() {

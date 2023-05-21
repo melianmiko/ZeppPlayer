@@ -34,8 +34,8 @@ export default class GifRecorder {
         this.loading.style.display = "";
 
         // Force set uiPause to prevent auto-render
-        this.player.withShift = false;
-        this.player.showEventZones = false;
+        this.player.config.withAutoIncrement = false;
+        this.player.config.showEventZones = false;
         this.player.wipeSettings();
         await this.player.setRenderLevel(1);
         await this.player.init();

@@ -133,18 +133,20 @@ export class ToolbarManager {
 
         // Add type class
         player.onProjectChanged.add(() => {
-            document.getElementById("toolbar_side").className = player.appType;
+            document.getElementById("toolbar_side").className = player.appConfig.app.appType;
         })
     }
 
     static initProfileSelect(player) {
+        const profiles = new DeviceProfiles();
+        const picker = document.getElementById("player_profile_select");
+
         let current = "sb7";
-        if(localStorage.zp_profile_name && DeviceProfiles[localStorage.zp_profile_name]) {
+        if(localStorage.zp_profile_name && profiles[localStorage.zp_profile_name]) {
             current = localStorage.zp_profile_name;
         }
 
-        const picker = document.getElementById("player_profile_select");
-        for(const name in DeviceProfiles) {
+        for(const name in profiles) {
             const opt = document.createElement("option");
             opt.value = name;
             opt.innerText = name;
@@ -221,11 +223,11 @@ export class ToolbarManager {
      */
     static _refresh() {
         const runtime = ToolbarManager.player.currentRuntime
-        const renderLevel = ToolbarManager.player.getRenderLevel();
+        const renderLevel = ToolbarManager.player.config.renderLevel;
         const data = [
-            [ToolbarManager.toggleEventZones, ToolbarManager.player.showEventZones],
+            [ToolbarManager.toggleEventZones, ToolbarManager.player.config.showEventZones],
             [ToolbarManager.togglePause, runtime && runtime.uiPause],
-            [ToolbarManager.toggleShift, ToolbarManager.player.withShift],
+            [ToolbarManager.toggleShift, ToolbarManager.player.config.withAutoIncrement],
             [ToolbarManager.toggleMode1, renderLevel === 1],
             [ToolbarManager.toggleMode2, renderLevel === 2],
             [ToolbarManager.toggleMode4, renderLevel === 4]
@@ -242,7 +244,7 @@ export class ToolbarManager {
     }
 
     static doScroll(d) {
-        ToolbarManager.player.renderScroll += d * 40;
+        ToolbarManager.player.config.renderScroll += d * 40;
     }
 
     static doBack() {
@@ -289,14 +291,14 @@ export class ToolbarManager {
     }
 
     static doToggleEventZones() {
-        const player = ToolbarManager.player;
-        player.showEventZones = !player.showEventZones;
+        const config = ToolbarManager.player.config;
+        config.showEventZones = !config.showEventZones;
         ToolbarManager._refresh();
     }
 
     static doToggleShift() {
-        const player = ToolbarManager.player;
-        player.withShift = !player.withShift;
+        const config = ToolbarManager.player.config;
+        config.withAutoIncrement = !config.withAutoIncrement;
         ToolbarManager._refresh();
     }
 

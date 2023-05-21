@@ -32,8 +32,8 @@ function withGroupedPlayerProps(player: ZeppPlayer) {
         if(data != null) return;
 
         const groupedStates: GroupedPlayerStates = {};
-        for(const key in player._deviceState) {
-            const entry: DeviceStateEntry<any> = player.getStateEntry(key);
+        for(const key in player.deviceState) {
+            const entry: DeviceStateEntry<any> = player.deviceState[key];
             if(!entry.displayConfig) continue;
 
             let group = entry.displayConfig.groupIcon;

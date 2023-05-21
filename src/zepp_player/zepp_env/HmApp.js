@@ -61,8 +61,9 @@ export class HmApp {
     }
 
     setLayerX() {}
+
     setLayerY(y) {
-        this.runtime.renderScroll = -y;
+        this.runtime.player.config.renderScroll = -y;
     }
 
     exit() {}

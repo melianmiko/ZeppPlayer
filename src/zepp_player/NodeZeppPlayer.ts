@@ -18,22 +18,26 @@
 
 import {createCanvas, loadImage} from "canvas";
 import ZeppPlayer from "./ZeppPlayer.js";
-import TGA from "tga";
 import * as fs from 'fs';
-import { PersistentStorage } from "./PersistentStorage.js";
+import {ListDirectoryResponseEntry} from "./types/PlayerTypes";
+import {CanvasEntry, ImageEntry} from "./types/EnvironmentTypes";
+
+declare const __dirname: string;
 
 export class NodeZeppPlayer extends ZeppPlayer {
-    imgCache = {};
-
     constructor() {
         super();
 
         // Create fake localStorage for persistent
-        global.localStorage = {};
+        (globalThis as any).localStorage = {};
     }
 
-    async listDirectory(path) {
-        const out = [];
+    newCanvas() {
+        return createCanvas(20, 20);
+    }
+
+    protected async listDirectory(path: string): Promise<ListDirectoryResponseEntry[]> {
+        const out: ListDirectoryResponseEntry[] = [];
         const content = fs.readdirSync(path);
 
         for(let i in content) {
@@ -47,18 +51,18 @@ export class NodeZeppPlayer extends ZeppPlayer {
         return out;
     }
 
-    async loadFile(path) {
+    protected async loadFile(path: string) {
         if(path.startsWith("/app"))
             path = __dirname + "/" + path.substring(4);
 
         return fs.readFileSync(path);
     }
 
-    newCanvas() {
-        return createCanvas(20, 20);
+    protected async _loadPNG(data: ArrayBuffer): Promise<ImageEntry> {
+        return loadImage(data as any);
     }
 
-    async _loadPNG(data) {
-        return loadImage(data);
+    protected getEvalAdditionalData(path: string): string {
+        return "";
     }
 }

@@ -6,7 +6,7 @@ export class NumberDeviceState extends DeviceStateEntry<number> {
     shiftStep: number = 0;
     shiftTickCount: number = 1;
 
-    constructor(overrides: Partial<NumberDeviceState>) {
+    constructor(overrides: Partial<NumberDeviceState> | any) {
         super();
         Object.assign(this, overrides);
     }

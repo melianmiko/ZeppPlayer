@@ -10,7 +10,8 @@ export function getChangeProfileCommands(onCancel: () => any) {
         onCancel();
     }
 
-    return Object.keys(DeviceProfiles).map((name) => (
+    const profiles = new DeviceProfiles();
+    return Object.keys(profiles).map((name) => (
         <CommandPaletteItem value={`profile_${name}`} onSelect={() => applyProfile(name)}>
             {`Set profile: ${name}`}
         </CommandPaletteItem>

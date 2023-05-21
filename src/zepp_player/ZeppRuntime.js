@@ -27,14 +27,6 @@ export default class ZeppRuntime {
         this.appConfig = this.player.appConfig;
     }
 
-    get renderScroll() {
-        return this.player.renderScroll;
-    }
-
-    set renderScroll(val) {
-        this.player.renderScroll = val;
-    }
-
     get language() {
         switch(this.fullLanguage) {
             case "zh-CN":
@@ -139,9 +131,10 @@ export default class ZeppRuntime {
         }
 
         // Handle overscroll
-        const maxScroll = this.contentHeight - this.screen[1]
-        if(this.renderScroll > maxScroll) {
-            this.renderScroll = maxScroll;
+        const maxScroll = Math.max(0, this.contentHeight - this.screen[1]);
+        const config = this.player.config;
+        if(config.renderScroll > maxScroll) {
+            config.renderScroll = maxScroll;
         }
 
         // Run post-render tasks
@@ -181,7 +174,7 @@ export default class ZeppRuntime {
     }
 
     handleEvent(name, x, y, info) {
-        y += this.player.renderScroll;
+        y += this.player.config.renderScroll;
 
         if(this.rootEventHandler[name])
             this.rootEventHandler[name](info);
@@ -276,8 +269,10 @@ export default class ZeppRuntime {
         return await this.player.getAssetImage(...arguments);
     }
 
-    addDeviceStateChangeEvent() {
-        this.player.addDeviceStateChangeEvent(...arguments);
+    addDeviceStateChangeEvent(type, callback) {
+        this.player.onStateChanged.add((eventType) => {
+            if(type === eventType) callback();
+        })
     }
 
     newCanvas() {

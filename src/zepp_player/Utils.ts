@@ -16,18 +16,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export function zeppColorToHex(i) {
+export function zeppColorToHex(i: number|string): string {
     if(i === null || i === undefined) return "#000000";
 
     if(typeof i == "string") {
         if(i.startsWith("0x")) {
-            // Fuck you............
             i = parseInt(i);
-        } else return i;
+        } else {
+            return i;
+        }
     }
 
     let s = i.toString(16);
     if(s.length > 6) s = s.substring(s.length-6, s.length);
     s = "#" + s.padStart(6, "0");
+
     return s;
 }

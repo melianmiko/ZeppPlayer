@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 /*
     ZeppPlayer - ZeppOS, mostly Mi Band 7, simulator for PC
     Copyright (C) 2022  MelianMiko
@@ -17,27 +19,25 @@
 */
 
 import HuamiSensorMock from "./zepp_env/HuamiSensor.js";
-import { ConsoleMock } from "./zepp_env/ConsoleCatch.js";
+import {ConsoleMock} from "./zepp_env/ConsoleCatch.js";
 import DeviceRuntimeCoreMock from "./zepp_env/DeviceRuntimeCore.js";
 import HuamiFsMock from "./zepp_env/HuamiFs.js";
 import HuamiSettingMock from "./zepp_env/HuamiSetting.js";
 import HuamiUIMock from "./ui/HuamiUI.js";
 import TimerMock from "./zepp_env/Timer.js";
-import { HuamiBLEMock } from "./zepp_env/HuamiBLE.js";
-import { HmApp } from "./zepp_env/HmApp.js";
+import {HuamiBLEMock} from "./zepp_env/HuamiBLE.js";
+import {HmApp} from "./zepp_env/HmApp.js";
+import ZeppPlayer from "./ZeppPlayer";
+import ZeppRuntime from "./ZeppRuntime";
 
-export function createAppEnv(player) {
-    const object = {};
-    const core = new DeviceRuntimeCoreMock(player);
+export class AppEnvironment {
+    hmApp: HmApp;
+    hmFS: HuamiFsMock;
+    hmSetting: HuamiSettingMock;
+    DeviceRuntimeCore: DeviceRuntimeCoreMock;
 
-    object.hmFS = new HuamiFsMock(player);
-    object.hmSetting = new HuamiSettingMock(player);
-    object.hmApp = new HmApp(player);
-
-    object.DeviceRuntimeCore = core;
-
-    object.__$$module$$__ = {};
-    object.__$$hmAppManager$$__ = {
+    __$$module$$__: any = {};
+    __$$hmAppManager$$__: any = {
         currentApp: {
             pid: 10,
             current: {},
@@ -45,20 +45,22 @@ export function createAppEnv(player) {
                 __globals__: {}
             }
         }
-    };
+    }
 
-    return object;
+    constructor(player: ZeppPlayer) {
+        this.hmApp = new HmApp(player);
+        this.hmSetting = new HuamiSettingMock(player);
+        this.hmFS = new HuamiFsMock(player);
+        this.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player);
+    }
 }
 
-export function createPageEnv(runtime, appRuntime) {
-    const object = {};
-    const core = new DeviceRuntimeCoreMock(runtime);
-
-    // Glob constants
+export function createPageEnv(runtime: ZeppRuntime, appRuntime: AppEnvironment) {
+    const object: any = {};
     object.SLEEP_REFERENCE_ZERO = 24 * 60;
 
     // Base libraries
-    object.DeviceRuntimeCore = core;
+    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(runtime);
     object.hmUI = new HuamiUIMock(runtime);
     object.hmFS = new HuamiFsMock(runtime);
     object.hmApp = new HmApp(runtime);
@@ -72,7 +74,7 @@ export function createPageEnv(runtime, appRuntime) {
     object.__$$module$$__ = {};
     object.__$$hmAppManager$$__ = appRuntime.__$$hmAppManager$$__;
     object.Logger = object.DeviceRuntimeCore.HmLogger;
-    object.WatchFace = (conf) => object.DeviceRuntimeCore.WatchFace(conf);
+    object.WatchFace = (conf: any) => object.DeviceRuntimeCore.WatchFace(conf);
 
     // Override x to prevent conflict with preact
     object.x = undefined;
