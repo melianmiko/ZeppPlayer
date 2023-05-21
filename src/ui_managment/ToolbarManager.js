@@ -132,7 +132,9 @@ export class ToolbarManager {
         document.addEventListener("keydown", ToolbarManager.handleControlKey)
 
         // Add type class
-        document.getElementById("toolbar_side").classList.add(player.appType);
+        player.onProjectChanged.add(() => {
+            document.getElementById("toolbar_side").className = player.appType;
+        })
     }
 
     static initProfileSelect(player) {

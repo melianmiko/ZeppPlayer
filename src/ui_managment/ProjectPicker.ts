@@ -42,10 +42,12 @@ export class ProjectPicker {
         ProjectPicker.projects = projects;
         ProjectPicker.player = player;
 
+        const availableURLs = [];
         for(const row of projects) {
             const opt = document.createElement("option");
             opt.value = row.url;
             opt.innerText = row.title;
+            availableURLs.push(row.url);
             ProjectPicker.view.appendChild(opt);
         }
 
@@ -63,7 +65,9 @@ export class ProjectPicker {
 
         // Load current option
         if(localStorage.zepp_player_last_project) {
-            ProjectPicker.view.value = localStorage.zepp_player_last_project;
+            const lastProject = localStorage.zepp_player_last_project;
+            if(availableURLs.indexOf(lastProject) > -1)
+                ProjectPicker.view.value = lastProject;
         }
 
         // Event handler

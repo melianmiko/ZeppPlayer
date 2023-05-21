@@ -22,7 +22,8 @@
     "buffer": "^6.0.3",
     "canvas": "^2.11.0",
     "file-saver": "^2.0.5",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "mini-signals": "^2.0.0"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.1",

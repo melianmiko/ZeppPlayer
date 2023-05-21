@@ -56,24 +56,23 @@ const start = async () => {
     // Project picker
     await ProjectPicker.setup(player);
 
-    // Load main script
+    // Legacy UI
     ToolbarManager.initProfileSelect(player);
-
-    await player.setProject(ProjectPicker.getProject());
-    await ChangesWatcher.init(player);
-
-    ToolbarManager.init(player);
-    // EditorManager.init(player);
-    ConsoleManager.init(player);
-    ExplorerManager.init(player);
-    // initCssSettings();
-
-    await player.init();
 
     // Prepare canvas
     root.width = player.screen[0];
     root.height = player.screen[1];
     player.setupHTMLEvents(root);
+
+    // More legacy UI
+    ToolbarManager.init(player);
+    ConsoleManager.init(player);
+    ExplorerManager.init(player);
+
+    // Load project
+    await player.setProject(ProjectPicker.getProject());
+    await ChangesWatcher.init(player);
+    await player.init();
 
     // Render config
     let lastRender = 0;

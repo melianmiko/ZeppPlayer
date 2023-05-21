@@ -24,6 +24,7 @@ import ZeppRuntime from "./ZeppRuntime.js";
 import {TGAImage} from "./TgaImage";
 import {createAppEnv} from "./SyystemEnvironment";
 import {DeviceProfiles} from "./DeviceProfiles";
+import { MiniSignal } from 'mini-signals';
 
 export default class ZeppPlayer extends ZeppPlayerConfig {
     timerRtcUpdate = null;
@@ -52,7 +53,10 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
 
         // Device state
         this._deviceState = createDeviceState();
-        this._deviceStateChangeEvents = {};
+
+        // Signals
+        this.onStateChanged = new MiniSignal();
+        this.onProjectChanged = new MiniSignal();
     }
 
     static createConfigProxy(player) {
@@ -190,19 +194,18 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         }
     }
 
+    /**
+     * @deprecated
+     */
     addDeviceStateChangeEvent(type, callback) {
-        if(!this._deviceStateChangeEvents[type]) 
-            this._deviceStateChangeEvents[type] = [];
-        this._deviceStateChangeEvents[type].push(callback);
+        this.onStateChanged.add((eventType, value) => {
+            if(type === eventType) callback(value);
+        })
     }
 
     setDeviceState(type, value, requireRefresh=true) {
         this._deviceState[type].setValue(value);
-        if(this._deviceStateChangeEvents[type]) {
-            for(let i in this._deviceStateChangeEvents[type]) {
-                this._deviceStateChangeEvents[type][i]()
-            }
-        }
+        this.onStateChanged.dispatch(type, value);
 
         if(this.currentRuntime && requireRefresh)
             this.currentRuntime.refresh_required = "set_state";
@@ -228,6 +231,8 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         await this._loadAppJs();
         await this.overlayTool.init();
         await this.preloadProjectAssets(path + "/");
+
+        this.onProjectChanged.dispatch(this.projectPath, this.appConfig);
     }
 
     async restart() {
@@ -402,9 +407,9 @@ export default class ZeppPlayer extends ZeppPlayerConfig {
         this.wfSubRuntime = null;
         this.currentRuntime = null;
         this.render_counter = 0;
-        this._deviceStateChangeEvents = {};
         this.onDestroy = [];
         this.backStack = [];
+        this.onStateChanged.detachAll();
     }
 
     getEvalAdditionalData() {
