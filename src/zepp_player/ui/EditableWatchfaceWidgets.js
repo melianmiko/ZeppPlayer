@@ -17,7 +17,7 @@
 */
 
 import { PersistentStorage } from "../PersistentStorage.js";
-import { BaseWidget } from "./BaseWidget.js";
+import { BaseWidget } from "./widget/BaseWidget.ts";
 import { ImageWidget } from "./ImagingWidgets.js";
 import {TextWidget} from "./widget/TextWidget";
 

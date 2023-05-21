@@ -280,7 +280,7 @@ class PaiSensor {
     }
 
     get totalpai() {
-        return this.player.getDeviceState("PAI_DAILY") * 4.5;
+        return this.player.getDeviceState("PAI_WEEKLY");
     }
 
     get dailypai() {return this.player.getDeviceState("PAI_DAILY");}

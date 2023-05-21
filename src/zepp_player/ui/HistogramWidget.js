@@ -17,7 +17,7 @@
 */
 
 import { zeppColorToHex } from "../Utils.js";
-import { BaseWidget } from "./BaseWidget.js";
+import { BaseWidget } from "./widget/BaseWidget.ts";
 import {TextWidget} from "./widget/TextWidget";
 
 /**

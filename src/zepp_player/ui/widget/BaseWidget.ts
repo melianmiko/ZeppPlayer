@@ -16,9 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import ZeppRuntime from "../ZeppRuntime";
-import {BaseWidgetConfig, BaseWidgetEventHandler, BaseWidgetEvents} from "../types/BaseWidgetTypes";
-import {CanvasEntry} from "../types/EnvironmentTypes";
+import ZeppRuntime from "../../ZeppRuntime";
+import {BaseWidgetConfig, BaseWidgetEventHandler, BaseWidgetEvents} from "./types/BaseWidgetTypes";
+import {CanvasEntry} from "../../types/EnvironmentTypes";
 
 export abstract class BaseWidget<T> {
     setPropertyBanlist: string[] = [];

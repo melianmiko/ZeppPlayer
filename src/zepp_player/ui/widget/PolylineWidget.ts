@@ -1,4 +1,4 @@
-import {BaseWidget} from "../BaseWidget";
+import {BaseWidget} from "./BaseWidget";
 import ZeppRuntime from "../../ZeppRuntime";
 import {CanvasContextEntry, CanvasEntry} from "../../types/EnvironmentTypes";
 import {zeppColorToHex} from "../../Utils";

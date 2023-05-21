@@ -1,6 +1,6 @@
 // noinspection JSUnresolvedVariable
 
-import {BaseWidget} from "./BaseWidget";
+import {BaseWidget} from "./widget/BaseWidget";
 import {FillRectWidget} from "./DrawingWidgets";
 import {ImageWidget} from "./ImagingWidgets";
 import {TextWidget} from "./widget/TextWidget";

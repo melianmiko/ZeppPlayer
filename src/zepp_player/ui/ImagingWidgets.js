@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { BaseWidget } from "./BaseWidget.js";
+import { BaseWidget } from "./widget/BaseWidget.ts";
 
 /**
  * hmUI.widget.IMG

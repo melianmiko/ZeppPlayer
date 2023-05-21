@@ -1,26 +1,32 @@
-import {BaseWidget} from "../BaseWidget";
+import {BaseWidget} from "./BaseWidget";
 import {zeppColorToHex} from "../../Utils";
 import {TextToLines} from "../utils/TextToLines";
+import {TextWidgetConfig} from "./types/TextWidgetTypes";
+import ZeppRuntime from "../../ZeppRuntime";
+import {CanvasEntry} from "../../types/EnvironmentTypes";
 
 /**
  * hmUI.widget.TEXT
  */
-export class TextWidget extends BaseWidget {
-    constructor(config) {
+export class TextWidget extends BaseWidget<TextWidgetConfig> {
+    constructor(config: TextWidgetConfig) {
         super(config);
         config.alpha = undefined;
     }
 
-    static drawText(config, player) {
-        const textSize = config.text_size ? config.text_size : 18;
-        const fontConf = textSize + "px allfont";
-        const colorConf = config.color ? zeppColorToHex(config.color) : "#000";
-        const offsetX = config.char_space ? config.char_space : 0;
+    static drawText(userConfig: TextWidgetConfig, runtime: ZeppRuntime) {
+        const config: TextWidgetConfig = {
+            text_size: 18,
+            color: 0x0,
+            char_space: 0,
+            line_space: 0,
+            ...userConfig
+        };
 
-        let canvas = player.newCanvas();
+        let canvas = runtime.newCanvas();
         let context = canvas.getContext("2d");
         context.textBaseline = "top";
-        context.font = fontConf;
+        context.font = `${config.text_size}px allfont`;
 
         // Split to lines
         const lines = TextToLines.perform(context, config);
@@ -33,28 +39,28 @@ export class TextWidget extends BaseWidget {
         for (let i in lines) {
             let data = lines[i];
 
-            let lineCanvas = player.newCanvas();
+            let lineCanvas = runtime.newCanvas();
             let lineContext = lineCanvas.getContext("2d");
             lineContext.textBaseline = "top";
-            lineContext.font = fontConf;
+            lineContext.font = context.font;
 
             let sizes = lineContext.measureText(data);
-            lineCanvas.width = sizes.width + offsetX * data.length + 2;
-            lineCanvas.height = textSize * 1.5;
+            lineCanvas.width = sizes.width + config.char_space * data.length + 2;
+            lineCanvas.height = config.text_size * 1.5;
 
             lineContext.textBaseline = "top";
-            lineContext.fillStyle = colorConf;
-            lineContext.font = fontConf;
+            lineContext.fillStyle = zeppColorToHex(config.color);
+            lineContext.font = context.font;
 
             px = 0;
             for (let j in data) {
-                lineContext.fillText(data[j], px, textSize * 0.25);
-                px += lineContext.measureText(data[j]).width + offsetX;
+                lineContext.fillText(data[j], px, config.text_size * 0.25);
+                px += lineContext.measureText(data[j]).width + config.char_space;
             }
 
             lines[i] = lineCanvas;
             maxWidth = Math.max(maxWidth, lineCanvas.width);
-            totalHeight += lineCanvas.height + (config.line_space ? config.line_space : 0);
+            totalHeight += lineCanvas.height + config.line_space;
         }
 
         if (config._metricsOnly) return {
@@ -63,10 +69,8 @@ export class TextWidget extends BaseWidget {
         }
 
         // Build full image
-        canvas.width = config.w;
-        canvas.height = config.h;
-        if (!canvas.height) canvas.height = totalHeight;
-        if (!canvas.width) canvas.width = maxWidth;
+        canvas.width = config.w ? config.w : maxWidth;
+        canvas.height = config.h ? config.h : totalHeight;
 
         let py = 0;
         if (config.align_v === "center_v") py = (canvas.height - totalHeight) / 2;
@@ -81,11 +85,11 @@ export class TextWidget extends BaseWidget {
 
             if (!config.text_style && maxWidth > config.w) {
                 // scroll
-                const progress = ((player.render_counter + 100) % 300) / 100;
+                const progress = ((runtime.render_counter + 100) % 300) / 100;
                 const w = maxWidth + config.w;
                 if (progress < 1) px += (1 - progress) * w;
                 else if (progress > 2) px -= (progress - 2) * w;
-                player.refresh_required = "text_scroll";
+                runtime.refresh_required = "text_scroll";
             }
 
             context.drawImage(lineCanvas, px, py);
@@ -95,17 +99,17 @@ export class TextWidget extends BaseWidget {
         return canvas;
     }
 
-    async render(canvas, player) {
+    async render(canvas: CanvasEntry, runtime: ZeppRuntime) {
         const config = this.config;
         let width = config.w, height = config.h;
         if (config.text) {
-            const text = await TextWidget.drawText(config, player);
+            const text = await TextWidget.drawText(config, runtime);
             canvas.getContext("2d").drawImage(text, config.x, config.y);
             width = text.width;
             height = text.height;
         }
 
-        this.dropEvents(player, [
+        this.dropEvents(runtime, [
             config.x,
             config.y,
             config.x + width,

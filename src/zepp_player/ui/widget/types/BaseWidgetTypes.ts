@@ -1,4 +1,4 @@
-import ZeppRuntime from "../ZeppRuntime";
+import ZeppRuntime from "../../../ZeppRuntime";
 
 export type BaseWidgetConfig = {
     __runtime: ZeppRuntime,
@@ -15,6 +15,7 @@ export type BaseWidgetConfig = {
     y?: number,
     w?: number,
     h?: number,
+    alpha?: number,
 }
 
 export type BaseWidgetEventInfo = {

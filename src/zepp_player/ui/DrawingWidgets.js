@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {BaseWidget} from "./BaseWidget.js";
+import {BaseWidget} from "./widget/BaseWidget.ts";
 import {zeppColorToHex} from "../Utils.js";
 import {ImageWidget} from "./ImagingWidgets.js";
 
@@ -150,60 +150,29 @@ export class ArcProgressWidget extends BaseWidget {
         ctx.lineWidth = width;
         ctx.strokeStyle = zeppColorToHex(config.color);
 
-        if(Math.abs(len) >= 360) {
-            // Draw a circle and exit
-            ctx.beginPath();
-            ctx.arc(config.center_x,
-                config.center_y,
-                config.radius,
-                config.start_angle * Math.PI,
-                config.end_angle * Math.PI,
-                direction);
-            ctx.stroke();
-
-            ctx.restore();
-            return;
-        }
-
         const dN = (90 * width) / (Math.PI * config.radius) * (config.start_angle < config.end_angle ? -1 : 1);
         const isLargerThanDot = Math.abs(config.radius * len / 180 * Math.PI) > width;
 
+        const cornerFlag = Math.abs(len) >= 360 ? 3 : config.corner_flag;
+        const withStartCornerRound = [direction ? 1 : 2, 3].indexOf(cornerFlag) === -1;
+        const withEndCornerRound = [direction ? 2 : 1, 3].indexOf(cornerFlag) === -1 && isLargerThanDot
+
         const getRadian = (len) => (-90 + config.start_angle + len) / 180 * Math.PI
+        const drawArc = (start, end) => {
+            ctx.beginPath();
+            ctx.arc(config.center_x, config.center_y, config.radius,
+                getRadian(start), getRadian(end), direction)
+            ctx.stroke();
+        };
 
         // Draw all as one ARC
-        ctx.beginPath();
-        ctx.arc(config.center_x,
-            config.center_y,
-            config.radius,
-            getRadian(-dN),
-            getRadian(isLargerThanDot ? len + dN : -dN),
-            direction);
-        ctx.stroke();
+        drawArc(withStartCornerRound ? -dN : 0,
+            isLargerThanDot ? len + (withEndCornerRound ? dN : 0) : -dN)
 
+        // Round start/end, if required
         ctx.lineCap = "round";
-        if(config.corner_flag !== 2 && config.corner_flag !== 3) {
-            // Draw start "dot"
-            ctx.beginPath();
-            ctx.arc(config.center_x,
-                config.center_y,
-                config.radius,
-                getRadian(-dN),
-                getRadian(-dN),
-                direction);
-            ctx.stroke();
-        }
-
-        if(config.corner_flag !== 1 && config.corner_flag !== 3 && isLargerThanDot) {
-            // Draw end "dot"
-            ctx.beginPath();
-            ctx.arc(config.center_x,
-                config.center_y,
-                config.radius,
-                getRadian(len + dN),
-                getRadian(len + dN),
-                direction);
-            ctx.stroke();
-        }
+        if(withStartCornerRound) drawArc(-dN, -dN);
+        if(withEndCornerRound) drawArc(len + dN, len + dN);
 
         ctx.restore();
     }
