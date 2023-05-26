@@ -353,6 +353,20 @@ export default abstract class ZeppPlayer {
             canvas = newCanvas;
         }
 
+        // Circle
+        if(this.config.renderDeviceOverlay && this.profileData.circleScreen) {
+            const size = canvas.width;
+            const newCanvas = this.newCanvas();
+            newCanvas.width = size;
+            newCanvas.height = size;
+            const ctx = newCanvas.getContext("2d");
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2, false);
+            ctx.clip();
+            ctx.drawImage(canvas, 0, 0);
+            canvas = newCanvas;
+        }
+
         // Overlay
         if(this.config.renderDeviceOverlay && this.profileData.hasOverlay) {
             await this.overlayTool.drawDeviceFrame(canvas);
