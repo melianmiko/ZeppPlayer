@@ -5,8 +5,6 @@ export type DeviceStateDisplayConfig = {
     groupIcon?: string,
     info?: string,
     displayName?: string,
-    type?: string,
-    options?: string[],
     notEditable?: boolean,
 }
 

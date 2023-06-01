@@ -6,35 +6,35 @@ import {PropInput} from "./PropInput";
 import "./PropEditorEntry.css"
 import {JSX} from "preact";
 import {PropCheckboxInput} from "./PropCheckboxInput";
-import {DeviceStateEntry} from "../../../zepp_player/device_state/DeviceStateEntry";
+import {DeviceState} from "../../../zepp_player/DeviceStateObject";
+import {BooleanDeviceState} from "../../../zepp_player/device_state/BooleanDeviceState";
+import {SelectDeviceState} from "../../../zepp_player/device_state/SelectDeviceState";
 
 export type PropEditorEntryProps = PropsWithPlayer<{
-    entry: DeviceStateEntry<any>,
-    name: string,
+    name: keyof DeviceState,
 }>
 
 export function PropEditorEntry(props: PropEditorEntryProps) {
     const prettyName = props.name.charAt(0).toUpperCase() +
         props.name.slice(1).replaceAll("_", " ").toLowerCase();
 
-    if(!props.entry.displayConfig) return null;
+    const entry = props.player.deviceState[props.name];
+
+    if(!entry.displayConfig) return null;
 
     let view: JSX.Element;
-    switch(props.entry.displayConfig.type) {
-        case "select":
-            view = <PropSelectInput {...props} />;
-            break;
-        case "boolean":
-            view = <PropCheckboxInput {...props} />;
-            break;
-        default:
-            view = <PropInput {...props} />;
+    if(entry instanceof BooleanDeviceState) {
+        view = <PropCheckboxInput {...props} entry={entry} />;
+    } else if(entry instanceof  SelectDeviceState) {
+        view = <PropSelectInput {...props} entry={entry} />;
+    } else {
+        view = <PropInput {...props} entry={entry} />;
     }
 
     return (
         <div className="props-entry">
             <span className="props-entry__title">
-                {props.entry.displayConfig.displayName || prettyName}
+                {entry.displayConfig.displayName || prettyName}
             </span>
             <span>
                 {view}

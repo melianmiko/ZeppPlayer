@@ -2,11 +2,18 @@ import {DeviceStateEntry} from "./DeviceStateEntry";
 import ZeppPlayer from "../ZeppPlayer";
 
 export class StringDeviceState extends DeviceStateEntry<string> {
-    performShift(tick: number, player: ZeppPlayer) {
-        if(!this.displayConfig.options) return;
+    shiftOptions: string[] = null;
 
-        const curIndex = this.displayConfig.options.indexOf(this.value);
-        const index = (curIndex + 1) % this.displayConfig.options.length;
-        this.value = this.displayConfig.options[index];
+    constructor(overrides?: Partial<StringDeviceState>) {
+        super(overrides);
+        if(overrides) Object.assign(this, overrides);
+    }
+
+    performShift(tick: number, player: ZeppPlayer) {
+        if(!this.shiftOptions) return;
+
+        const curIndex = this.shiftOptions.indexOf(this.value);
+        const index = (curIndex + 1) % this.shiftOptions.length;
+        this.value = this.shiftOptions[index];
     }
 }

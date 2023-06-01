@@ -22,6 +22,7 @@ import ZeppPlayer from "./ZeppPlayer";
 import {NumberDeviceState} from "./device_state/NumberDeviceState";
 import {StringDeviceState} from "./device_state/StringDeviceState";
 import {BooleanDeviceState} from "./device_state/BooleanDeviceState";
+import {SelectDeviceState} from "./device_state/SelectDeviceState";
 
 export class DeviceState {
     STEP_TARGET = new NumberDeviceState({
@@ -184,11 +185,10 @@ export class DeviceState {
         },
     });
 
-    AM_PM = new StringDeviceState({
+    AM_PM = new SelectDeviceState({
         value: "hide",
+        options: ["hide", "am", "pm"],
         displayConfig: {
-            type: "select",
-            options: ["hide", "am", "pm"],
             groupIcon: "calendar_month",
             info: "AM/PM state: hide - 24h mode, am/pm - 12h mode",
             maxLength: 4,
@@ -198,7 +198,6 @@ export class DeviceState {
     OS_LANGUAGE = new StringDeviceState({
         value: "en-US",
         displayConfig: {
-            type: "string",
             groupIcon: "settings",
             maxLength: 5,
         },
@@ -207,7 +206,6 @@ export class DeviceState {
     OVERLAY_COLOR = new StringDeviceState({
         value: "#FFFFFF",
         displayConfig: {
-            type: "string",
             groupIcon: "settings",
             maxLength: 7,
         }
@@ -215,11 +213,10 @@ export class DeviceState {
 
     ALARM_CLOCK = new StringDeviceState({
         value: "09:30",
+        shiftOptions: ["0", "06:00", "09:30", "11:00"],
         displayConfig: {
-            type: "string",
             groupIcon: "settings",
-            maxLength: 4,
-            options: ["0", "06:00", "09:30", "11:00"]
+            maxLength: 4
         },
         getBoolean(): boolean {
             return this.value !== "0";
@@ -261,7 +258,6 @@ export class DeviceState {
     DISCONNECT = new BooleanDeviceState({
         value: true,
         displayConfig: {
-            type: "boolean",
             groupIcon: "settings",
             maxLength: 1,
         }
@@ -270,7 +266,6 @@ export class DeviceState {
     DISTURB = new BooleanDeviceState({
         value: true,
         displayConfig: {
-            type: "boolean",
             groupIcon: "settings",
             maxLength: 1,
         }
@@ -279,7 +274,6 @@ export class DeviceState {
     LOCK = new BooleanDeviceState({
         value: true,
         displayConfig: {
-            type: "boolean",
             groupIcon: "settings",
             maxLength: 1,
         }
@@ -372,11 +366,10 @@ export class DeviceState {
 
     SLEEP = new StringDeviceState({
         value: "9:0",
+        shiftOptions: ["0", "06:00", "09:30", "11:00"],
         displayConfig: {
-            type: "string",
             groupIcon: "monitor_heart",
             maxLength: 5,
-            options: ["0", "06:00", "09:30", "11:00"]
         },
         getBoolean(): boolean {
             return this.value != "0";
@@ -481,7 +474,6 @@ export class DeviceState {
     WEATHER_CITY = new StringDeviceState({
         value: "Barnaul",
         displayConfig: {
-            type: "string",
             maxLength: 15,
             groupIcon: "sunny",
             displayName: "City name",
@@ -554,7 +546,6 @@ export class DeviceState {
     MUSIC_IS_PLAYING = new BooleanDeviceState({
         value: true,
         displayConfig: {
-            type: "boolean",
             groupIcon: "music_note",
             maxLength: 1,
         }
@@ -564,7 +555,6 @@ export class DeviceState {
         value: "Crusher-P",
         displayConfig: {
             groupIcon: "music_note",
-            type: "string",
             maxLength: 8
         }
     });
@@ -573,7 +563,6 @@ export class DeviceState {
         value: "ECHO",
         displayConfig: {
             groupIcon: "music_note",
-            type: "string",
             maxLength: 12
         }
     });
@@ -582,7 +571,6 @@ export class DeviceState {
         value: "-",
         displayConfig: {
             maxLength: 5,
-            type: "string",
             groupIcon: "apps",
         }
     });
@@ -591,7 +579,6 @@ export class DeviceState {
         value: "-",
         displayConfig: {
             maxLength: 5,
-            type: "string",
             groupIcon: "apps",
         }
     });

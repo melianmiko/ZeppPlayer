@@ -18,52 +18,77 @@
 
 import React from "preact/compat";
 import {PropsWithPlayer} from "../types/ReactProps";
-import ZeppPlayer from "../../zepp_player/ZeppPlayer";
-import {GroupedPlayerStates} from "../types/PlayerProps";
 import {PropEditorGroup} from "./prop_editor/PropEditorGroup";
 import {PropEditorEntry} from "./prop_editor/PropEditorEntry";
 import {RealTimeSwitch} from "./prop_editor/RealTimeSwitch";
-import {DeviceStateEntry} from "../../zepp_player/device_state/DeviceStateEntry";
-
-function withGroupedPlayerProps(player: ZeppPlayer) {
-    const [data, setData] = React.useState<GroupedPlayerStates>(null);
-
-    React.useEffect(() => {
-        if(data != null) return;
-
-        const groupedStates: GroupedPlayerStates = {};
-        for(const key in player.deviceState) {
-            const entry: DeviceStateEntry<any> = player.deviceState[key];
-            if(!entry.displayConfig) continue;
-
-            let group = entry.displayConfig.groupIcon;
-            if(!group) group = "inventory_2";
-
-            if(!groupedStates.hasOwnProperty(group))
-                groupedStates[group] = {};
-            groupedStates[group][key] = entry;
-        }
-
-        setData(groupedStates);
-    });
-
-    return data;
-}
 
 export function PropEditorPanel(props: PropsWithPlayer<{}>) {
-    const states = withGroupedPlayerProps(props.player);
-
-    if(!states) return null;
     return (
         <>
             <RealTimeSwitch player={props.player} />
-            {Object.keys((states)).map((group) => (
-                <PropEditorGroup icon={group}>
-                    {Object.keys(states[group]).map((name) => (
-                        <PropEditorEntry entry={states[group][name]} name={name} player={props.player} />
-                    ))}
-                </PropEditorGroup>
-            ))}
+            <PropEditorGroup icon="calendar_month">
+                <PropEditorEntry name={"HOUR"} {...props} />
+                <PropEditorEntry name={"MINUTE"} {...props} />
+                <PropEditorEntry name={"SECOND"} {...props} />
+                <PropEditorEntry name={"DAY"} {...props} />
+                <PropEditorEntry name={"MONTH"} {...props} />
+                <PropEditorEntry name={"YEAR"} {...props} />
+                <PropEditorEntry name={"WEEKDAY"} {...props} />
+                <PropEditorEntry name={"AM_PM"} {...props} />
+            </PropEditorGroup>
+            <PropEditorGroup icon="settings">
+                <PropEditorEntry name={"OS_LANGUAGE"} {...props} />
+                <PropEditorEntry name={"OVERLAY_COLOR"} {...props} />
+                <PropEditorEntry name={"ALARM_CLOCK"} {...props} />
+                <PropEditorEntry name={"BATTERY"} {...props} />
+                <PropEditorEntry name={"WEAR_STATE"} {...props} />
+                <PropEditorEntry name={"DISCONNECT"} {...props} />
+                <PropEditorEntry name={"DISTURB"} {...props} />
+                <PropEditorEntry name={"LOCK"} {...props} />
+            </PropEditorGroup>
+            <PropEditorGroup icon="fitness_center">
+                <PropEditorEntry name={"STEP"} {...props} />
+                <PropEditorEntry name={"STEP_TARGET"} {...props} />
+                <PropEditorEntry name={"DISTURB"} {...props} />
+                <PropEditorEntry name={"CAL"} {...props} />
+                <PropEditorEntry name={"CAL_TARGET"} {...props} />
+                <PropEditorEntry name={"STAND"} {...props} />
+                <PropEditorEntry name={"STAND_TARGET"} {...props} />
+                <PropEditorEntry name={"FAT_BURNING"} {...props} />
+                <PropEditorEntry name={"FAT_BURNING_TARGET"} {...props} />
+            </PropEditorGroup>
+            <PropEditorGroup icon="monitor_heart">
+                <PropEditorEntry name={"HEART"} {...props} />
+                <PropEditorEntry name={"SLEEP"} {...props} />
+                <PropEditorEntry name={"SPO2"} {...props} />
+                <PropEditorEntry name={"PAI_WEEKLY"} {...props} />
+                <PropEditorEntry name={"PAI_DAILY"} {...props} />
+                <PropEditorEntry name={"STRESS"} {...props} />
+                <PropEditorEntry name={"BODY_TEMP"} {...props} />
+            </PropEditorGroup>
+            <PropEditorGroup icon="sunny">
+                <PropEditorEntry name={"WEATHER_CURRENT"} {...props} />
+                <PropEditorEntry name={"WEATHER_HIGH"} {...props} />
+                <PropEditorEntry name={"WEATHER_LOW"} {...props} />
+                <PropEditorEntry name={"WEATHER_CURRENT_ICON"} {...props} />
+                <PropEditorEntry name={"PAI_DAILY"} {...props} />
+                <PropEditorEntry name={"WIND"} {...props} />
+                <PropEditorEntry name={"WIND_DIRECTION"} {...props} />
+                <PropEditorEntry name={"AQI"} {...props} />
+                <PropEditorEntry name={"HUMIDITY"} {...props} />
+                <PropEditorEntry name={"ALTIMETER"} {...props} />
+                <PropEditorEntry name={"UVI"} {...props} />
+                <PropEditorEntry name={"SUN_CURRENT"} {...props} />
+                <PropEditorEntry name={"MOON"} {...props} />
+                <PropEditorEntry name={"WEATHER_CITY"} {...props} />
+            </PropEditorGroup>
+            <PropEditorGroup icon="apps">
+                <PropEditorEntry name={"STOP_WATCH"} {...props} />
+                <PropEditorEntry name={"COUNT_DOWN"} {...props} />
+                <PropEditorEntry name={"MUSIC_IS_PLAYING"} {...props} />
+                <PropEditorEntry name={"MUSIC_ARTIST"} {...props} />
+                <PropEditorEntry name={"MUSIC_TITLE"} {...props} />
+            </PropEditorGroup>
         </>
     )
 }

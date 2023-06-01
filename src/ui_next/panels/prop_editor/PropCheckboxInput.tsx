@@ -2,8 +2,10 @@ import {PropEditorEntryProps} from "./PropEditorEntry";
 import {ChromeZeppPlayer} from "../../../zepp_player/ChromeZeppPlayer";
 import React from "preact/compat";
 import {preventPropagation} from "./preventPropagation";
+import {DeviceStateEntry} from "../../../zepp_player/device_state/DeviceStateEntry";
+import {BooleanDeviceState} from "../../../zepp_player/device_state/BooleanDeviceState";
 
-export function PropCheckboxInput(props: PropEditorEntryProps) {
+export function PropCheckboxInput(props: PropEditorEntryProps & { entry: BooleanDeviceState }) {
     const [value, setValue] = React.useState<boolean>(props.entry.value);
 
     function onChange(e: any) {
