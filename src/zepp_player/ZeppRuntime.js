@@ -93,7 +93,8 @@ export default class ZeppRuntime {
     }
 
     postInit() {
-        this.callDelegates("resume_call");
+        if(this.showLevel === 1)
+            this.callDelegates("resume_call");
         this.initTime = Date.now();
     }
 
