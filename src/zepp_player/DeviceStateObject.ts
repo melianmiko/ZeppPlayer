@@ -148,7 +148,7 @@ export class DeviceState {
         },
         getNumber(player: ZeppPlayer): number {
             if(player.config.enableRTC)
-                return new Date().getMonth();
+                return new Date().getMonth() + 1;
             return this.value;
         },
     });
