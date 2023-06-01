@@ -1,7 +1,7 @@
 {
   "name": "zeppplayer",
-  "version": "1.6.6",
-  "description": "Mi Band 7 preview tool",
+  "version": "1.6.7",
+  "description": "Unofficial ZeppOS emulator",
   "main": "app/zepp_player/cli.js",
   "scripts": {
     "browser:build": "esbuild --bundle --outdir=app src/index.browser.js",
