@@ -49,7 +49,7 @@ export function PropEditorPanel(props: PropsWithPlayer<{}>) {
             <PropEditorGroup icon="fitness_center">
                 <PropEditorEntry name={"STEP"} {...props} />
                 <PropEditorEntry name={"STEP_TARGET"} {...props} />
-                <PropEditorEntry name={"DISTURB"} {...props} />
+                <PropEditorEntry name={"DISTANCE"} {...props} />
                 <PropEditorEntry name={"CAL"} {...props} />
                 <PropEditorEntry name={"CAL_TARGET"} {...props} />
                 <PropEditorEntry name={"STAND"} {...props} />

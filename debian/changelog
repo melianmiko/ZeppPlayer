@@ -1,4 +1,4 @@
-zeppplayer (1.6.7-1) bookworm jammy kinetic lunar; urgency=medium
+zeppplayer (1.6.8-1) bookworm jammy kinetic lunar; urgency=medium
 
   * Fix: month in RTC
   * Fix: don't call delegate resume_call on AOD/edit 

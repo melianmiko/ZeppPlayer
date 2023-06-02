@@ -1,5 +1,4 @@
 .vagrant
 /output
-/private
-!/private/.folder
+!/output/.folder
 
