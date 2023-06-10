@@ -146,10 +146,10 @@ Vagrant.configure("2") do |config|
 
       echo "Create venv & install python deps..."
       python3.11 -m venv venv
-      pip3.11 install -r requirements.txt
+      ./venv/bin/pip install -r requirements.txt
 
       echo "Run make_release.py..."
-      python3.11 make_release.py
+      PATH=$PATH:$PWD/venv/bin ./venv/bin/python make_release.py
 
       echo "Collecting output..."
       cp dist/*.tar.gz ~/output/

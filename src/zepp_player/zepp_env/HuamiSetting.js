@@ -98,10 +98,11 @@ export default class HuamiSettingMock {
     }
 
     getLanguage() {
-        if(LANG_VALUE_TABLE.indexOf(this.runtime.fullLanguage) < 0)
+        const lang = this.runtime.deviceState.OS_LANGUAGE.value;
+        if(LANG_VALUE_TABLE.indexOf(lang) < 0)
             return 2;
 
-        return LANG_VALUE_TABLE.indexOf(this.runtime.fullLanguage);
+        return LANG_VALUE_TABLE.indexOf(lang);
     }
 
     getUserData() {

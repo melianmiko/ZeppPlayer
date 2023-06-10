@@ -25,10 +25,11 @@ export default class ZeppRuntime {
         this.screen = this.player.screen;
         this.profileData = this.player.profileData;
         this.appConfig = this.player.appConfig;
+        this.deviceState = this.player.deviceState;
     }
 
     get language() {
-        switch(this.fullLanguage) {
+        switch(this.deviceState.OS_LANGUAGE.value) {
             case "zh-CN":
                 return "sc";
             case "zh-TW":
@@ -38,9 +39,6 @@ export default class ZeppRuntime {
         }
     }
 
-    get fullLanguage() {
-        return this.getDeviceState("OS_LANGUAGE", "string");
-    }
 
     async start() {
         if(this.initTime) this.destroy();

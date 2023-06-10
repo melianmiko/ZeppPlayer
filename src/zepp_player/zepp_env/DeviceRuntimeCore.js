@@ -36,7 +36,7 @@ class HmUtilsMock {
     }
 
     getLanguage() {
-        return this.runtime.fullLanguage;
+        return this.runtime.deviceState.OS_LANGUAGE.value;
     }
 
     getPx() {
