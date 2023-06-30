@@ -90,7 +90,7 @@ export default abstract class ZeppPlayer {
             if(data[0] instanceof Error) {
                 if(this.autoFixGlobalScopeError(data[0])) {
                     console.log("Env fixed, restarting");
-                    return this.init();
+                    setTimeout(() => this.init(), 10);
                 }
             }
         })

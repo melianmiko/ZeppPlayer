@@ -37,9 +37,14 @@ export class ConsoleManager {
         this.player = player;
 
         player.onConsoleOutput.add((tag, data, extra) => {
-            if(tag === "PlayerRestarted") return this.wipe();
             this.writeBrowserConsole(tag, data, extra)
-            this.write(tag, data, extra);
+
+            try {
+                if(tag === "PlayerRestarted") return this.wipe();
+                this.write(tag, data, extra);
+            } catch(e) {
+                console.warn("When writing UI console", e);
+            }
         })
     }
 
@@ -78,7 +83,11 @@ export class ConsoleManager {
             if(data[i] instanceof Error) {
                 arg.innerText = data[i].stack;
             }else if(data[i] instanceof Object) {
-                arg.innerText = JSON.stringify(data[i]);
+                try {
+                    arg.innerText = JSON.stringify(data[i]);
+                } catch(e) {
+                    arg.innerText = data[i].toString();
+                }
             } else {
                 arg.innerText = data[i].toString();
             }

@@ -103,4 +103,22 @@ export class DeviceProfiles {
         deviceName: "",
         deviceSource: 414,
     };
+
+    cheetah: DeviceInfo = {
+        screenWidth: 454,
+        screenHeight: 454,
+        circleScreen: true,
+        swapRedAndBlueTGA: true,
+        deviceName: "",
+        deviceSource: 8192256,
+    };
+
+    cheetah_pro: DeviceInfo = {
+        screenWidth: 480,
+        screenHeight: 480,
+        circleScreen: true,
+        swapRedAndBlueTGA: true,
+        deviceName: "",
+        deviceSource: 8126720,
+    };
 }
