@@ -205,6 +205,7 @@ export default abstract class ZeppPlayer {
         runtime.onInitParam = param;
         await runtime.start();
         this._attachRuntime(runtime);
+        await runtime.postInit();
     }
 
     async back() {
@@ -221,6 +222,7 @@ export default abstract class ZeppPlayer {
         await runtime.start();
 
         this._attachRuntime(runtime);
+        await runtime.postInit();
     }
 
     async finish() {
