@@ -8,8 +8,8 @@ This application can run ZeppOS apps & watchfaces in your browser. Useful for
 homebrew development, faster and more flexible than the official ZeppOS 
 Simulator, but a bit less compatible.
 
-- [💿 Binary download](https://melianmiko.ru/en/zepp_player/)
-- [❤️ Make a donation](https://melianmiko.ru/en/donate)
+- [💿 Binary download](https://mmk.pw/en/zepp_player/)
+- [❤️ Make a donation](https://mmk.pw/en/donate)
 
 ⚠️ Main ZeppOS device, which is used as prototype of emulation, is Xiaomi Mi Band 7.
 So work of any other isn't guaranteed for now.
@@ -34,7 +34,7 @@ Currently supported ZeppOS devices: all.
 
 ## Installation and basic usage
 
-Grab binary build [here](https://melianmiko.ru/en/zepp_player/) or build your own one, and
+Grab binary build [here](https://mmk.pw/en/zepp_player/) or build your own one, and
 run application. Your browser will be opened automatically.
 
 Now, just unpack your ZeppOS app/watchface archive into `projects` folder near player,

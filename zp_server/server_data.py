@@ -20,7 +20,7 @@ PROJECTS_DIR = ROOT_DIR / "projects"
 if sys.platform == "darwin" or str(ROOT_DIR).startswith("/opt") or str(ROOT_DIR).startswith("/app"):
     PROJECTS_DIR = CONFIG_DIR / "projects"
 
-LINK_WEB = "https://melianmiko.ru/en/zepp_player"
+LINK_WEB = "https://mmk.pw/en/zepp_player"
 LINK_SRC = "https://github.com/melianmiko/ZeppPlayer"
 PORT = 3195
 

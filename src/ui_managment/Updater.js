@@ -24,7 +24,7 @@ export async function initVersionUI() {
     const view = document.getElementById("version_box");
     const versionDiv = document.createElement("div");
     versionDiv.innerHTML = "<span>ZeppPlayer v" + APP_VERSION + 
-        ", by <a href='https://melianmiko.ru' target='_blank'>melianmiko</a></span>";
+        ", by <a href='https://mmk.pw' target='_blank'>melianmiko</a></span>";
 
     view.innerHTML = "";
     view.appendChild(versionDiv);
@@ -34,10 +34,10 @@ export async function initVersionUI() {
     // Fetch release info
     let data = {};
     try {
-        const resp = await fetch("https://st.melianmiko.ru/zepp_player/release.json");
+        const resp = await fetch("https://st.mmk.pw/zepp_player/release.json");
         data = await resp.json();
     } catch(e) {
-        console.warn("Update check failed. You can check manually here https://melianmiko.ru");
+        console.warn("Update check failed. You can check manually here https://mmk.pw");
         return;
     }
 

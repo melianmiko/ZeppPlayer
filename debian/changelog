@@ -1,3 +1,9 @@
+zeppplayer (1.6.9-1) bookworm jammy kinetic lunar; urgency=medium
+
+  * Bugfixes
+
+ -- MelianMiko <melianmiko@gmail.com>  Sun, 02 Jul 2023 16:15:51 +0700
+
 zeppplayer (1.6.8-1) bookworm jammy kinetic lunar; urgency=medium
 
   * Fix: month in RTC

@@ -6,7 +6,7 @@ from mmk_updater.ui_tkinter import TkinterUiMod
 from zp_server import tk_tools
 from zp_server.server_data import ROOT_DIR
 
-URL = "https://st.melianmiko.ru/zepp_player/release.json"
+URL = "https://st.mmk.pw/zepp_player/release.json"
 
 
 def get_self_version():
