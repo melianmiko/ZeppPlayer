@@ -78,7 +78,6 @@ export function PropEditorPanel(props: PropsWithPlayer<{}>) {
                 <PropEditorEntry name={"HUMIDITY"} {...props} />
                 <PropEditorEntry name={"ALTIMETER"} {...props} />
                 <PropEditorEntry name={"UVI"} {...props} />
-                <PropEditorEntry name={"SUN_CURRENT"} {...props} />
                 <PropEditorEntry name={"MOON"} {...props} />
                 <PropEditorEntry name={"WEATHER_CITY"} {...props} />
             </PropEditorGroup>

@@ -514,7 +514,7 @@ export class DeviceState {
 
     ALTIMETER = new NumberDeviceState({
         value: 0,
-        maxValue: 100,
+        maxValue: 1064,
         displayConfig: {
             type: "number",
             maxLength: 3,
@@ -628,6 +628,11 @@ export class DeviceState {
             }
             return this.SUN_SET.value;
         },
+        getProgress: (): number => {
+            let current = this.HOUR.value + (this.MINUTE.value / 100);
+            current = Math.max(0, current - parseFloat(this.SUN_RISE.value));
+            return current / parseFloat(this.SUN_SET.value);
+        }
     });
 
     SUN_SET = new StringDeviceState({
@@ -639,7 +644,7 @@ export class DeviceState {
     });
 
     SUN_RISE = new StringDeviceState({
-        value: "06:30",
+        value: "06.30",
         displayConfig: {
             notEditable: true,
             maxLength: 5,
