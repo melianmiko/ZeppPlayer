@@ -435,19 +435,23 @@ export class ImageProgressWidget extends BaseWidget {
 }
 
 /**
- * hmUI.widget.LEVEL
+ * hmUI.widget.IMG_LEVEL
  */
 export class LevelWidget extends BaseWidget {
     async render(canvas, player) {
         const ctx = canvas.getContext("2d");
 
-        let level = this.config.level;
-        if(this.config.type) {
+        let level = 0;
+        if(typeof this.config.level == "number") {
+            level = Math.max(0, this.config.level - 1);
+        } else if(this.config.type) {
             let val = player.getDeviceState(this.config.type, "progress");
             if(!val) val = 0;
             level = Math.floor(val * (this.config.image_length-1));
             // console.log(val, level);
         }
+
+        if(level >= this.config.image_length) level = 0;
 
         const img = await player.getAssetImage(this.config.image_array[level]);
         ctx.drawImage(img, this.config.x, this.config.y);
