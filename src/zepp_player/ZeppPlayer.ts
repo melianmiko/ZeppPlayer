@@ -546,6 +546,9 @@ export default abstract class ZeppPlayer {
             const str = `${extra}\n(${Object.keys(appEnv).toString() }) => {${appJsText};}`;
             const appJs = eval(str);
             appJs(...Object.values(appEnv));
+
+            const app = appEnv.__$$hmAppManager$$__.currentApp.app;
+            if(app.onCreate) app.onCreate();
         } catch (e) {
             console.warn("app.js exec failed", e);
         }

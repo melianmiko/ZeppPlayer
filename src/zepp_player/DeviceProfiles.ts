@@ -7,6 +7,7 @@ export type DeviceInfo = {
     circleScreen?: boolean;
     enablePropBanList?: boolean;
     swapRedAndBlueTGA?: boolean;
+    defaultFontSize?: number,
 }
 
 export class DeviceProfiles {
@@ -72,12 +73,13 @@ export class DeviceProfiles {
         deviceSource: 7995648,
     };
 
-    gts4mini = {
+    gts4mini: DeviceInfo = {
         screenWidth: 336,
         screenHeight: 384,
         hasOverlay: true,
         deviceName: "Amazfit GTS 4 Mini",
         deviceSource: 246,
+        defaultFontSize: 12,
     };
 
     trexultra: DeviceInfo = {

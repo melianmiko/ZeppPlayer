@@ -16,7 +16,7 @@ export class TextWidget extends BaseWidget<TextWidgetConfig> {
 
     static drawText(userConfig: TextWidgetConfig, runtime: ZeppRuntime) {
         const config: TextWidgetConfig = {
-            text_size: 18,
+            text_size: runtime.profileData.defaultFontSize || 18,
             color: 0x0,
             char_space: 0,
             line_space: 0,
