@@ -36,6 +36,7 @@ export default class HuamiFsMock {
 
     constructor(runtime) {
         this.runtime = runtime;
+        this.useAbsolutePathsInHuamiFS = runtime.profileData.useAbsolutePathsInHuamiFS;
 
         const setters = ["SysProSetBool", "SysProSetInt64", "SysProSetDouble", "SysProSetChars"];
         const getters = ["SysProGetBool", "SysProGetInt64", "SysProGetDouble", "SysProGetChars"];
@@ -60,6 +61,10 @@ export default class HuamiFsMock {
             }
         }
         return this.vfs[path];
+    }
+
+    getDataFilePath(path) {
+        return `/storage/${this.appTypeDirName}/data/${this.appDirName}/${path}`
     }
 
     newFile(path) {
@@ -91,7 +96,7 @@ export default class HuamiFsMock {
     }
 
     open(path, flag) {
-        path = `/storage/${this.appTypeDirName}/data/${this.appDirName}/${path}`;
+        path = this.getDataFilePath(path);
         return this._performOpen(normalize(path), flag);
     }
 
@@ -150,11 +155,15 @@ export default class HuamiFsMock {
     }
 
     remove(path) {
+        if(!this.useAbsolutePathsInHuamiFS)
+            path = normalize(this.getDataFilePath(path))
         delete this.vfs[path];
         return 0;
     }
 
     rename(path, dest) {
+        if(!this.useAbsolutePathsInHuamiFS)
+            path = normalize(this.getDataFilePath(path))
         const data = PersistentStorage.get('fs', path);
         PersistentStorage.set("fs", dest, data);
         PersistentStorage.del("fs", path);
@@ -167,7 +176,8 @@ export default class HuamiFsMock {
     }
 
     readdir(path) {
-        const normalize = require('path-normalize');
+        if(!this.useAbsolutePathsInHuamiFS)
+            path = normalize(this.getDataFilePath(path))
         path = normalize(path);
 
         let content = [];

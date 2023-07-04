@@ -36,9 +36,11 @@ export class HmApp {
         delta = Math.floor(delta);
         if(delta <= 0) return -1;
 
-        this.timers.push(setTimeout(() => {
+        const id = setTimeout(() => {
             this.runtime.requestPageSwitch(options);
-        }, delta * 1000))
+        }, delta * 1000);
+        this.timers.push(id)
+        return id;
     }
 
     alarmCancel() {}

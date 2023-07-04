@@ -8,6 +8,7 @@ export type DeviceInfo = {
     enablePropBanList?: boolean;
     swapRedAndBlueTGA?: boolean;
     defaultFontSize?: number,
+    useAbsolutePathsInHuamiFS?: boolean,
 }
 
 export class DeviceProfiles {
@@ -18,6 +19,7 @@ export class DeviceProfiles {
         deviceName: "Xiaomi Smart Band 7",
         deviceSource: 260,
         enablePropBanList: true,
+        useAbsolutePathsInHuamiFS: true,
     };
 
     ab7: DeviceInfo = {
