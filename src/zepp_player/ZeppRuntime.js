@@ -1,5 +1,6 @@
 import { createPageEnv } from "./SyystemEnvironment";
 import { ScreenRootEventHandler } from "./ui/ScreenRootEventHandler";
+import {MiniSignal} from "mini-signals";
 
 export default class ZeppRuntime {
     widgets = [];
@@ -14,7 +15,8 @@ export default class ZeppRuntime {
     uiPause = false;
     refresh_required = "";
     animMaxFPS = false;
-    
+    onStateChanged = new MiniSignal();
+
     constructor(player, scriptPath, showLevel) {
         this.player = player;
         this.scriptPath = scriptPath;
@@ -167,8 +169,10 @@ export default class ZeppRuntime {
         this.env = null;
         this.initTime = null;
         this.contentHeight = 0;
+
         console.debug("ZeppRuntime.destroy()",
-            this.scriptPath.split("/").pop() + ":" + this.scriptPath);
+        this.scriptPath.split("/").pop() + ":" + this.scriptPath);
+        this.onStateChanged.detachAll();
     }
 
     handleEvent(name, x, y, info) {

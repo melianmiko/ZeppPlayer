@@ -52,7 +52,6 @@ export default abstract class ZeppPlayer {
     public deviceState = new DeviceState();
     public onConfigChanged = new MiniSignal<[string, any]>();
 
-    protected onStateChanged = new MiniSignal<[string]>();
     protected vfs: {[path: string]: ArrayBuffer} = {};
 
     private lastCanvas: CanvasEntry = null;
@@ -164,10 +163,11 @@ export default abstract class ZeppPlayer {
 
     setDeviceState(type: keyof DeviceState, value: any, requireRefresh: boolean = true) {
         (this.deviceState[type] as DeviceStateEntry<any>).setValue(value);
-        this.onStateChanged.dispatch(type);
 
-        if(this.currentRuntime && requireRefresh)
-            this.currentRuntime.refresh_required = "set_state";
+        if(this.currentRuntime) {
+            this.currentRuntime.onStateChanged.dispatch(type);
+            if(requireRefresh) this.currentRuntime.refresh_required = "set_state";
+        }
     }
 
     async setProject(path: string) {
@@ -235,7 +235,6 @@ export default abstract class ZeppPlayer {
         this.currentRuntime = null;
         this.render_counter = 0;
         this.backStack = [];
-        this.onStateChanged.detachAll();
     }
 
     async init(): Promise<void> {
@@ -398,13 +397,12 @@ export default abstract class ZeppPlayer {
         const now = new Date();
 
         // Emulate events for RTC mode
-        if(this.config.enableRTC) {
-            if(this.currentRuntime)
+        if(this.config.enableRTC && this.currentRuntime) {
                 this.currentRuntime.refresh_required = "rtc_timer";
             if(now.getSeconds() === 0)
-                this.onStateChanged.dispatch("MINUTE");
+                this.currentRuntime.onStateChanged.dispatch("MINUTE");
             if(now.getSeconds() === 0 && now.getMinutes() === 0)
-                this.onStateChanged.dispatch("HOUR");
+                this.currentRuntime.onStateChanged.dispatch("HOUR");
         }
     }
 

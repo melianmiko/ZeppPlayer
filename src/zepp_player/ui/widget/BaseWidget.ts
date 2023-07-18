@@ -118,6 +118,10 @@ export abstract class BaseWidget<T> {
         this.events[event] = fn;
     }
 
+    removeEventListener(event: string, _: BaseWidgetEventHandler) {
+        this.events[event] = null;
+    }
+
     dropEvents(runtime: ZeppRuntime, zone: number[]=null) {
         const config = this.config;
         if(zone == null)

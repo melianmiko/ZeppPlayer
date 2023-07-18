@@ -254,20 +254,24 @@ class HeartSensor {
     constructor(player) {
         this.player = player;
         this.today = [];
+        this._eventCallbacks = [];
+
+        this.player.onStateChanged.add((e) => {
+            if(e === "HEART") for(const fn of this._eventCallbacks)
+                fn();
+        })
 
         for(let i = 0; i < 3600; i++) {
             this.today[i] = Math.round(90 + 90 * (i % 120)/120);
         }
     }
 
-    removeEventListener(_) {
-        this.player.onConsole("ZeppPlayer", ["Sensor removeEventList not implemented, sorry"]);
+    removeEventListener(name, callback) {
+        this._eventCallbacks.splice(this._eventCallbacks.indexOf(callback), 1);
     }
 
     addEventListener(name, callback) {
-        this.player.addDeviceStateChangeEvent("HEART", () => {
-            callback();
-        });
+        this._eventCallbacks.push(callback);
     }
 }
 
