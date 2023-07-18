@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { PersistentStorage } from "../zepp_player/PersistentStorage.js";
 import GifRecorder from "./GifRecorder.js";
 import {DeviceProfiles} from "../zepp_player/DeviceProfiles";
 import AppSettingsManager from "./AppSettingsManager";
@@ -303,9 +302,8 @@ export class ToolbarManager {
     }
 
     static doReload() {
-        PersistentStorage.wipe();
-
         const player = ToolbarManager.player;
+        player.currentRuntime.persistent.wipe();
         player.init();
     }
 

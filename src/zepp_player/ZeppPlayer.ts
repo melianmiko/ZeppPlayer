@@ -17,7 +17,6 @@
 */
 
 import {DeviceState} from "./DeviceStateObject.js";
-import {PersistentStorage} from "./PersistentStorage.js";
 import Overlay from "./ui/Overlay.js";
 import ZeppRuntime from "./ZeppRuntime.js";
 import {TGAImage} from "./TgaImage";
@@ -42,6 +41,7 @@ export default abstract class ZeppPlayer {
         renderScroll: 0,
         showEventZones: false,
         withAutoIncrement: false,
+        persistentKeyName: "zp_appdata",
     }
     public profileName: keyof DeviceProfiles = "sb7";
     public projectPath: string = "";
@@ -75,7 +75,7 @@ export default abstract class ZeppPlayer {
         return [this.profileData.screenWidth, this.profileData.screenHeight];
     }
 
-    protected constructor() {
+    constructor() {
         this.config = new Proxy(this.config, {
             set: this.changeOption.bind(this)
         });
@@ -129,7 +129,7 @@ export default abstract class ZeppPlayer {
      */
     wipeSettings() {
         this.deviceState = new DeviceState();
-        PersistentStorage.wipe();
+        if(this.currentRuntime) this.currentRuntime.persistent.wipe();
     }
 
     getVfsAppPath() {

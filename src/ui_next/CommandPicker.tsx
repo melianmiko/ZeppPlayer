@@ -22,6 +22,9 @@ export function CommandPicker(props: CommandPickerProps) {
                 <CommandPaletteItem value="p_cfg" onSelect={() => props.changePane("settings")}>
                     {"Open player settings"}
                 </CommandPaletteItem>
+                <CommandPaletteItem value="p_overview" onSelect={() => props.changePane("overview")}>
+                    {"Overview mode"}
+                </CommandPaletteItem>
                 {...getChangeProjectCommands(onCancel)}
                 {...getChangeProfileCommands(onCancel)}
             </CommandPalette>

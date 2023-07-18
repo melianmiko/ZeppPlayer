@@ -112,10 +112,15 @@ def list_projects_legacy():
     return HTML_TEMPLATE.replace("{}", out)
 
 
-@bottle.route("/projects/<filename:path>")
+@bottle.route("/projects/<filename:path>", method=["GET", "PUT"])
 def project_file(filename):
     projects_dir = _get_projects_dir()
     path = projects_dir / filename
+
+    if bottle.request.method == "PUT":
+        with open(path, "wb") as f:
+            f.write(bottle.request.body.read())
+        return ""
 
     if path.is_dir():
         """deprecated"""

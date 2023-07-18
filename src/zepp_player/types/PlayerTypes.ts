@@ -25,4 +25,5 @@ export type PlayerConfig = {
     renderScroll: number,
     showEventZones: boolean,
     withAutoIncrement: boolean,
+    persistentKeyName: string,
 }

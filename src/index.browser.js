@@ -22,7 +22,6 @@ import {ProjectPicker} from "./ui_managment/ProjectPicker.js";
 import {ToolbarManager} from "./ui_managment/ToolbarManager.js";
 import {initVersionUI} from "./ui_managment/Updater.js";
 import {ChromeZeppPlayer} from "./zepp_player/ChromeZeppPlayer.js";
-import {PersistentStorage} from "./zepp_player/PersistentStorage.js";
 import {ChangesWatcher} from "./ui_managment/ChangesWatcher";
 import {start as startNgUi} from "./ui_next/RootComponent";
 import {PlayerSettingsLoader} from "./ui_next/PlayerSettingsLoader";
@@ -50,7 +49,6 @@ const start = async () => {
     startNgUi(document.getElementById("ng-root"), player);
 
     // Make storage available from browser console
-    window.PersistentStorage = PersistentStorage;
     window.player = player;
 
     // Project picker

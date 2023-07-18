@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { PersistentStorage } from "../PersistentStorage.js";
 import { BaseWidget } from "./widget/BaseWidget.ts";
 import { ImageWidget } from "./ImagingWidgets.js";
 import {TextWidget} from "./widget/TextWidget";
@@ -30,14 +29,14 @@ class BaseEditableWidget extends BaseWidget {
      * @returns {boolean} ture, if focused
      */
     zp_isActive() {
-        return PersistentStorage.get("wfEdit", "focus") === this.config.edit_id;
+        return this.runtime.persistent.get("wfEdit", "focus") === this.config.edit_id;
     }
 
     /**
      * Change active state
      */
     zp_setActive() {
-        PersistentStorage.set("wfEdit", "focus", this.config.edit_id);
+        this.runtime.persistent.set("wfEdit", "focus", this.config.edit_id);
         this.runtime.refresh_required = "edit";
     }
 
@@ -59,7 +58,7 @@ export class EditableBackground extends BaseEditableWidget {
     constructor(config) {
         super(config);
 
-        config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
+        config.current_type = this.runtime.persistent.get('wfEdit', config.edit_id);
         if(config.current_type === null || config.current_type === undefined)
             config.current_type = config.default_id;
 
@@ -86,7 +85,7 @@ export class EditableBackground extends BaseEditableWidget {
         const i = this._findCurrent();
         const nextIndex = (i + 1) % this.config.bg_config.length;
         const val = this.config.bg_config[nextIndex].id;
-        PersistentStorage.set("wfEdit", this.config.edit_id, val);
+        this.runtime.persistent.set("wfEdit", this.config.edit_id, val);
         this.config.current_type = val;
         this.runtime.refresh_required = "edit";
     }
@@ -137,7 +136,7 @@ export class EditPointerWidget extends BaseEditableWidget {
     constructor(config) {
         super(config);
 
-        config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
+        config.current_type = this.runtime.persistent.get('wfEdit', config.edit_id);
         if(config.current_type === null || config.current_type === undefined)
             config.current_type = config.default_id;
 
@@ -154,7 +153,7 @@ export class EditPointerWidget extends BaseEditableWidget {
                 // Get next
                 const nextIndex = (i + 1) % this.config.count;
                 const val = this.config.config[nextIndex];
-                PersistentStorage.set("wfEdit", this.config.edit_id, val.id);
+                this.runtime.persistent.set("wfEdit", this.config.edit_id, val.id);
                 this.config.current_type = val.id;
                 this.runtime.refresh_required = "edit";
                 return;
@@ -256,10 +255,10 @@ export class EditGroupWidget extends BaseEditableWidget {
     constructor(config) {
         super(config);
 
-        config.current_type = PersistentStorage.get('wfEdit', config.edit_id);
+        config.current_type = this.runtime.persistent.get('wfEdit', config.edit_id);
         if(config.current_type === null || config.current_type === undefined) {
             config.current_type = config.default_type;
-            PersistentStorage.set("wfEdit", config.edit_id, config.default_type);
+            this.runtime.persistent.set("wfEdit", config.edit_id, config.default_type);
         }
 
         this.addEventListener("onmouseup", () => {
@@ -359,7 +358,7 @@ export class EditGroupWidget extends BaseEditableWidget {
                 // Get next
                 const nextIndex = (i + 1) % this.config.count;
                 const val = this.config.optional_types[nextIndex];
-                PersistentStorage.set("wfEdit", this.config.edit_id, val.type);
+                this.runtime.persistent.set("wfEdit", this.config.edit_id, val.type);
                 this.config.current_type = val.type;
                 this.runtime.render_counter = 0;
                 this.runtime.refresh_required = "edit";

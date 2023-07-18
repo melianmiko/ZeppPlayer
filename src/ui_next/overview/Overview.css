@@ -1,0 +1,34 @@
+.zp-overview {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    gap: 4px;
+}
+
+.zp-overview__card {
+    position: relative;
+    user-select: none;
+    cursor: pointer;
+}
+
+.zp-overview__card > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.zp-overview__card,
+.zp-overview__card > canvas,
+.zp-overview__card > img {
+    max-width: 150px;
+}
+
+.zp-overview__card > span {
+    display: block;
+    text-align: center;
+    margin: 12px 0;
+    opacity: .8;
+    max-width: 150px;
+    text-overflow: ellipsis;
+}

@@ -7,6 +7,7 @@ import {CommandPicker} from "./CommandPicker";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "./base/Modal";
 import {Button} from "./base/Button";
 import {PlayerSettingsPane} from "./settings_pane/PlayerSettingsPane";
+import {OverviewRoot} from "./overview/OverviewRoot";
 
 
 export function RootComponent() {
@@ -19,6 +20,8 @@ export function RootComponent() {
                                    onCancel={() => setPane("")} />
             <CommandPicker open={pane == "command_picker"}
                            changePane={setPane} />
+            <OverviewRoot open={pane == "overview"}
+                          onClose={() => setPane("")} />
             <PlayerSettingsPane open={pane == "settings"}
                                 onCancel={() => setPane("")} />
         </>

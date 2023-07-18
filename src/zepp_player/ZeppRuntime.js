@@ -1,6 +1,7 @@
 import { createPageEnv } from "./SyystemEnvironment";
 import { ScreenRootEventHandler } from "./ui/ScreenRootEventHandler";
 import {MiniSignal} from "mini-signals";
+import {PersistentStorage} from "./PersistentStorage";
 
 export default class ZeppRuntime {
     widgets = [];
@@ -24,6 +25,7 @@ export default class ZeppRuntime {
         this.render_counter = 0;
 
         this.vfs = this.player.vfs;
+        this.persistent = new PersistentStorage(player.config.persistentKeyName);
         this.screen = this.player.screen;
         this.profileData = this.player.profileData;
         this.appConfig = this.player.appConfig;

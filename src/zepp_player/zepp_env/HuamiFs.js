@@ -18,8 +18,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {PersistentStorage} from "../PersistentStorage.js";
-
 const CONSTANT_FOLDER = 1;
 const normalize = require('path-normalize')
 
@@ -164,9 +162,9 @@ export default class HuamiFsMock {
     rename(path, dest) {
         if(!this.useAbsolutePathsInHuamiFS)
             path = normalize(this.getDataFilePath(path))
-        const data = PersistentStorage.get('fs', path);
-        PersistentStorage.set("fs", dest, data);
-        PersistentStorage.del("fs", path);
+        const data = this.runtime.persistent.get('fs', path);
+        this.runtime.persistent.set("fs", dest, data);
+        this.runtime.persistent.del("fs", path);
         return 0;
     }
 
@@ -194,10 +192,10 @@ export default class HuamiFsMock {
     }
 
     SysProGetInt(key) {
-        return PersistentStorage.get("SysProRegistery", key);
+        return this.runtime.persistent.get("SysProRegistery", key);
     }
 
     SysProSetInt(key, val) {
-        PersistentStorage.set("SysProRegistery", key, val);
+        this.runtime.persistent.set("SysProRegistery", key, val);
     }
 }

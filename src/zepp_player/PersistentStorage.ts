@@ -17,34 +17,44 @@
 */
 
 export class PersistentStorage {
-    static get(group, key) {
-        let data = PersistentStorage._getStorage();
+    public baseKey: string;
+
+    constructor(baseKey: string) {
+        this.baseKey = baseKey;
+    }
+
+    get(group: string, key: string): any {
+        let data = this._getStorage();
         if(!data[group]) return null;
         return data[group][key];
     }
 
-    static set(group, key, value) {
-        let data = PersistentStorage._getStorage();
+    set(group: string, key: string, value: any) {
+        if(this.baseKey == "disabled") return;
+
+        let data = this._getStorage();
         if(!data[group]) data[group] = {};
         data[group][key] = value;
-        localStorage._zeppPlayer_storage = JSON.stringify(data);
+        localStorage[this.baseKey] = JSON.stringify(data);
     }
 
-    static wipe() {
-        localStorage._zeppPlayer_storage = "{}";
+    wipe() {
+        localStorage[this.baseKey] = "{}";
     }
 
-    static del(group, key) {
-        PersistentStorage.set(group, key, null);
+    del(group: string, key: string) {
+        this.set(group, key, null);
     }
 
-    static keys(group) {
-        return Object.keys(PersistentStorage._getStorage()[group]);
+    keys(group: string) {
+        return Object.keys(this._getStorage()[group]);
     }
 
-    static _getStorage() {
+    private _getStorage() {
+        if(this.baseKey == "disabled") return {};
+
         try {
-            return JSON.parse(localStorage._zeppPlayer_storage);
+            return JSON.parse(localStorage[this.baseKey]);
         } catch(e) {return {}}
     }
 }
