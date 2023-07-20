@@ -5,6 +5,6 @@ sv_ttk==2.4.2
 requests==2.28.2
 waitress~=2.1.2
 PyGObject~=3.44.1; sys_platform == "linux"
-pyinstaller==5.9
-mmk-updater==0.13.1
+pyinstaller==5.12
+mmk-updater==0.14.1
 watchdog==3.0.0

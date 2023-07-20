@@ -39,6 +39,7 @@ Vagrant.configure("2") do |config|
     debian.vm.provider "virtualbox" do |v|
       v.memory = 512
       v.cpus = 1
+      v.linked_clone = true
     end
     
     # Set up rsync
@@ -88,6 +89,7 @@ Vagrant.configure("2") do |config|
     mac.vm.provider "virtualbox" do |v|
       v.memory = 4096
       v.cpus = 4
+      v.linked_clone = true
 
       # For non-Intel CPUs
       v.customize ["modifyvm", :id, "--cpu-profile", "Intel Core i7-6700K"]
@@ -171,6 +173,7 @@ Vagrant.configure("2") do |config|
     win.vm.provider "virtualbox" do |v|
       v.memory = 2048
       v.cpus = 4
+      v.linked_clone = true
     end
 
     # Install deps

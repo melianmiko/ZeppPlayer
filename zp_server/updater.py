@@ -18,7 +18,6 @@ def get_self_version():
 
 def run():
     updater = UpdaterTool(URL, get_self_version(), UpdaterUiMod())
-    updater.ppa_glob = ""
     updater.start()
 
 
