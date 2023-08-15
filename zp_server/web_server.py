@@ -1,5 +1,6 @@
 import json
 import logging
+import string
 import subprocess
 import sys
 from pathlib import Path
@@ -14,7 +15,10 @@ log = logging.getLogger("ZPServer")
 
 
 def _get_projects_dir():
-    return Path(user_config.get_prop("projects_path", PROJECTS_DIR))
+    user_dir = Path(user_config.get_prop("projects_path", PROJECTS_DIR))
+    if not user_dir.is_dir():
+        return Path(PROJECTS_DIR)
+    return user_dir
 
 
 @tk_tools.async_with_ui("WebServer")
@@ -47,7 +51,24 @@ def get_watch():
 @bottle.get("/api/folder_chooser/")
 @bottle.get("/api/folder_chooser/<path:path>")
 def get_start_path(path=""):
-    path = (Path.home() / path).resolve()
+    if sys.platform == "win32":
+        if path == "":
+            from ctypes import windll
+            drives = []
+            bitmask = windll.kernel32.GetLogicalDrives()
+            for letter in string.ascii_uppercase:
+                if bitmask & 1:
+                    drives.append(letter)
+                bitmask >>= 1
+            return {
+                "current_path": "/",
+                "contents": drives
+            }
+        else:
+            drive_name, path = path.split("/", 1)
+            path = Path(f"{drive_name}:/{path}")
+    else:
+        path = Path(f"/{path}").resolve()
 
     items = []
     for item in path.iterdir():
@@ -62,7 +83,7 @@ def get_start_path(path=""):
 
 @bottle.get("/api/set_projects_dir/")
 @bottle.get("/api/set_projects_dir/<path:path>")
-def get_start_path(path=""):
+def set_projects_dir(path=""):
     path = (Path.home() / path).resolve()
     assert path.is_dir()
 
