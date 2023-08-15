@@ -1,3 +1,11 @@
+zeppplayer (1.7.1-1) bookworm jammy kinetic lunar; urgency=medium
+
+  * Fix crash when using event listener on sensors
+  * Use today high/low temperature in forecastData of weather sensor
+  * Add drive picker for project folder chooser on win32
+
+ -- MelianMiko <support@mmk.pw>  Tue, 15 Aug 2023 15:04:52 +0700
+
 zeppplayer (1.7-2) bookworm jammy kinetic lunar; urgency=medium
 
   * Add overview mode
