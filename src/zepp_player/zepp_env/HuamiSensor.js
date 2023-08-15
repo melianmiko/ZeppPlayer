@@ -366,7 +366,11 @@ class WeatherSensor {
             cityName: this.player.getDeviceState("WEATHER_CITY", "string"),
             forecastData: {
                 data: [
-                    {high: 15, low: 12, index: 0},
+                    {
+                        high: this.player.getDeviceState("WEATHER_HIGH"),
+                        low: this.player.getDeviceState("WEATHER_LOW"),
+                        index: 0
+                    },
                     {high: 10, low: 8, index: 1},
                     {high: 5, low: 2, index: 2},
                     {high: -1, low: -3, index: 3}

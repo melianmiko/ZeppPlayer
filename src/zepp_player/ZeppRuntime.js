@@ -274,7 +274,7 @@ export default class ZeppRuntime {
     }
 
     addDeviceStateChangeEvent(type, callback) {
-        this.player.onStateChanged.add((eventType) => {
+        this.onStateChanged.add((eventType) => {
             if(type === eventType) callback();
         })
     }
