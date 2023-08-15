@@ -25,7 +25,7 @@ export function ServerDirectoryPicker(props: {open: boolean, onCancel?: () => an
     });
 
     async function reload() {
-        const resp = await fetch("/api/folder_chooser/" + path);
+        const resp = await fetch("/api/folder_chooser/" + encodeURIComponent(path));
         const data = await resp.json();
 
         setState({
@@ -40,7 +40,7 @@ export function ServerDirectoryPicker(props: {open: boolean, onCancel?: () => an
 
     async function handleSelect(v: string) {
         if(v == "$$apply$$") {
-            const resp = await fetch(`/api/set_projects_dir/${path}`);
+            const resp = await fetch(`/api/set_projects_dir/${encodeURIComponent(currentPath)}`);
             if(resp.status == 200) {
                 location.reload();
             }

@@ -64,9 +64,11 @@ def get_start_path(path=""):
                 "current_path": "/",
                 "contents": drives
             }
-        else:
+        elif "/" in path:
             drive_name, path = path.split("/", 1)
             path = Path(f"{drive_name}:/{path}")
+        else:
+            path = Path(f"{path}:/")
     else:
         path = Path(f"/{path}").resolve()
 
@@ -84,7 +86,9 @@ def get_start_path(path=""):
 @bottle.get("/api/set_projects_dir/")
 @bottle.get("/api/set_projects_dir/<path:path>")
 def set_projects_dir(path=""):
-    path = (Path.home() / path).resolve()
+    path = path.replace("\\", "/")
+    path = Path(path).resolve()
+    print("Change projects dir to", path)
     assert path.is_dir()
 
     user_config.set_prop("projects_path", str(path))
