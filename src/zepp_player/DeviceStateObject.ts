@@ -222,8 +222,7 @@ export class DeviceState {
             return this.value !== "0";
         },
         getString(): string {
-            const value = this.value ? this.value : "09:30";
-            return value.replaceAll(":", ".")
+            return this.value.replace(":", ".");
         },
         getProgress(): number {
             try {
