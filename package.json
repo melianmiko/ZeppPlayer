@@ -21,7 +21,7 @@
   "dependencies": {
     "@types/node": "^20.2.1",
     "buffer": "^6.0.3",
-    "canvas": "^2.11.0",
+    "canvas": "^2.11.2",
     "file-saver": "^2.0.5",
     "fs": "^0.0.1-security",
     "mini-signals": "^2.0.0"

@@ -159,7 +159,13 @@ export default class ZeppRuntime {
     }
 
     destroy() {
-        if(this.module && this.module.onDestroy) this.module.onDestroy();
+        if(this.module && this.module.onDestroy) {
+            try {
+                this.module.onDestroy();
+            } catch(e) {
+                console.warn("When trying to run module onDestroy", e);
+            }
+        }
         for(let i in this.onDestroy) {
             this.onDestroy[i]();
         }
