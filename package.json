@@ -19,7 +19,7 @@
   "author": "MelianMiko",
   "license": "Apache 2.0",
   "dependencies": {
-    "@types/node": "^20.2.1",
+    "@types/node": "^20.10.5",
     "buffer": "^6.0.3",
     "canvas": "^2.11.2",
     "file-saver": "^2.0.5",
@@ -27,14 +27,14 @@
     "mini-signals": "^2.0.0"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.1",
-    "esbuild": "^0.17.18",
+    "@types/uuid": "^9.0.7",
+    "esbuild": "^0.19.10",
     "gif-encoder-2": "^1.0.5",
     "normalize-path": "^3.0.0",
-    "path-normalize": "^6.0.6",
-    "preact": "^10.13.2",
+    "path-normalize": "^6.0.12",
+    "preact": "^10.19.3",
     "tga": "^1.0.7",
-    "uuid": "^9.0.0",
-    "yargs": "^17.5.1"
+    "uuid": "^9.0.1",
+    "yargs": "^17.7.2"
   }
 }
