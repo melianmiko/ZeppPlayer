@@ -1,6 +1,6 @@
 {
   "name": "zeppplayer",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Unofficial ZeppOS emulator",
   "main": "app/zepp_player/cli.js",
   "scripts": {
