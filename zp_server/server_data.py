@@ -6,6 +6,8 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if hasattr(sys, "frozen"):
     ROOT_DIR = Path(os.path.dirname(sys.executable))
+    if sys.platform == "darwin":
+        ROOT_DIR = ROOT_DIR.parent / "Resources"
 
 if sys.platform == "win32":
     CONFIG_DIR = Path.home() / "AppData/Roaming/ZeppPLayer"
