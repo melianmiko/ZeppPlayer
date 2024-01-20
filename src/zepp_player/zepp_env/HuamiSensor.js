@@ -362,6 +362,13 @@ class WeatherSensor {
     }
 
     getForecastWeather() {
+        function toTideData(timeString) {
+            const time = parseFloat(timeString);
+            const hour = Math.trunc(time);
+            return {hour, minute: time - hour};
+        }
+        const sunrise = toTideData(this.player.getDeviceState("SUN_RISE", "string"));
+        const sunset = toTideData(this.player.getDeviceState("SUN_SET", "string"));
         return {
             cityName: this.player.getDeviceState("WEATHER_CITY", "string"),
             forecastData: {
@@ -380,20 +387,20 @@ class WeatherSensor {
             tideData: {
                 data: [
                     {
-                        sunrise: {hour: 9, minute: 30},
-                        sunset: {hour: 21, minute: 30}
+                        sunrise,
+                        sunset
                     },
                     {
-                        sunrise: {hour: 9, minute: 30},
-                        sunset: {hour: 21, minute: 30}
+                        sunrise,
+                        sunset
                     },
                     {
-                        sunrise: {hour: 9, minute: 30},
-                        sunset: {hour: 21, minute: 30}
+                        sunrise,
+                        sunset
                     },
                     {
-                        sunrise: {hour: 9, minute: 30},
-                        sunset: {hour: 21, minute: 30}
+                        sunrise,
+                        sunset
                     }
                 ],
                 count: 4
