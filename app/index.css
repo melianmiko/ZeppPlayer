@@ -8,6 +8,7 @@ html {
     --input: #444;
     --input-text: #fff;
     --accent: #ff7043;
+    --display-size: 22.5;
 }
 
 input[type=checkbox] {
@@ -21,6 +22,31 @@ input[type=checkbox] {
 input[type=checkbox]:checked {
     background: var(--accent);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='16px' viewBox='0 0 24 24' width='16px' fill='%23FFFFFF'%3E%3Cpath d='M0 0h24v24H0V0z' fill='none'/%3E%3Cpath d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z'/%3E%3C/svg%3E");
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 16px;
+    padding: 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 16px; 
+    height: 16px;
+    border-radius: 8px;
+    background: var(--accent);
+    cursor: pointer;
+}
+  
+input[type=range]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    background: var(--accent);
+    cursor: pointer;
 }
 
 
@@ -70,6 +96,7 @@ aside.caption {
 
 #display {
     height: fit-content;
+    width: calc(var(--display-size)*1vh);
 }
 
 .root {
