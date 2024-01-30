@@ -5,7 +5,12 @@ import AppSettingsManager from "../../ui_managment/AppSettingsManager";
 
 export type CssSettingsOptionProps = SettingsListItemProps & {
     cssPropName: string,
+    inputType: "color" | "range"
 };
+
+export function transformDidplaySize(value: number): string {
+    return (value*0.55+20).toString();
+}
 
 export function CssSettingsOption(props: CssSettingsOptionProps) {
     const configKey = `css_${props.cssPropName}`;
@@ -13,7 +18,11 @@ export function CssSettingsOption(props: CssSettingsOptionProps) {
 
     React.useEffect(() => {
         if(current == null) return;
-        document.documentElement.style.setProperty(`--${props.cssPropName}`, current);
+        let value = current;
+        if(props.inputType === "range") {
+            value = transformDidplaySize(+value);
+        }
+        document.documentElement.style.setProperty(`--${props.cssPropName}`, value);
         AppSettingsManager.setString(configKey, current);
     })
 
@@ -22,7 +31,7 @@ export function CssSettingsOption(props: CssSettingsOptionProps) {
                           description={props.description}
                           noClickHandler>
 
-            <input type="color"
+            <input type={props.inputType}
                    value={current}
                    onChange={(e: any) => setCurrent(e.target.value)} />
 

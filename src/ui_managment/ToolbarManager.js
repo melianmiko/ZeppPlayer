@@ -212,7 +212,11 @@ export class ToolbarManager {
                 ToolbarManager.switchProject(-1);
                 return;
             case "Escape":
-                ToolbarManager.doBack();
+                if(document.querySelector('.ui-backdrop__visible')) {
+                    window._setReactPane("");
+                } else {
+                    ToolbarManager.doBack();
+                }
                 return;
         }
     }
