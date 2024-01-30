@@ -9,7 +9,7 @@ export type CssSettingsOptionProps = SettingsListItemProps & {
 };
 
 export function transformDidplaySize(value: number): string {
-    return (value*0.15+15).toString();
+    return (value*0.55+20).toString();
 }
 
 export function CssSettingsOption(props: CssSettingsOptionProps) {

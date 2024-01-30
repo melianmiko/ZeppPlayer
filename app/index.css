@@ -8,13 +8,14 @@ html {
     --input: #444;
     --input-text: #fff;
     --accent: #ff7043;
-    --display-size: 22.5;
+    --display-size: 52;
 }
 
 input[type=checkbox] {
     background: var(--foreground);
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
     height: 16px;
     width: 16px;
 }
@@ -27,6 +28,7 @@ input[type=checkbox]:checked {
 input[type=range] {
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
     height: 16px;
     padding: 0;
 }
@@ -48,7 +50,6 @@ input[type=range]::-moz-range-thumb {
     background: var(--accent);
     cursor: pointer;
 }
-
 
 @font-face {
     font-family: 'Material Symbols Outlined';
@@ -95,18 +96,16 @@ aside.caption {
 }
 
 #display {
-    height: fit-content;
-    width: calc(var(--display-size)*1vh);
+    height: calc(var(--display-size)*1vh);
 }
 
 .root {
-    position: relative;
     display: flex;
     flex-wrap: wrap;
-    max-width: 900px;
-    flex: 1;
     margin-top: 8px;
     margin-left: 8px;
+    width: 100%;
+    justify-content: center;
 }
 
 .root > div,
@@ -116,13 +115,14 @@ aside.caption {
 }
 
 .root > div {
+    min-width: 300px;
     flex: 1;
-    min-width: 0;
 }
 
 .player_root {
     display: flex;
     min-height: 400px;
+    min-width: calc(var(--display-size)*1vh);
 }
 
 #toolbar_top, #toolbar_side {
@@ -167,7 +167,7 @@ hr {
 }
 
 #toolbar_side > span,
-#toolbar_top > span {
+#toolbar_top > .tools > span {
     max-width: 24px;
     min-width: 24px;
     max-height: 24px;
@@ -181,15 +181,19 @@ hr {
     border-radius: 8px;
 }
 
-#toolbar_top > span:hover,
+#toolbar_top > .tools > span:hover,
 #toolbar_side > span:hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-#toolbar_top > span.active,
+#toolbar_top > .tools > span.active,
 #toolbar_side > span.active {
     color: var(--accent);
     background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tools {
+    display: flex;
 }
 
 select, input, .legacy-button {
@@ -210,9 +214,9 @@ select {
     color: var(--editor-text);
     background-color: var(--editor);
     overflow: auto;
-    max-height: 360px;
+    max-height: 500px;
+    min-height: 65px;
     min-width: 300px;
-    max-width: 490px;
     margin-bottom: 8px;
     border-radius: 5px;
     box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.1);
@@ -224,14 +228,17 @@ select {
     height: 200px;
     padding: 5px 10px;
     white-space: nowrap;
+    resize: vertical;
 }
 
 #view_console > div > span {
     margin-right: 1em;
+    white-space: break-spaces;
 }
 
 #view_edit {
     height: 450px;
+    resize: vertical;
 }
 
 #view_settings {
@@ -317,6 +324,18 @@ a:link, a:visited {
 @media all and (max-width: 360px) {
     .bigscreen {
         display: none;
+    }
+}
+
+@media all and (max-width: 550px) {
+
+    #player_profile_select {
+        flex: 1;
+    }
+
+    #toolbar_top {
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
 }
 
