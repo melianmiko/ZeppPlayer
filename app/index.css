@@ -104,7 +104,7 @@ aside.caption {
     flex-wrap: wrap;
     margin-top: 8px;
     margin-left: 8px;
-    width: 100%;
+    width: calc(100% - 48px - 8px);/* <-- for some fun reason root takes width of its parent as if toolbar and its margin never existed*/
     justify-content: center;
 }
 
@@ -122,7 +122,6 @@ aside.caption {
 .player_root {
     display: flex;
     min-height: 400px;
-    min-width: calc(var(--display-size)*1vh);
 }
 
 #toolbar_top, #toolbar_side {
@@ -156,14 +155,13 @@ hr {
 }
 
 #toolbar_side {
-    right: 100%;
-    top: 0;
     display: flex;
     padding: 0 6px 6px 2px;
     flex-direction: column;
     margin-bottom: 8px;
     border-radius: 0 0 16px 0; 
     height: fit-content;
+    z-index: 1;
 }
 
 #toolbar_side > span,
@@ -214,7 +212,7 @@ select {
     color: var(--editor-text);
     background-color: var(--editor);
     overflow: auto;
-    max-height: 500px;
+    max-height: 550px;
     min-height: 65px;
     min-width: 300px;
     margin-bottom: 8px;
