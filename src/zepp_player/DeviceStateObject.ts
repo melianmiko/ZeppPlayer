@@ -623,8 +623,8 @@ export class DeviceState {
         },
         getString: () => {
             const current = this.HOUR.value + (this.MINUTE.value / 100);
-            if(current <= 6.30 || current >= 21.30) {
-                return this.SUN_RISE.value;
+            if(current <= parseFloat(this.SUN_RISE.value) || current >= parseFloat(this.SUN_SET.value)) {
+              return this.SUN_RISE.value;
             }
             return this.SUN_SET.value;
         },
@@ -638,7 +638,7 @@ export class DeviceState {
     SUN_SET = new StringDeviceState({
         value: "21.30",
         displayConfig: {
-            notEditable: true,
+            displayName: "Sunset",
             maxLength: 5,
         }
     });
@@ -646,7 +646,7 @@ export class DeviceState {
     SUN_RISE = new StringDeviceState({
         value: "06.30",
         displayConfig: {
-            notEditable: true,
+            displayName: "Sunrise",
             maxLength: 5,
         }
     });

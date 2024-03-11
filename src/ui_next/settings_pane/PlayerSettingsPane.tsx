@@ -37,10 +37,15 @@ export function PlayerSettingsPane(props: BackdropProps) {
                         "from this directory instead of main project root."}
                     configKey="preferBuildDir"
                     fallback={true} />
-
                 <hr />
-
                 <CssColorOptions />
+                <hr />
+                <CssSettingsOption
+                    title='Display size'
+                    description="Calculated relatively to window size"
+                    cssPropName={'display-size'}
+                    inputType="range" />
+
             </DialogContent>
             <DialogActions>
                 <Button primary onClick={props.onCancel}>

@@ -106,7 +106,7 @@ Build progress. All commands written in PowerShell syntax, Python version 3.11 i
 
 1. Grab sources from here, open PowerShell in this folder
 2. Install NodeJS dependencies: `npm i`
-3. Create virtualenv: `python3.11 -m venv`
+3. Create virtualenv: `python3.11 -m venv venv`
 4. Activate virtualenv: `.\venv\Scripts\activate`
 5. Install Python dependencies: `pip install -r requirements.txt`
 6. Try to build a binary package with script: `python make_release.py`
@@ -122,7 +122,7 @@ Build progress.
 
 1. Grab sources from here, open terminal in this folder
 2. Install NodeJS dependencies: `npm i`
-3. Create virtualenv: `python3.11 -m venv`
+3. Create virtualenv: `python3.11 -m venv venv`
 4. Activate virtualenv: `source venv/bin/activate`
 5. Install Python dependencies: `pip install -r requirements.txt`
 6. Try to build a binary package with script: `python make_release.py`

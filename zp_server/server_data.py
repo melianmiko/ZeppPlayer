@@ -10,11 +10,11 @@ if hasattr(sys, "frozen"):
         ROOT_DIR = ROOT_DIR.parent / "Resources"
 
 if sys.platform == "win32":
-    CONFIG_DIR = Path.home() / "AppData/Roaming/ZeppPLayer"
+    CONFIG_DIR = Path.home() / "AppData/Roaming/ZeppPlayer"
 elif sys.platform == "darwin":
-    CONFIG_DIR = Path.home() / "Library/Application Support/ZeppPLayer"
+    CONFIG_DIR = Path.home() / "Library/Application Support/ZeppPlayer"
 else:
-    CONFIG_DIR = Path.home() / ".config/ZeppPLayer"
+    CONFIG_DIR = Path.home() / ".config/ZeppPlayer"
 
 PROJECTS_DIR = ROOT_DIR / "projects"
 

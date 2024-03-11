@@ -201,6 +201,7 @@ export default class HuamiUIMock {
         TEXT: "text",
         TEXT_SIZE: "text_size",
         COLOR: "color",
+        LEVEL: "level",
         RADIUS: "radius",
         START_ANGLE: "start_angle",
         END_ANGLE: "end_angle",

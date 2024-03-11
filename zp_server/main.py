@@ -36,7 +36,7 @@ def main():
 
     # Tray menu
     import pystray
-    State.applet = pystray.Icon("ZeppPLayer",
+    State.applet = pystray.Icon("ZeppPlayer",
                                 icon=Image.open(ROOT_DIR / "app" / "icon.png"),
                                 menu=build_menu())
 

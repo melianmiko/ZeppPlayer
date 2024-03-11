@@ -19,7 +19,8 @@ export function CssColorOptions() {
             {Object.keys(CSS_OPTIONS).map((key) => <CssSettingsOption
                 title={CSS_OPTIONS[key]}
                 description=""
-                cssPropName={key} />)}
+                cssPropName={key}
+                inputType="color" />)}
         </>
     )
 }

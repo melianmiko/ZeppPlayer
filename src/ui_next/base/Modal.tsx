@@ -18,7 +18,6 @@ export function Dialog(props: ModalProps) {
                  style={{maxWidth: props.maxWidth || "80vw", minWidth: props.minWidth}}>
 
                 {props.children}
-
             </div>
         </Backdrop>
     )

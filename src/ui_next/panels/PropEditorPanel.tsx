@@ -80,6 +80,8 @@ export function PropEditorPanel(props: PropsWithPlayer<{}>) {
                 <PropEditorEntry name={"UVI"} {...props} />
                 <PropEditorEntry name={"MOON"} {...props} />
                 <PropEditorEntry name={"WEATHER_CITY"} {...props} />
+                <PropEditorEntry name={"SUN_RISE"} {...props} />
+                <PropEditorEntry name={"SUN_SET"} {...props} />
             </PropEditorGroup>
             <PropEditorGroup icon="apps">
                 <PropEditorEntry name={"STOP_WATCH"} {...props} />
