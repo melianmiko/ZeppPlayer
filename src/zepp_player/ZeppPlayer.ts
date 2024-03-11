@@ -29,6 +29,7 @@ import {ZeppAppJson} from "./types/ZeppAppJson";
 import {DeviceStateFetchType, ListDirectoryResponseEntry, PlayerConfig, RenderLevel} from "./types/PlayerTypes";
 
 const profiles = getDeviceProfiles();
+const assetsBlacklist = ["node_modules/", ".git/"];
 
 export default abstract class ZeppPlayer {
     public refresh_required: string = "init";
@@ -457,6 +458,11 @@ export default abstract class ZeppPlayer {
         const dirContent = await this.listDirectory(path);
         for(let i in dirContent) {
             const filePath = path + dirContent[i].name;
+            if(assetsBlacklist.indexOf(dirContent[i].name) > -1) {
+                console.log(`Skip asset downloading: ${filePath}, reason: blacklisted`);
+                continue;
+            }
+
             if(dirContent[i].type === "file") {
                 arr.push(filePath);
             } else {
