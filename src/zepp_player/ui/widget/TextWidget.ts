@@ -23,6 +23,12 @@ export class TextWidget extends BaseWidget<TextWidgetConfig> {
             ...userConfig
         };
 
+        if(config.w < 0 || config.h < 0) {
+            console.warn("Invalid text size provided", config, "assume they're equal zero");
+            config.w = 0;
+            config.h = 0;
+        }
+
         let canvas = runtime.newCanvas();
         let context = canvas.getContext("2d");
         context.textBaseline = "top";
