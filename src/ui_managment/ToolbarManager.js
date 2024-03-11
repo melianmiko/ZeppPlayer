@@ -17,7 +17,7 @@
 */
 
 import GifRecorder from "./GifRecorder.js";
-import {DeviceProfiles} from "../zepp_player/DeviceProfiles";
+import { getDeviceProfiles } from "../zepp_player/DeviceProfiles";
 import AppSettingsManager from "./AppSettingsManager";
 
 export class ToolbarManager {
@@ -137,10 +137,10 @@ export class ToolbarManager {
     }
 
     static initProfileSelect(player) {
-        const profiles = new DeviceProfiles();
+        const profiles = getDeviceProfiles();
         const picker = document.getElementById("player_profile_select");
 
-        let current = "sb7";
+        let current = "mi_band7";
         if(localStorage.zp_profile_name && profiles[localStorage.zp_profile_name]) {
             current = localStorage.zp_profile_name;
         }

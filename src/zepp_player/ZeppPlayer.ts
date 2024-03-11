@@ -21,14 +21,14 @@ import Overlay from "./ui/Overlay.js";
 import ZeppRuntime from "./ZeppRuntime.js";
 import {TGAImage} from "./TgaImage";
 import {AppEnvironment} from "./SyystemEnvironment";
-import {DeviceInfo, DeviceProfiles} from "./DeviceProfiles";
+import { DeviceInfo, getDeviceProfiles } from "./DeviceProfiles";
 import {MiniSignal} from 'mini-signals';
 import {CanvasEntry, ImageEntry} from "./types/EnvironmentTypes";
 import {DeviceStateEntry} from "./device_state/DeviceStateEntry";
 import {ZeppAppJson} from "./types/ZeppAppJson";
 import {DeviceStateFetchType, ListDirectoryResponseEntry, PlayerConfig, RenderLevel} from "./types/PlayerTypes";
 
-const profiles = new DeviceProfiles();
+const profiles = getDeviceProfiles();
 
 export default abstract class ZeppPlayer {
     public refresh_required: string = "init";
@@ -43,7 +43,7 @@ export default abstract class ZeppPlayer {
         withAutoIncrement: false,
         persistentKeyName: "zp_appdata",
     }
-    public profileName: keyof DeviceProfiles = "sb7";
+    public profileName: string = "mi_band7";
     public projectPath: string = "";
     public appConfig: ZeppAppJson = null;
     public currentRuntime: ZeppRuntime = null;

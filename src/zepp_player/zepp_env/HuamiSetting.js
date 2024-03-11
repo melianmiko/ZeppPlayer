@@ -131,7 +131,7 @@ export default class HuamiSettingMock {
         return {
             width: this.runtime.profileData.screenWidth,
             height: this.runtime.profileData.screenHeight,
-            screenShape: 1,
+            screenShape: this.runtime.profileData.circleScreen ? 1 : 0,
             deviceName: this.runtime.profileData.deviceName,
             deviceSource: this.runtime.profileData.deviceSource,
             keyNumber: 0,

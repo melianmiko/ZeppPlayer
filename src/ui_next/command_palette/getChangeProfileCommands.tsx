@@ -1,6 +1,5 @@
-import React from "preact/compat";
-import {DeviceProfiles} from "../../zepp_player/DeviceProfiles";
-import {CommandPaletteItem} from "../palette/CommandPaletteItem";
+import { getDeviceProfiles } from "../../zepp_player/DeviceProfiles";
+import { CommandPaletteItem } from "../palette/CommandPaletteItem";
 
 export function getChangeProfileCommands(onCancel: () => any) {
     function applyProfile(name: string) {
@@ -10,7 +9,7 @@ export function getChangeProfileCommands(onCancel: () => any) {
         onCancel();
     }
 
-    const profiles = new DeviceProfiles();
+    const profiles = getDeviceProfiles();
     return Object.keys(profiles).map((name) => (
         <CommandPaletteItem value={`profile_${name}`} onSelect={() => applyProfile(name)}>
             {`Set profile: ${name}`}
