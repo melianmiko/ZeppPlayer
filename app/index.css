@@ -8,7 +8,6 @@ html {
     --input: #444;
     --input-text: #fff;
     --accent: #ff7043;
-    --display-size: 52;
 }
 
 input[type=checkbox] {
@@ -34,15 +33,15 @@ input[type=range] {
 }
 
 input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; 
+    -webkit-appearance: none;
     appearance: none;
-    width: 16px; 
+    width: 16px;
     height: 16px;
     border-radius: 8px;
     background: var(--accent);
     cursor: pointer;
 }
-  
+
 input[type=range]::-moz-range-thumb {
     width: 16px;
     height: 16px;
@@ -96,7 +95,7 @@ aside.caption {
 }
 
 #display {
-    height: calc(var(--display-size)*1vh);
+    /*height: calc(var(--display-size)*1vh);*/
 }
 
 .root {
@@ -108,13 +107,12 @@ aside.caption {
     justify-content: center;
 }
 
-.root > div,
-.root > canvas {
+.root > * {
     margin-bottom: 8px;
     margin-right: 8px;
 }
 
-.root > div {
+.root > .settings_root {
     min-width: 300px;
     flex: 1;
 }
@@ -159,7 +157,7 @@ hr {
     padding: 0 6px 6px 2px;
     flex-direction: column;
     margin-bottom: 8px;
-    border-radius: 0 0 16px 0; 
+    border-radius: 0 0 16px 0;
     height: fit-content;
     z-index: 1;
 }
