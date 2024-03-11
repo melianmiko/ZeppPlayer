@@ -54,6 +54,8 @@ class HmUtilsMock {
 }
 
 export default class DeviceRuntimeCoreMock {
+    version = "1.0.1-zepp-player";
+
     constructor(runtime) {
         this.runtime = runtime;
         this.HmUtils = new HmUtilsMock(runtime);

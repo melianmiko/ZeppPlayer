@@ -102,7 +102,7 @@ export class TextWidget extends BaseWidget<TextWidgetConfig> {
     async render(canvas: CanvasEntry, runtime: ZeppRuntime) {
         const config = this.config;
         let width = config.w, height = config.h;
-        if (config.text !== undefined) {
+        if (config.text !== undefined && config.text !== "") {
             const text = await TextWidget.drawText(config, runtime);
             canvas.getContext("2d").drawImage(text, config.x, config.y);
             width = text.width;

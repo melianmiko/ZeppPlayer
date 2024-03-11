@@ -35,6 +35,7 @@ export class AppEnvironment {
     hmFS: HuamiFsMock;
     hmSetting: HuamiSettingMock;
     DeviceRuntimeCore: DeviceRuntimeCoreMock;
+    self: AppEnvironment;
 
     __$$module$$__: any = {};
     __$$hmAppManager$$__: any = {
@@ -48,6 +49,7 @@ export class AppEnvironment {
     }
 
     constructor(player: ZeppPlayer) {
+        this.self = this;
         this.hmApp = new HmApp(player);
         this.hmSetting = new HuamiSettingMock(player);
         this.hmFS = new HuamiFsMock(player);
@@ -58,6 +60,9 @@ export class AppEnvironment {
 export function createPageEnv(runtime: ZeppRuntime, appRuntime: AppEnvironment) {
     const object: any = {};
     object.SLEEP_REFERENCE_ZERO = 24 * 60;
+
+    // Share global environment
+    object.self = object;
 
     // Base libraries
     object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(runtime);

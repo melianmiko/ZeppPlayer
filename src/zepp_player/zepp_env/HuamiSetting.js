@@ -97,7 +97,7 @@ export default class HuamiSettingMock {
         };
     }
 
-    getLanguage() {
+    getLanguage = () => {
         const lang = this.runtime.deviceState.OS_LANGUAGE.value;
         if(LANG_VALUE_TABLE.indexOf(lang) < 0)
             return 2;
@@ -105,7 +105,7 @@ export default class HuamiSettingMock {
         return LANG_VALUE_TABLE.indexOf(lang);
     }
 
-    getUserData() {
+    getUserData = () => {
         return {
             age: 20,
             height: 180,
@@ -116,7 +116,7 @@ export default class HuamiSettingMock {
         }
     }
 
-    getDiskInfo() {
+    getDiskInfo = () => {
         return {
             total: 103140000,
             free: 30130000,
@@ -127,7 +127,7 @@ export default class HuamiSettingMock {
         }
     }
 
-    getDeviceInfo() {
+    getDeviceInfo = () => {
         return {
             width: this.runtime.profileData.screenWidth,
             height: this.runtime.profileData.screenHeight,
@@ -138,11 +138,11 @@ export default class HuamiSettingMock {
         }
     }
 
-    getTimeFormat() {
+    getTimeFormat = () => {
         return this.runtime.getDeviceState("AM_PM", "string") === "hide" ? 1 : 0;
     }
 
-    getScreenType() {
+    getScreenType = () => {
         return this.runtime.showLevel;
     }
 

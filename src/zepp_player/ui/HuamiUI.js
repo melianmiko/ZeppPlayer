@@ -84,7 +84,7 @@ export default class HuamiUIMock {
         for(let a in this._widget) this.widget[a] = a;
     }
 
-    deleteWidget(widget) {
+    deleteWidget = (widget) => {
         const widgets = this.runtime.widgets;
         const targetId = widget.config.__id;
         for(let i in widgets) {
@@ -107,7 +107,7 @@ export default class HuamiUIMock {
         console.warn("can't delete undefined widget", widget);
     }
 
-    createWidget(type, config) {
+    createWidget = (type, config) => {
         let Widget = this._widget[type];
         if(!Widget) {
             Widget = MissingWidget;
@@ -129,7 +129,7 @@ export default class HuamiUIMock {
         return i;
     }
 
-    showToast(options) {
+    showToast = (options) => {
         if(!this.toastWidget) {
             const screenWidth = this.runtime.screen[0];
             const toastWidth = Math.max(170, Math.round(screenWidth / 2))
@@ -165,7 +165,7 @@ export default class HuamiUIMock {
     updateStatusBarTitle() {}
     setScrollView() {}
 
-    getTextLayout(text, options) {
+    getTextLayout = (text, options) => {
         const canvas = TextWidget.drawText({
             text,
             text_size: options.text_size,

@@ -62,9 +62,11 @@ export class HmApp {
         return this.gotoPage(conf);
     }
 
-    setLayerX() {}
+    getLayerY = () => {
+        return -this.runtime.player.config.renderScroll;
+    }
 
-    setLayerY(y) {
+    setLayerY = (y) => {
         this.runtime.player.config.renderScroll = -y;
     }
 
@@ -95,6 +97,23 @@ export class HmApp {
         }
     }
 
+    key = {
+        BACK: "back",
+        SHORTCUT: "shortcut",
+        SELECT: "select",
+        UP: "up",
+        DOWN: "down",
+        HOME: "home",
+    }
+
+    action = {
+        CLICK: "click",
+        LONG_PRESS: "long_press",
+        DOUBLE_CLICK: "double_click",
+        PRESS: "press",
+        RELEASE: "release",
+    }
+
     gesture = {
         UP: "up",
         LEFT: "left",
@@ -112,8 +131,7 @@ export class HmApp {
 
     registerKeyEvent() {}
     unregisterKeyEvent() {}
-    unregistKeyEvent() {}
 
     registerSpinEvent() {}
-    unregistSpinEvent() {}
+    unregisterSpinEvent() {}
 }
