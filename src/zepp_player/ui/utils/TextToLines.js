@@ -58,7 +58,7 @@ export class TextToLines {
                 newLine = lines[currentLine] + word;
                 width = context.measureText(newLine).width + (offsetX * (newLine.length - 1));
                 if ((width < config.w || lines[currentLine].length === 0)) {
-                    while (context.measureText(word).width > config.w) {
+                    while (context.measureText(word).width > config.w && word.length > 1) {
                         word = word.substring(0, word.length - 1);
                     }
                     lines[currentLine] += word;
