@@ -56,8 +56,9 @@ class HmUtilsMock {
 export default class DeviceRuntimeCoreMock {
     version = "1.0.1-zepp-player";
 
-    constructor(runtime) {
+    constructor(runtime, placement) {
         this.runtime = runtime;
+        this.placement = placement;
         this.HmUtils = new HmUtilsMock(runtime);
     }
 
@@ -91,10 +92,12 @@ export default class DeviceRuntimeCoreMock {
     }
 
     WatchFace(config) {
+        this.placement.currentApp.current.module = config;
         return config;
     }
 
     Page(config) {
+        this.placement.currentApp.current.module = config;
         return config;
     }
 }

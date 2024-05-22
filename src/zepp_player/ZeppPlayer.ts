@@ -140,6 +140,10 @@ export default abstract class ZeppPlayer {
     }
 
     getVfsAssetPath(path: string) {
+        if(this.appConfig.targets) {
+            // zeus-compatibility mode
+            return `${this.getVfsAppPath()}/assets/${Object.keys(this.appConfig.targets)[0]}/${path}`;
+        }
         return `${this.getVfsAppPath()}/assets/${path}`;
     }
 

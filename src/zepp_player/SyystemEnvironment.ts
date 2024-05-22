@@ -53,7 +53,7 @@ export class AppEnvironment {
         this.hmApp = new HmApp(player);
         this.hmSetting = new HuamiSettingMock(player);
         this.hmFS = new HuamiFsMock(player);
-        this.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player);
+        this.DeviceRuntimeCore = new DeviceRuntimeCoreMock(player, this.__$$hmAppManager$$__);
     }
 }
 
@@ -65,7 +65,7 @@ export function createPageEnv(runtime: ZeppRuntime, appRuntime: AppEnvironment) 
     object.self = object;
 
     // Base libraries
-    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(runtime);
+    object.DeviceRuntimeCore = new DeviceRuntimeCoreMock(runtime, appRuntime.__$$hmAppManager$$__);
     object.hmUI = new HuamiUIMock(runtime);
     object.hmFS = new HuamiFsMock(runtime);
     object.hmApp = new HmApp(runtime);

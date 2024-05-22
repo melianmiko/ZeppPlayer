@@ -60,18 +60,39 @@
     "deviceName": "Bip 5",
     "alternativeDeviceNames": [],
     "deviceSource": [
+      8454400,
       8454401
     ],
     "chipset": "apollo",
     "screenShape": "square",
     "screenWidth": 320,
     "screenHeight": 380,
-    "screenRadius": 160,
+    "screenRadius": 69,
     "iconSize": 124,
     "physicalKeysCount": 1,
     "watchfacePreviewWidth": 200,
     "watchfacePreviewHeight": 238,
     "osVersion": "2.1.0"
+  },
+  {
+    "id": "bip5unity",
+    "deviceName": "Bip 5 Unity",
+    "alternativeDeviceNames": [],
+    "deviceSource": [
+      8782081,
+      8782088,
+      8782089
+    ],
+    "chipset": "apollo",
+    "screenShape": "square",
+    "screenWidth": 320,
+    "screenHeight": 380,
+    "screenRadius": 69,
+    "iconSize": 124,
+    "physicalKeysCount": 1,
+    "watchfacePreviewWidth": 200,
+    "watchfacePreviewHeight": 238,
+    "osVersion": "3.0.0"
   },
   {
     "id": "trex_ultra",
@@ -137,8 +158,8 @@
     "deviceSource": [
       8257793
     ],
-    "chipset": "",
-    "screenShape": "",
+    "chipset": "nxp",
+    "screenShape": "square",
     "screenWidth": 390,
     "screenHeight": 450,
     "screenRadius": 86,
@@ -234,7 +255,7 @@
     ],
     "chipset": "dialog",
     "screenShape": "square",
-    "screenWidth": 366,
+    "screenWidth": 336,
     "screenHeight": 384,
     "screenRadius": 80,
     "iconSize": 80,

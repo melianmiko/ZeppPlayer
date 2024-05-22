@@ -25,10 +25,13 @@ import {ChromeZeppPlayer} from "./zepp_player/ChromeZeppPlayer.js";
 import {ChangesWatcher} from "./ui_managment/ChangesWatcher";
 import {start as startNgUi} from "./ui_next/RootComponent";
 import {PlayerSettingsLoader} from "./ui_next/PlayerSettingsLoader";
+import { Buffer } from "buffer/";
 
 const DISPLAY_FPS = 60;
 
 const DISPLAY_DELTA = 1000 / DISPLAY_FPS;
+
+window.Buffer = Buffer;
 
 /**
  * Start all
@@ -90,7 +93,7 @@ const start = async () => {
             }, 2500);
         }
     };
-    
+
     const performRefresh = async () => {
         if(!player.currentRuntime) return;
         if(document.hidden || player.currentRuntime.uiPause || !player.currentRuntime.refresh_required) return;
